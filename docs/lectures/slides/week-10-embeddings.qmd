@@ -1,0 +1,62 @@
+---
+title: "Week 10: Embeddings Models and Representation Learning"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Vector Embeddings
+
+### What are Embeddings?
+
+- **Definition**: Numerical representations of text, images, or other data
+- **Purpose**: Capture semantic meaning in vector space
+- **Applications**: Search, recommendations, classification
+
+## Embedding Models
+
+### Popular Embedding Models
+
+- **Sentence Transformers**: SBERT, MPNet
+- **OpenAI Embeddings**: text-embedding-3-small/large
+- **Amazon Titan Embeddings**: Bedrock embedding models
+- **Cohere Embeddings**: Multilingual support
+
+## How Embeddings Work
+
+### Representation Learning
+
+- **Semantic Similarity**: Similar concepts have similar vectors
+- **Vector Space**: High-dimensional representations
+- **Distance Metrics**: Cosine similarity, Euclidean distance
+
+## Fine-tuning Embedding Models
+
+### Why Fine-tune?
+
+- **Domain Adaptation**: Specific vocabulary and concepts
+- **Improved Accuracy**: Task-specific performance
+- **Custom Requirements**: Unique business needs
+
+## Hands-on Lab
+
+### Working with Embeddings
+
+*Practical exercise and demonstration*
+
+- Generating embeddings
+- Measuring similarity
+- Fine-tuning embedding models
+- Integration with RAG systems
+
+---
+
+*Content placeholder - detailed embeddings implementation coming soon*

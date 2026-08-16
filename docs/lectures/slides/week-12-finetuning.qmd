@@ -1,0 +1,341 @@
+---
+title: "Week 7: Fine-tuning"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Overview
+
+::: {.incremental}
+- Why fine-tuning matters
+- Fine-tuning in the model customization spectrum
+- Parameter-Efficient Fine-Tuning (PEFT) methods
+- Types of LoRA techniques
+- Challenges: Catastrophic forgetting and accuracy concerns
+- Evaluation methodologies
+- Ethical considerations
+- Future directions
+:::
+
+## Why Fine-Tune Large Language Models?
+
+::: {.incremental}
+- **Specialized domain adaptation** - medical, legal, scientific
+- **Task-specific optimization** - improving performance on specific tasks
+- **Alignment with values/preferences** - customizing for safety, tone, style
+- **Proprietary knowledge integration** - incorporating private data/knowledge
+- **Reducing hallucinations** for specific domains
+- **Efficiency** - smaller fine-tuned models vs. large general models
+:::
+
+## The Model Customization Spectrum
+
+```{mermaid}
+flowchart LR
+    A[Prompt Engineering] -->|Increasing complexity/cost| B[Retrieval Augmented Generation]
+    B --> C[Fine-Tuning]
+    C --> D[Continued Pre-training]
+    E[Pre-training from Scratch]
+    D --> E
+    
+    style A fill:#d4f1f9
+    style B fill:#c2e5d3
+    style C fill:#ffe0b2
+    style D fill:#ffccbc
+    style E fill:#ffaba0
+```
+
+## Cost-Benefit Analysis
+
+| Approach | Cost | Time | Data Required | Performance Improvement |
+|----------|------|------|---------------|-------------------------|
+| Prompt Engineering | $ | Hours-Days | Low | Low-Medium |
+| RAG | $$ | Days | Medium | Medium |
+| Fine-Tuning | $$$ | Days-Weeks | Medium-High | Medium-High |
+| Continued Pre-training | $$$$ | Weeks-Months | High | High |
+| Pre-training | $$$$$ | Months | Massive | Complete control |
+
+## Traditional Fine-Tuning vs. PEFT
+
+::: {.columns}
+::: {.column width="50%"}
+**Full Fine-Tuning**
+
+- Updates all model parameters
+- Requires large amounts of GPU memory
+- More expensive computationally
+- More prone to catastrophic forgetting
+- Requires more data to avoid overfitting
+:::
+
+::: {.column width="50%"}
+**Parameter-Efficient Fine-Tuning**
+
+- Updates small subset of parameters
+- Much lower memory requirements
+- Computationally efficient
+- Better preserves general capabilities
+- Works well with limited data
+:::
+:::
+
+## Parameter-Efficient Fine-Tuning (PEFT)
+
+::: {.incremental}
+- **Adapter methods**: Add small trainable modules to frozen model
+- **Prompt tuning**: Learn continuous prompts (soft prompts)
+- **Prefix tuning**: Add trainable prefix to each layer
+- **LoRA (Low-Rank Adaptation)**: Inject trainable low-rank matrices
+- **QLoRA**: Quantized version of LoRA
+:::
+
+## LoRA: Low-Rank Adaptation
+
+![LoRA approach to fine-tuning](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/peft/LoRA_diagram.png)
+
+::: {.notes}
+LoRA freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, drastically reducing the number of trainable parameters for downstream tasks.
+:::
+
+## Types of LoRA Approaches
+
+::: {.incremental}
+- **Standard LoRA**: Low-rank adaptations to attention weights
+- **QLoRA**: Quantized LoRA for reduced memory footprint
+- **AdaLoRA**: Adaptive budget allocation across weight matrices
+- **DyLoRA**: Dynamic rank allocation during training
+- **DoRA**: Double low-rank adaptation with additional rescaling
+- **GLoRA**: Gated LoRA for improved control
+:::
+
+## Understanding LoRA Hyperparameters
+
+::: {.incremental}
+- **Rank (r)**: Size of low-rank matrices (typically 8-64)
+  - Higher rank = more capacity but more parameters
+- **Alpha**: Scaling factor for LoRA updates
+- **Dropout**: Regularization for LoRA weights
+- **Target modules**: Which layers to apply LoRA to
+  - Attention matrices (query, key, value)
+  - Feed forward networks
+  - Both
+:::
+
+## QLoRA: Quantization + LoRA
+
+::: {.columns}
+::: {.column width="60%"}
+- Quantizes base model to 4 or 8 bits
+- Keeps LoRA adapters in 16-bit precision
+- Uses:
+  - 4-bit NormalFloat (NF4)
+  - Double quantization
+  - Paged optimizers
+- Dramatically reduces memory requirements
+- Enables fine-tuning on consumer hardware
+:::
+
+::: {.column width="40%"}
+![QLoRA memory efficiency](https://raw.githubusercontent.com/artidoro/qlora/main/assets/memory_plot.png){width="90%"}
+:::
+:::
+
+## Fine-Tuning Methods: Comparison
+
+| Method | Memory Usage | Training Speed | Performance | Portability |
+|--------|-------------|----------------|-------------|-------------|
+| Full Fine-Tuning | Highest | Slowest | Best (potentially) | Low |
+| LoRA | Low | Fast | Good | High |
+| QLoRA | Lowest | Medium | Good | High |
+| Adapter | Low | Medium | Good | Medium |
+| Prompt Tuning | Very Low | Fastest | Lower | Limited |
+
+## Challenges: Catastrophic Forgetting
+
+::: {.incremental}
+- Model loses general capabilities when learning new tasks
+- Especially problematic with limited or biased data
+- Mitigation strategies:
+  - PEFT methods (like LoRA) limit impact
+  - Regularization techniques
+  - Rehearsal/replay of examples from original distribution
+  - Knowledge distillation with teacher models
+:::
+
+## Loss in Accuracy Concerns
+
+::: {.incremental}
+- **Distribution Shift**: Fine-tuning data may represent narrow use cases
+- **Overfitting**: Model learns training data peculiarities
+- **Generalization Loss**: Performance degradation on out-of-domain tasks
+- **Evaluation Gap**: Training metrics may not reflect real-world performance
+- **Prompt Sensitivity**: Fine-tuned models may become more brittle to prompt formulations
+:::
+
+## Data Preparation for Fine-Tuning
+
+::: {.incremental}
+- **Quality over quantity**: Curated high-quality examples beat more noisy data
+- **Balanced representation**: Cover edge cases and diverse scenarios
+- **Format consistency**: Standardized input/output patterns
+- **Instruction-following format**: Clear instruction → response pairs
+- **Data augmentation**: Techniques to artificially expand dataset
+- **Synthetic data generation**: Using existing LLMs to create training data
+:::
+
+## Instruction Tuning
+
+```
+INSTRUCTION: Write a poem about artificial intelligence in the style of Shakespeare.
+
+RESPONSE: Hark! What light through silicon valley breaks?
+It is the east, and Artificial Intelligence is the sun.
+Arise, fair algorithms, and kill the envious human,
+Who is already sick and pale with grief,
+That thou, AI, art far more advanced than they.
+...
+```
+
+## Fine-Tuning Architectures
+
+::: {.columns}
+::: {.column width="50%"}
+**Encoder-Decoder Models**
+
+- BART, T5, Flan-T5
+- Well-suited for:
+  - Summarization
+  - Translation
+  - Question answering
+  - Structured generation
+:::
+
+::: {.column width="50%"}
+**Decoder-Only Models**
+
+- GPT family, LLaMA, Mistral
+- Well-suited for:
+  - Open-ended generation
+  - Dialogue
+  - Creative writing
+  - Code generation
+:::
+:::
+
+## Tools and Frameworks for Fine-Tuning
+
+::: {.incremental}
+- **Hugging Face Transformers & PEFT**: Most common academic/research approach
+- **TRL (Transformer Reinforcement Learning)**: SFT & RLHF
+- **Unsloth**: Efficient LoRA fine-tuning
+- **LangChain**: Integration with other components 
+- **Cloud Providers**:
+  - Amazon SageMaker
+  - Azure OpenAI Service
+  - Google Vertex AI
+:::
+
+## Evaluation Methodologies
+
+::: {.columns}
+::: {.column width="50%"}
+**Automatic Metrics**
+- Perplexity
+- ROUGE, BLEU, METEOR
+- LLM-as-a-judge
+- Task-specific metrics
+- Benchmark suites (GLUE, SuperGLUE)
+:::
+
+::: {.column width="50%"}
+**Human Evaluation**
+- Direct assessment
+- A/B testing
+- Ranking
+- Error analysis
+- User studies
+:::
+:::
+
+## Advanced Fine-Tuning Paradigms
+
+::: {.incremental}
+- **RLHF**: Reinforcement Learning from Human Feedback
+  - SFT → Reward Modeling → RL optimization
+- **DPO**: Direct Preference Optimization
+  - Simplifies RLHF by eliminating reward model
+- **ORPO**: Offline Reinforced Preference Optimization
+- **GRPO**: Generative Reward Preference Optimization
+  - Uses an LLM to generate rewards for preference pairs
+  - Combines benefits of DPO with explicit reward modeling
+- **Constitutional AI**: Constraining outputs to follow principles
+:::
+
+## Multi-Task Fine-Tuning
+
+::: {.incremental}
+- Train on multiple tasks simultaneously
+- Benefits:
+  - Better generalization
+  - Positive transfer between tasks
+  - More efficient use of model capacity
+- Challenges:
+  - Task balancing
+  - Negative interference
+  - More complex evaluation
+:::
+
+## Ethical Considerations
+
+::: {.incremental}
+- **Data provenance**: Ensuring training data is ethically sourced
+- **Bias amplification**: Fine-tuning can reinforce biases in data
+- **Dual-use concerns**: Fine-tuned models for harmful purposes
+- **Attribution and transparency**: Documenting fine-tuning process
+- **Over-reliance**: Potential over-trust in fine-tuned systems
+- **Accessibility**: Democratizing fine-tuning capabilities
+:::
+
+
+## Practical Tips for Effective Fine-Tuning
+
+::: {.incremental}
+1. Start with a strong, well-aligned base model
+2. Use high-quality, diverse, and representative data
+3. Align training format with intended use patterns  
+4. Start with smaller models before scaling up
+5. Carefully monitor for overfitting and forgetting
+6. Conduct robust evaluation on varied test cases
+7. Consider ensemble or mixture-of-experts approaches
+8. Document your process and data for reproducibility
+:::
+
+## Resources
+
+- [Hugging Face PEFT Documentation](https://huggingface.co/docs/peft/index)
+- [Stanford CRFM Fine-tuning Tutorial](https://crfm.stanford.edu/2023/03/13/alpaca.html)
+- [QLoRA Paper](https://arxiv.org/abs/2305.14314)
+- [TRL Documentation](https://huggingface.co/docs/trl/index)
+- [EleutherAI LM Evaluation Harness](https://github.com/EleutherAI/lm-evaluation-harness)
+- [OpenAI Fine-tuning Guide](https://platform.openai.com/docs/guides/fine-tuning)
+
+## Thank You!
+
+Any questions?
+
+::: {.notes}
+Time for Q&A - possible follow-up topics:
+- More details on specific PEFT methods
+- Cost comparisons across different approaches
+- Discussion of proprietary vs. open-source options
+- Specific use cases and implementation strategies
+:::

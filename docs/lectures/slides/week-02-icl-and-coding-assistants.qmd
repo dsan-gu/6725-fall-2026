@@ -1,0 +1,1849 @@
+---
+title: "Week 2: In-context learning (ICL) and AI Coding Assistants"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## What is In-Context Learning (ICL)?
+
+- **Definition**: A paradigm where models learn to perform tasks by being provided examples or instructions directly in the input (context).
+- **Impact**: Reduces or eliminates the need for fine-tuning on specific tasks.
+- **Analogy**: Teaching by showing examples without altering the student's core knowledge.
+- **Key Feature**: Enables models to generalize without retraining.
+
+---
+
+## Why Use In-Context Learning?
+
+- **Advantages**:
+  - No need for model retraining or additional compute-intensive fine-tuning.
+  - Enables quick adaptation to novel tasks.
+- **Applications**:
+  - Rapid prototyping.
+  - Tasks with small or specialized datasets.
+
+---
+
+## Mechanism of ICL
+
+- **Few-Shot Approach**: The model is given examples of inputs and desired outputs as part of its prompt.
+- **Mechanism**:
+  - Uses the input examples to infer the pattern.
+  - Applies this pattern to new inputs.
+- **Key Insight**: Leverages the pre-trained knowledge of large language models.
+
+---
+
+## Hierarchy of Techniques
+
+1. **Prompt Engineering**:
+   - Easiest to implement.
+   - Iterative improvement of task instructions and examples.
+   - **When to use**: Small datasets, quick experiments.
+
+2. **Fine-Tuning**:
+   - Adjusts model weights for specific tasks.
+   - Requires more resources (compute, labeled data).
+   - **When to use**: High accuracy demands, domain-specific tasks.
+
+3. **Continued Pre-Training (cPT)**:
+   - Extends the pre-training phase with domain-specific data.
+   - **When to use**: Large shifts in domain or task requirements.
+
+---
+
+## Pros and Cons of Each Technique
+
+| Technique          | Pros                                | Cons                                   |
+|--------------------|-------------------------------------|----------------------------------------|
+| Prompt Engineering | Fast, low cost, no retraining.     | Limited accuracy, trial and error.    |
+| Fine-Tuning        | Improved task performance.         | Requires labeled data, costly.        |
+| cPT                | Handles major domain shifts well.  | Expensive, needs significant data.    |
+
+---
+
+## Prompt Engineering Overview
+
+- **Zero-Shot Learning**:
+  - No examples provided.
+  - Example: "Summarize the following paragraph."
+
+- **One-Shot Learning**:
+  - One example provided.
+  - Example: "Translate 'Bonjour' to English. Example: 'Hola -> Hello'. Translate 'Merci'."
+
+- **Few-Shot Learning**:
+  - Multiple examples provided.
+  - Example: "Classify these reviews: 'I love this movie!' -> Positive, 'I hate this book.' -> Negative. Classify: 'This product is amazing.'"
+
+---
+
+## Zero-Shot Learning Example
+
+- **Task**: Summarization.
+- **Prompt**:
+  - "Summarize the following text: 'Large language models are transforming AI.'"
+- **Models**:
+  - LLaMA3: Short and factual.
+  - Claude: Polished and coherent.
+  - Amazon Nova: Emphasizes conciseness.
+
+---
+
+## One-Shot Learning Example
+
+- **Task**: Question Answering.
+- **Prompt**:
+  - "Question: Who developed the theory of relativity?
+    Example: Question: Who invented the telephone? Answer: Alexander Graham Bell.
+    Answer:"
+- **Output**:
+  - LLaMA3: Albert Einstein.
+  - Claude: Einstein.
+  - Amazon Nova: Albert Einstein.
+
+---
+
+## Few-Shot Learning Example
+
+- **Task**: SQL Generation.
+- **Prompt**:
+  - "Examples:
+     Input: Find all employees hired after 2020.
+     Output: SELECT * FROM employees WHERE hire_date > '2020-01-01';
+     Input: Count the number of departments.
+     Output: SELECT COUNT(*) FROM departments;
+     Input: List all customers from New York."
+- **Output**:
+  - LLaMA3: SELECT * FROM customers WHERE city = 'New York';
+  - Claude: SELECT name FROM customers WHERE location = 'New York';
+  - Amazon Nova: SELECT * FROM customers WHERE city = 'NYC';
+
+---
+
+
+## Anatomy of a Prompt
+
+- **Structure**:
+  - System Message: Defines the model's role or behavior.
+  - User Message: Specifies the task or query.
+  - Assistant Message (optional): Provides context or prior responses.
+- **Examples**:
+  - System: "You are a helpful assistant."
+  - User: "Summarize the following text: 'Generative AI is a game changer.'"
+  - Assistant: "Generative AI is transformative."
+- **Key Idea**: Clear instructions improve response quality.
+
+---
+
+## The Messages API
+
+- **Components**:
+  - `system`: Sets the model's tone and scope.
+  - `user`: Contains the main prompt or task.
+  - `assistant`: Used for context in iterative tasks.
+- **Flow**:
+  - Messages are passed as a sequence.
+  - Each message builds upon the previous ones.
+- **Benefits**:
+  - Enhances multi-turn interactions.
+  - Allows dynamic context updates.
+
+
+---
+
+## Inference parameters
+
+the Messages API allows you to interact with the model in a conversational way. You can define the role of the message and the content. The role can be either system, assistant, or user. The system role is used to provide context to the model, and the user role is used to ask questions or provide input to the model.
+
+Users can get tailored responses for their use case using the following inference parameters while invoking foundation models:
+
+  - `temperature` – Temperature is a value between 0–1, and it regulates the creativity of the model's responses. Use a lower temperature if you want more deterministic responses, and use a higher temperature if you want more creative or different responses from the model.
+  - `top_k` – This is the number of most-likely candidates that the model considers for the next token. Choose a lower value to decrease the size of the pool and limit the options to more likely outputs. Choose a higher value to increase the size of the pool and allow the model to consider less likely outputs.
+  - `top_p` – Top-p is used to control the token choices made by the model during text generation. It works by considering only the most probable token options and ignoring the less probable ones, based on a specified probability threshold value (p). By setting the top-p value below 1.0, the model focuses on the most likely token choices, resulting in more stable and repetitive completions. This approach helps reduce the generation of unexpected or unlikely outputs, providing greater consistency and predictability in the generated text.
+
+---
+
+## Inference parameters (contd.)
+
+  - `stop sequences` – This refers to the parameter to control the stopping sequence for the model’s response to a user query. For Meta-Llama models this value can either be "<|start_header_id|>", "<|end_header_id|>", or "<|eot_id|>".
+
+
+---
+
+## Prompting Best Practices
+
+- **General Guidelines**:
+  - Be specific: "Translate this sentence" vs. "Translate."
+  - Avoid ambiguity: Use complete instructions.
+  - Provide examples for complex tasks.
+
+- **For GPT-4o / o1**:
+  - Use detailed instructions for creative tasks.
+  - Include constraints like word limits or tone.
+  - o1 models: Let them reason; avoid "think step by step" (built-in).
+
+- **For Claude (Sonnet 4, Opus 4)**:
+  - Use XML tags to structure complex prompts.
+  - Excels at reasoning tasks when examples are provided.
+  - Supports extended thinking for complex problems.
+
+- **For LLaMA 4 / Mistral**:
+  - Keep prompts concise.
+  - Focus on factual and structured queries.
+  - Use system prompts for role definition.
+
+---
+
+## Prompting Best Practices
+
+| Model family | Prompt Engineering Reference |
+|--------|---------------------------|
+| Amazon Nova | https://docs.aws.amazon.com/nova/latest/userguide/prompting.html |
+| Anthropic Claude | https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/ |
+| Meta LLaMA | https://www.llama.com/docs/how-to-guides/prompting/ |
+
+---
+
+## Example: Claude Messages API with Amazon Bedrock
+
+- **Task**: Summarize a document.
+
+```python
+import boto3
+import json
+
+# Initialize the Bedrock Runtime client
+bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+
+# Define messages using the Converse API (recommended for 2026)
+messages = [
+    {
+        "role": "user",
+        "content": [{"text": "Summarize the following text: 'Generative AI is transforming industries by automating creative tasks.'"}]
+    }
+]
+
+# Call Claude via Bedrock Converse API
+response = bedrock.converse(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    messages=messages,
+    system=[{"text": "You are a helpful assistant."}]
+)
+
+# Print the response
+print(response["output"]["message"]["content"][0]["text"])
+```
+
+---
+
+## Advanced Example: Few-Shot Learning with Claude
+
+- **Task**: Classify sentiment.
+
+```python
+messages = [
+    {
+        "role": "user",
+        "content": [{"text": """Examples:
+Review: 'I love this product!' -> Positive
+Review: 'This is the worst service ever.' -> Negative
+Review: 'The delivery was on time.' ->"""}]
+    }
+]
+
+response = bedrock.converse(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    messages=messages,
+    system=[{"text": "You are a helpful assistant that classifies sentiment."}]
+)
+
+print(response["output"]["message"]["content"][0]["text"])
+```
+
+---
+
+## Multi-Modal In-Context Learning
+
+- **Definition**: Extending ICL to handle tasks across multiple data types (text, images, audio).
+- **Examples**:
+  - Text-to-Image generation: Providing prompts with descriptive instructions.
+  - Image Captioning: Few-shot examples pairing images with captions.
+- **Future Applications**:
+  - Interactive assistants.
+  - Cross-domain insights.
+
+
+
+---
+
+## Prompt engineering - examples
+
+Text to SQL prompt with Meta-LLaMA3
+
+```{.bash}
+messages = [
+{
+  "role": "system",
+  "content":
+    """You are a mysql query expert whose output is a valid sql query.
+       Only use the following tables:
+       It has the following schemas:
+       <table_schemas>
+       {table_schemas}
+       <table_schemas>
+       Always combine the database name and table name to build your queries. You must identify these two values before proving a valid SQL query.
+       Please construct a valid SQL statement to answer the following the question, return only the mysql query in between <sql></sql>.
+    """
+},
+{
+  "role": "user",
+  "content": "{question}"
+}]
+```
+
+---
+
+## Prompt engineering - examples - Few-shot prompting
+
+```{.bash}
+Extract the relevant information from the following parahrapgh and present it in a JSON format.
+
+Michael Doe, a 45-year-old teacher from Boston, Massachusetts, is an avid reader and enjoys gardening during his spare time.
+Example 1:
+Paragraph: "John Doe is a 32-year-old software engineer from San Francisco, California. He enjoys hiking and playing guitar in his free time."
+"employee": {
+    "fullname": "John Doe",
+    "city": "San Francisco",
+    "state": "California",
+    "occupation": "software engineer",
+    "hobbies": ["hiking", "playing guitar"],
+    "recentTravel": "not provided"
+},
+Example 2:
+Paragraph: "Emily Jax, a 27-year-old marketing manager from New York City, loves traveling and trying new cuisines. She recently visited Paris and enjoyed the city's rich cultural heritage."
+"employee": {
+    "fullname": "Emily Jax",
+    "city": "New York City",
+    "state": "New York",
+    "occupation": "marketing manager",
+    "hobbies": ["traveling", "trying new cuisines"],
+    "recentTravel": "Paris"
+}
+```
+This produces the following output
+
+```{.bashrc}
+{
+  "employee": {
+    "fullname": "Michael Doe",
+    "city": "Boston",
+    "state": "Massachusetts",
+    "occupation": "teacher",
+    "hobbies": [ "reading", "gardening"],
+    "recentTravel": "not provided"
+  }
+}
+```
+
+---
+
+## Prompt engineering - examples - Task decomposition
+
+```{.bashrc}
+
+Break down the task of planning a vacation into smaller, manageable steps.
+1. Choose a destination.
+2. Set a budget.
+3. Research accommodations.
+4. Plan activities.
+5. Book flights and accommodations.
+6. Pack and prepare for the trip.
+```
+
+---
+
+## Prompt engineering - examples - Chain of Thought
+
+```{.bashrc}
+Solve the following math problem step by step.
+
+If you have 10 apples and you give 3 apples to your friend,
+then buy 5 more apples, and finally eat 2 apples,
+how many apples do you have left?
+```
+
+---
+
+# From Prompt Engineering to Context Engineering
+
+## The Evolution: Prompt Engineering is Dead?
+
+### The 2025-2026 Paradigm Shift
+
+- **Gartner (July 2025)**: "Context engineering is in, and prompt engineering is out"
+- **The Problem with Prompts Alone**:
+  - LLMs have finite context windows (4K-200K tokens)
+  - Flooding with irrelevant instructions dilutes important information
+  - Longer/trickier prompts yield diminishing returns
+  - Prompts cannot compensate when model lacks situational data
+
+### Key Insight
+
+> "Prompt engineering is what you do **inside** the context window. Context engineering is how you decide **what fills** the window."
+
+---
+
+## What is Context Engineering?
+
+### Definition (Andrej Karpathy, 2025)
+
+> "Context engineering is the delicate art and science of filling the context window with just the right information for each step."
+
+### It's a System-Level Discipline
+
+- **Not just prompts** - Managing everything the model sees at runtime:
+  - Retrieved documents (RAG)
+  - System state and memory
+  - Prior outputs and conversation history
+  - Tool definitions and schemas
+  - Results from external APIs
+  - User preferences and permissions
+
+---
+
+## Why Context Engineering Emerged
+
+### LLM Limitations Drive the Need
+
+1. **LLMs are Stateless**
+   - They don't "remember" unless you reinsert memory into context
+
+2. **LLMs Hallucinate**
+   - Contextual grounding through external data reduces this
+
+3. **LLMs are Brittle**
+   - Prompt-only approaches don't scale or generalize
+
+### Industry Evidence (LangChain 2025 Report)
+
+- 57% of organizations have AI agents in production
+- 32% cite **quality** as top barrier
+- Most failures traced to **poor context management**, not LLM capabilities
+
+---
+
+## Context Engineering: Core Components
+
+### The Context Stack
+
+1. **System Instructions** - Role, constraints, output format
+2. **Retrieved Knowledge** - RAG, vector search results
+3. **Memory** - Conversation history, user preferences
+4. **Tool Definitions** - Available functions, API schemas
+5. **Examples** - Few-shot demonstrations
+6. **Current Task** - The actual user request
+
+### Key Principle: Context is a Resource
+
+- Treat context window like memory allocation
+- Every token has a cost (latency, accuracy, price)
+- Prioritize high-signal information
+- Dynamically adjust based on task
+
+---
+
+## Context Engineering Best Practices
+
+### Design Principles
+
+1. **Relevance Filtering**: Only include what's needed for the current step
+2. **Recency Weighting**: Recent context often more relevant
+3. **Compression**: Summarize long histories
+4. **Chunking**: Break large documents intelligently
+5. **Caching**: Reuse computed context where possible
+
+### Anti-Patterns to Avoid
+
+- Stuffing everything into context "just in case"
+- Static prompts that don't adapt to task
+- Ignoring token limits until truncation occurs
+- No separation between instruction and data
+
+---
+
+## Context Engineering Resources
+
+### Essential Reading
+
+- [Context Engineering: The Definitive 2025 Guide](https://www.flowhunt.io/blog/context-engineering/)
+- [Context Engineering Guide - Prompting Guide](https://www.promptingguide.ai/guides/context-engineering-guide)
+- [From Prompt Engineering to Context Engineering](https://www.ajeetraina.com/from-prompt-engineering-to-context-engineering/)
+- [Context Engineering: A Complete Guide 2026](https://codeconductor.ai/blog/context-engineering/)
+- [Context Engineering vs Prompt Engineering](https://dextralabs.com/blog/context-engineering-vs-prompt-engineering/)
+
+### Key Figures
+
+- **Tobi Lütke** (Shopify CEO): Popularized the term
+- **Andrej Karpathy**: "Delicate art and science" definition
+
+---
+
+# AI Writing Its Own Prompts
+
+## The DSPy Revolution
+
+### What is DSPy?
+
+- **Framework for programming—not prompting—language models** (Stanford NLP)
+- Abstracts prompts into modular Python code
+- **Automatically optimizes prompts** using ML techniques
+
+### The Core Idea
+
+Instead of:
+```python
+prompt = "You are a helpful assistant. Please summarize..."  # Manual trial & error
+```
+
+With DSPy:
+```python
+class Summarizer(dspy.Signature):
+    """Summarize the given text concisely."""
+    text = dspy.InputField()
+    summary = dspy.OutputField()
+
+# Optimizer finds the best prompt automatically!
+```
+
+---
+
+## How DSPy Optimization Works
+
+### The Process
+
+1. **Define Behavior Declaratively** - Use Signatures to specify input/output
+2. **Provide Training Examples** - Small set of examples with expected outputs
+3. **Define a Metric** - How to measure success
+4. **Run Optimizer** - AI automatically discovers optimal prompts
+
+### Key Optimizers
+
+| Optimizer | Approach |
+|-----------|----------|
+| **MIPROv2** | Bayesian optimization over instruction space |
+| **COPRO** | Coordinate ascent hill-climbing |
+| **SIMBA** | Self-reflective improvement from failures |
+| **GEPA** | Trajectory reflection and gap analysis |
+
+---
+
+## DSPy: Real Results
+
+### Automated Improvement
+
+- One optimizer raised evaluation from **51.9% to 63.0%** automatically
+- HotPot QA: **18.42% relative improvement** without manual prompt editing
+
+### Why This Matters
+
+- **Scales AI Development**: Automates the most time-consuming aspect
+- **Model Switching**: Change from GPT-4 to Llama = config change + re-optimize
+- **Reproducibility**: Systematic optimization vs. ad-hoc prompt tweaking
+
+### Resources
+
+- [DSPy Framework](https://dspy.ai/)
+- [GitHub: stanfordnlp/dspy](https://github.com/stanfordnlp/dspy)
+- [DSPy Tutorial 2025](https://www.pondhouse-data.com/blog/dspy-build-better-ai-systems-with-automated-prompt-optimization/)
+
+---
+
+## Modern Prompt Structures (2026)
+
+### Beyond Simple Instructions
+
+1. **XML-Tagged Sections** (Claude preferred)
+```xml
+<context>You are analyzing customer feedback</context>
+<instructions>Classify sentiment and extract key themes</instructions>
+<examples>...</examples>
+<input>{{user_input}}</input>
+```
+
+2. **Structured Output Enforcement**
+```
+Respond in JSON format:
+{"sentiment": "positive|negative|neutral", "themes": [...]}
+```
+
+3. **Chain-of-Thought Triggers**
+```
+Think step by step. Show your reasoning before the final answer.
+```
+
+---
+
+# Structured Outputs & Function Calling
+
+## The Shift to Structured Outputs (2025-2026)
+
+### Why Structured Outputs Matter
+
+- **Reliability**: Guarantees valid JSON/schema output every time
+- **Integration**: Direct parsing into application code
+- **Validation**: Schema enforcement prevents malformed responses
+- **Industry Adoption**: Every major API now supports this natively
+
+### The Problem with Unstructured Output
+
+```python
+# Old approach - brittle parsing
+response = llm("Extract name and email from: John at john@example.com")
+# Response: "The name is John and email is john@example.com"
+# Now you need regex or more LLM calls to parse this
+```
+
+---
+
+## Structured Outputs: Implementation
+
+### OpenAI JSON Mode
+
+```python
+from openai import OpenAI
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model="gpt-4o-2026-01-01",
+    response_format={"type": "json_object"},
+    messages=[
+        {"role": "system", "content": "Extract data as JSON with keys: name, email"},
+        {"role": "user", "content": "John Smith can be reached at john@example.com"}
+    ]
+)
+# Guaranteed valid JSON: {"name": "John Smith", "email": "john@example.com"}
+```
+
+### Anthropic Tool Use for Structured Output
+
+```python
+import anthropic
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1024,
+    tools=[{
+        "name": "extract_contact",
+        "description": "Extract contact information",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "email": {"type": "string", "format": "email"}
+            },
+            "required": ["name", "email"]
+        }
+    }],
+    tool_choice={"type": "tool", "name": "extract_contact"},
+    messages=[{"role": "user", "content": "Contact: John Smith, john@example.com"}]
+)
+```
+
+---
+
+## Function Calling: Connecting LLMs to Tools
+
+### What is Function Calling?
+
+- LLM decides **when** to call a function and **what arguments** to pass
+- You execute the function, return results to LLM
+- LLM incorporates results into response
+
+### Common Use Cases
+
+| Use Case | Function Example |
+|----------|------------------|
+| Database queries | `query_database(sql: str)` |
+| API calls | `get_weather(city: str)` |
+| Calculations | `calculate_mortgage(principal, rate, years)` |
+| File operations | `read_file(path: str)` |
+
+### Industry Reality
+
+- **80%+ of production AI apps** use function calling
+- Foundation for all AI agents and assistants
+- MCP (Model Context Protocol) builds on this pattern
+
+---
+
+## Function Calling: Amazon Bedrock Example
+
+### Tool Definition with Converse API
+
+```python
+import boto3
+import json
+
+bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+
+tools = [{
+    "toolSpec": {
+        "name": "get_stock_price",
+        "description": "Get current stock price for a ticker symbol",
+        "inputSchema": {
+            "json": {
+                "type": "object",
+                "properties": {
+                    "ticker": {"type": "string", "description": "Stock ticker symbol"}
+                },
+                "required": ["ticker"]
+            }
+        }
+    }
+}]
+
+response = bedrock.converse(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    messages=[{"role": "user", "content": [{"text": "What's Apple's stock price?"}]}],
+    toolConfig={"tools": tools}
+)
+# LLM returns: tool_use with {"ticker": "AAPL"}
+```
+
+---
+
+# Prompt Caching: Cost Optimization at Scale
+
+## The Economics of LLM Calls
+
+### Token Costs Add Up Fast
+
+| Model | Input (per 1M tokens) | Output (per 1M tokens) |
+|-------|----------------------|------------------------|
+| Claude Sonnet 4 | $3.00 | $15.00 |
+| GPT-4o | $2.50 | $10.00 |
+| Claude Opus 4 | $15.00 | $75.00 |
+
+### The Caching Opportunity
+
+- **System prompts** often 1000-5000 tokens
+- **Repeated across every request**
+- With 10,000 requests/day = massive waste
+
+---
+
+## Anthropic Prompt Caching
+
+### How It Works
+
+```python
+import anthropic
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "You are a customer service agent for Acme Corp...[long instructions]...",
+            "cache_control": {"type": "ephemeral"}  # Cache this block
+        }
+    ],
+    messages=[{"role": "user", "content": "How do I return an item?"}]
+)
+```
+
+### Cost Savings
+
+- **Cache write**: 25% more than base input price
+- **Cache read**: **90% discount** on cached tokens
+- **Break-even**: ~2 requests with same cached content
+- **TTL**: 5 minutes (ephemeral), extendable with activity
+
+---
+
+## Prompt Caching Strategies
+
+### What to Cache
+
+1. **System instructions** - Role definitions, rules, formatting
+2. **Few-shot examples** - Consistent across requests
+3. **Retrieved documents** - RAG results used multiple times
+4. **Tool definitions** - Same tools across conversations
+
+### Caching Architecture Pattern
+
+```
+┌─────────────────────────────────────────┐
+│  Cached (5000 tokens) - $0.30/M reads   │
+│  ┌─────────────────────────────────┐    │
+│  │ System prompt + Rules           │    │
+│  │ Few-shot examples               │    │
+│  │ Tool definitions                │    │
+│  └─────────────────────────────────┘    │
+├─────────────────────────────────────────┤
+│  Dynamic (500 tokens) - Full price      │
+│  ┌─────────────────────────────────┐    │
+│  │ User message                    │    │
+│  │ Conversation history            │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘
+```
+
+---
+
+# Evaluating and Testing Prompts
+
+## The Evaluation Gap
+
+### Why This Matters
+
+- **58% of AI teams** lack systematic prompt evaluation (2025 survey)
+- "Vibe checking" doesn't scale
+- Production failures often traced to untested prompt changes
+
+### What to Evaluate
+
+1. **Accuracy**: Does it produce correct outputs?
+2. **Consistency**: Same input → same output quality?
+3. **Edge cases**: How does it handle unusual inputs?
+4. **Safety**: Does it follow guardrails?
+5. **Cost**: Token usage within budget?
+
+---
+
+## Prompt Testing Frameworks
+
+### Unit Testing Prompts
+
+```python
+import pytest
+from your_llm_client import generate_response
+
+class TestSentimentPrompt:
+    """Test suite for sentiment classification prompt"""
+
+    def test_positive_sentiment(self):
+        result = generate_response("I absolutely love this product!")
+        assert result["sentiment"] == "positive"
+        assert result["confidence"] > 0.8
+
+    def test_negative_sentiment(self):
+        result = generate_response("This is the worst experience ever")
+        assert result["sentiment"] == "negative"
+
+    def test_neutral_edge_case(self):
+        result = generate_response("The product arrived on Tuesday")
+        assert result["sentiment"] == "neutral"
+
+    def test_empty_input_handling(self):
+        result = generate_response("")
+        assert "error" in result or result["sentiment"] == "unknown"
+```
+
+---
+
+## Evaluation Metrics and Tools
+
+### Key Metrics
+
+| Metric | What It Measures | When to Use |
+|--------|------------------|-------------|
+| **Exact Match** | Output == expected | Classification, extraction |
+| **F1 Score** | Precision + Recall | Multi-label tasks |
+| **BLEU/ROUGE** | Text similarity | Summarization, translation |
+| **LLM-as-Judge** | Quality rating by another LLM | Open-ended generation |
+| **Human Eval** | Expert assessment | Final validation |
+
+### Popular Tools (2026)
+
+- **Promptfoo**: Open-source prompt testing and evaluation
+- **LangSmith**: LangChain's evaluation platform
+- **Braintrust**: Continuous evaluation for AI products
+- **Humanloop**: Prompt management with built-in evals
+
+### Resources
+
+- [Promptfoo Documentation](https://www.promptfoo.dev/)
+- [Anthropic Evaluation Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/evaluation)
+
+---
+
+# Guardrails and Safety in Prompting
+
+## Why Guardrails Matter
+
+### The Risks
+
+- **Prompt injection**: Malicious inputs that hijack model behavior
+- **Jailbreaking**: Bypassing safety guidelines
+- **Data leakage**: Exposing sensitive information in outputs
+- **Harmful content**: Generating inappropriate or dangerous responses
+
+### Industry Reality
+
+- **Every production AI system needs guardrails**
+- Regulatory requirements increasing (EU AI Act, state laws)
+- Reputational risk from AI failures
+
+---
+
+## Input Guardrails
+
+### Techniques
+
+1. **Input Validation**
+```python
+def validate_input(user_input: str) -> bool:
+    # Length limits
+    if len(user_input) > 10000:
+        return False
+
+    # Known injection patterns
+    injection_patterns = ["ignore previous", "disregard instructions", "system:"]
+    if any(pattern in user_input.lower() for pattern in injection_patterns):
+        return False
+
+    return True
+```
+
+2. **Content Classification**
+```python
+# Use a classifier model to check input safety
+safety_check = classifier.predict(user_input)
+if safety_check["harmful_probability"] > 0.8:
+    return "I cannot process this request"
+```
+
+---
+
+## Output Guardrails
+
+### Techniques
+
+1. **Schema Validation**
+```python
+from pydantic import BaseModel, validator
+
+class SafeResponse(BaseModel):
+    answer: str
+
+    @validator('answer')
+    def no_pii(cls, v):
+        # Check for patterns like SSN, credit cards
+        if re.search(r'\d{3}-\d{2}-\d{4}', v):
+            raise ValueError("Response contains potential PII")
+        return v
+```
+
+2. **Amazon Bedrock Guardrails**
+```python
+response = bedrock.invoke_model(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    guardrailIdentifier="your-guardrail-id",
+    guardrailVersion="1",
+    body=json.dumps({"messages": messages})
+)
+```
+
+---
+
+## Defense in Depth: The Guardrail Stack
+
+### Layered Protection
+
+```
+┌─────────────────────────────────────────┐
+│  Layer 1: Input Validation              │
+│  - Length limits, format checks         │
+├─────────────────────────────────────────┤
+│  Layer 2: Content Moderation            │
+│  - Pre-flight safety classification     │
+├─────────────────────────────────────────┤
+│  Layer 3: System Prompt Hardening       │
+│  - Clear boundaries, role definitions   │
+├─────────────────────────────────────────┤
+│  Layer 4: Model-Level Safety            │
+│  - Built-in model guardrails            │
+├─────────────────────────────────────────┤
+│  Layer 5: Output Validation             │
+│  - Schema enforcement, PII detection    │
+├─────────────────────────────────────────┤
+│  Layer 6: Human Review                  │
+│  - High-stakes decisions flagged        │
+└─────────────────────────────────────────┘
+```
+
+---
+
+# Long Context Strategies
+
+## The Long Context Era (2026)
+
+### Available Context Windows
+
+| Model | Max Context | Effective Use |
+|-------|-------------|---------------|
+| Claude Opus 4 | 200K tokens | ~150K reliable |
+| Gemini 2.0 Pro | 2M tokens | ~1.5M reliable |
+| GPT-4o | 128K tokens | ~100K reliable |
+
+### The Challenge
+
+- **Having** long context ≠ **Using** it effectively
+- "Lost in the middle" phenomenon still exists
+- More context = more cost, more latency
+
+---
+
+## Long Context Best Practices
+
+### Strategies for Effective Use
+
+1. **Put Critical Information at Start and End**
+```
+<critical_instructions>
+[Most important rules here - model attends strongly]
+</critical_instructions>
+
+<context>
+[Supporting documents, examples, background]
+</context>
+
+<task>
+[Current request - model attends strongly]
+</task>
+```
+
+2. **Use Explicit Section Markers**
+```xml
+<document id="1" relevance="high">...</document>
+<document id="2" relevance="medium">...</document>
+```
+
+3. **Summarize When Possible**
+- Don't dump 50 pages when a 2-page summary suffices
+- Use hierarchical summarization for very long documents
+
+---
+
+## When to Use Long Context vs. RAG
+
+### Decision Framework
+
+| Factor | Long Context | RAG |
+|--------|--------------|-----|
+| **Document size** | < 100K tokens | > 100K tokens |
+| **Update frequency** | Static/rare updates | Frequent updates |
+| **Precision needed** | "Consider everything" | "Find the needle" |
+| **Cost sensitivity** | Lower volume | Higher volume |
+| **Latency requirements** | Flexible | Strict |
+
+### Hybrid Approach (Best of Both)
+
+1. **RAG for retrieval**: Find relevant chunks
+2. **Long context for reasoning**: Include full retrieved documents
+3. **Result**: Precise retrieval + comprehensive understanding
+
+---
+
+# Industry Case Studies
+
+## Case Study 1: Stripe - Agentic Commerce Suite
+
+### The Challenge
+- Enable AI agents to conduct commerce on behalf of users
+- Manage fragmented integrations across different AI platforms
+- Secure payment credential handling
+
+### The Solution (December 11, 2025)
+- **Single Integration**: Sell through multiple AI agents with one integration
+- **Shared Payment Tokens**: AI agents securely transmit buyer credentials to merchants
+- **Agentic Commerce Protocol (ACP)**: Open standard for AI-driven commerce
+
+### Adoption
+Major retailers: Coach, Kate Spade, URBN, Revolve, Ashley Furniture
+Platforms: Squarespace, Wix, Etsy, WooCommerce, BigCommerce
+
+Source: [Stripe Agentic Commerce Suite](https://stripe.com/newsroom/news/agentic-commerce-suite)
+
+---
+
+## Case Study 2: Notion 3.0 - AI Agents with Context Engineering
+
+### The Challenge
+- AI needs to understand user's entire workspace
+- Multi-step workflows requiring sustained context
+- Integration with external tools
+
+### The Solution (September 18, 2025)
+- **20+ minute multi-step actions** with state-of-the-art memory system
+- **AI Connectors**: Pull context from Slack, Google Drive, GitHub
+- **Custom Instructions Page**: Agent learns your work style and preferences
+- **MCP Partnerships**: Lovable, Perplexity, Mistral, HubSpot
+- **Built-in Models**: Claude Sonnet 4, GPT-5, Gemini 3 Pro (no extra fees)
+
+### Customer Quotes
+> "We can now instantly spin up ready-to-use systems that used to take hours..." - Ben Levick, Ramp
+
+> "It's like a coworker that's been around and has genuine context." - Harsha Yeddanupudy, Faire
+
+Source: [Notion 3.0: Agents](https://www.notion.com/releases/2025-09-18)
+
+---
+
+## Case Study 3: Cursor - Fastest Growing SaaS Company
+
+### The Numbers (2025)
+- **1M users**, 360,000+ paying customers (within 16 months)
+- **$500M ARR** (May 2025), up from $300M in April (~60% MoM growth)
+- **$2.6B valuation** (January 2025)
+- Fastest SaaS company from $1M to $500M ARR
+
+### Enterprise Adoption
+- 25% of Fortune 500 companies pilot or deploy Cursor
+- 40,000+ enterprise customers
+- Used by OpenAI, Shopify engineers
+
+### Productivity Impact
+- **126% productivity increase** reported by users
+- **40% faster debugging**
+- **25-35% reduction** in development time
+- 5x faster code completion than manual typing
+
+### Efficiency
+- Only **40-60 employees**
+- **$1.67M-$2.5M revenue per employee**
+
+Source: [Cursor Statistics 2025](https://devgraphiq.com/cursor-statistics/)
+
+---
+
+## Advanced Prompting Techniques (2026)
+
+### Self-Consistency
+
+- Generate multiple responses with temperature > 0
+- Take majority vote or aggregate answers
+- Reduces hallucination on reasoning tasks
+
+### Tree of Thoughts (ToT)
+
+- Explore multiple reasoning paths
+- Evaluate and prune branches
+- Backtrack when stuck
+
+### Reflection Prompting
+
+```
+First, provide your answer.
+Then, critically evaluate your answer for errors.
+Finally, provide your corrected final answer.
+```
+
+### Meta-Prompting
+
+- Use one LLM call to generate/improve prompts for another
+- "Write a prompt that would help an LLM solve this type of problem"
+
+---
+
+## The Future: Agentic Context Engineering
+
+### ACE (Agentic Context Engineering)
+
+- **Latest research direction** (2025-2026)
+- Context evolves like a "playbook" that self-updates
+- Models autonomously refine their prompts and memory
+
+### Key Trends
+
+1. **Dynamic Context**: Adapts in real-time based on task
+2. **Self-Improving Systems**: Learn from failures automatically
+3. **Multi-Agent Context Sharing**: Agents coordinate context
+4. **Context as Code**: Version-controlled, testable, reviewable
+
+### Industry Impact
+
+- Enterprise AI spending: **$37B in 2025** (up from $11.5B in 2024)
+- Organizations with robust context architectures see:
+  - 50% improvement in response times
+  - 40% higher quality outputs
+
+---
+
+## AI Coding Assistants: The Landscape
+
+- **Evolution**: From OpenAI Codex & GitHub Copilot (autocomplete) to autonomous agents.
+- **Models**: Powered by GPT-4o, Claude Sonnet 4, Claude Opus 4, Gemini 2.0 Pro.
+- **Main Categories**:
+  - **Plugin-based**: Extensions for existing IDEs (VS Code, JetBrains).
+  - **Agentic IDEs**: Standalone editors reimagined for AI collaboration.
+
+---
+
+## Category 1: Plugin-based Assistants
+
+- **Philosophy**: Enhance your existing environment (VS Code, IntelliJ, Terminal).
+- **Examples**:
+  - **GitHub Copilot**: The industry standard for autocomplete & chat.
+  - **Aider**: A CLI tool for pair programming; edits files directly via git.
+  - **Roo Code**: VS Code extension enabling autonomous task execution.
+  - **Claude Code**: Agentic CLI tool from Anthropic (often used alongside IDEs).
+
+---
+
+## Category 2: Agentic IDEs
+
+- **Philosophy**: Deeply integrated AI that "sees" the whole codebase and can drive the editor.
+- **Examples**:
+  - **Cursor**: A VS Code fork. Famous for "Composer" (multi-file edits) and "Tab" (prediction).
+  - **Windsurf**: By Codeium. Features "Cascade" flow and deep context awareness.
+  - **Antigravity**: Advanced agentic coding environment (Google).
+
+---
+
+## Comparative Analysis
+
+| Tool | Type | Key Strength | Link |
+|------|------|--------------|------|
+| **Cursor** | Agentic IDE | Best-in-class UI/UX, 'Composer' mode. | [cursor.com](https://cursor.com) |
+| **Windsurf** | Agentic IDE | Deep context 'Flow', 'Cascade' agent. | [codeium.com/windsurf](https://codeium.com/windsurf) |
+| **Antigravity** | Agentic IDE | Multi-agent orchestration, **free** for individuals. | [antigravity.google](https://antigravity.google) |
+| **Claude Code** | CLI / Plugin | Research-grade agentic capabilities. | [anthropic.com](https://anthropic.com) |
+| **Aider** | CLI Tool | Best for terminal users, git-aware. | [aider.chat](https://aider.chat) |
+| **Roo Code** | Plugin | Open-source, highly configurable agent. | [roocode.com](https://roocode.com) |
+
+---
+
+## Spotlight: Google Antigravity
+
+- **What is it?**: An agent-first IDE from Google DeepMind (announced Nov 2025).
+- **Pricing**: **Free** for individuals with a personal Gmail account (public preview).
+  - Access to Gemini 3 Pro/Flash, Claude Sonnet/Opus 4.5, GPT-OSS-120b.
+  - Unlimited tab completions and generous weekly rate limits.
+- **Key Differentiator**: Multi-agent orchestration via "Agent Manager".
+
+---
+
+## Antigravity: Core Capabilities
+
+- **Agent-First Paradigm**: AI agents autonomously plan, execute, validate, and iterate.
+- **Multi-Agent Orchestration**: Spawn multiple agent threads working in parallel (e.g., refactor + test).
+- **Comprehensive Interaction**: Agents control editor, terminal, and browser.
+- **Artifacts for Trust**: Produces rich markdown, diagrams, browser recordings, and diffs for human review.
+- **VS Code Fork**: Familiar interface with an agent sidebar.
+
+---
+
+## MCP Integration with AI Coding Assistants
+
+- **What is MCP?**: Model Context Protocol (Anthropic) — an open standard for connecting LLMs to external data and tools.
+- **Why it Matters**: Transforms AI from static knowledge to dynamic agents with real-time context.
+- **Supported Tools**:
+  - **Claude Code**: Native MCP support for databases, APIs, and custom tools.
+  - **Cursor**: Configure MCP servers in settings to connect to external systems.
+  - **Antigravity**: Integrates with Google Workspace, GitHub, Slack via MCP-like connectors.
+
+---
+
+## MCP Use Cases in Development
+
+- **Database Queries**: AI can directly query your Postgres/MySQL via MCP servers (e.g., **Supabase MCP**, **Firebase MCP**).
+- **API Integration**: Connect to REST APIs, Slack, Notion, or GitHub for richer context (**GitHub MCP**, **Notion MCP**).
+- **Documentation Access**: **Context7 MCP** provides up-to-date, version-specific docs for ~20,000 libraries (prevents hallucinations).
+- **Design-to-Code**: **Figma MCP** extracts design context and generates code from Figma files.
+- **Browser Automation**: **Playwright MCP** and **Chrome DevTools MCP** enable AI to control browsers for testing and debugging.
+- **Custom Tools**: Build your own MCP servers to expose proprietary data or internal tools.
+
+---
+
+## Example MCP Workflow
+
+- **Scenario**: Developer asks: "Find all users who signed up last week."
+- **Steps**:
+  1. Claude Code (via **Supabase MCP**) queries the database and returns results.
+  2. Developer: "Generate a CSV export."
+  3. Agent writes the script and executes it.
+- **Benefit**: No context switching between IDE, database UI, and documentation.
+
+---
+
+## Spotlight: Claude Code Architecture
+
+### The Complete Claude Code Stack (Boris Cherny)
+
+![Claude Code Architecture](img/claudeCode.png){width=85%}
+
+Source: [Boris Cherny on X](https://x.com/bcherny/status/2007179832300581177)
+
+---
+
+# Deep Dive: Claude Code Configuration
+
+## CLAUDE.md: The Project Brain
+
+### What is CLAUDE.md?
+
+- **Persistent context** that Claude automatically incorporates into every conversation
+- Solves the problem of repeatedly explaining the same context
+- Think of it as a configuration file for your AI pair programmer
+
+### File Hierarchy
+
+```
+~/.claude/CLAUDE.md              # Global (all projects)
+~/repos/org/CLAUDE.md            # Organization-wide
+~/repos/org/project/CLAUDE.md    # Project-specific (most common)
+~/repos/org/project/src/CLAUDE.md  # Subdirectory (additive)
+```
+
+**Key Insight**: Files are additive - subdirectory CLAUDE.md appends to parent, doesn't override.
+
+---
+
+## CLAUDE.md: What to Include
+
+### Essential Sections
+
+```markdown
+# Project Overview
+This is a FastAPI e-commerce backend with Stripe integration.
+
+# Tech Stack
+- Python 3.12, FastAPI, SQLAlchemy 2.0
+- PostgreSQL 15, Redis for caching
+- pytest for testing
+
+# Commands
+- Run tests: `uv run pytest`
+- Start dev server: `uv run uvicorn main:app --reload`
+- Lint: `uv run ruff check --fix . && uv run ruff format .`
+
+# Code Style
+- Use Pydantic for all data validation
+- Private functions start with underscore
+- One parameter per line in function signatures
+
+# Architecture Decisions
+- All database queries go through repository pattern
+- Use dependency injection for testability
+```
+
+---
+
+## CLAUDE.md: Best Practices
+
+### Do's
+
+1. **Keep it concise** - ~150-200 instructions max (frontier model limit)
+2. **Focus on the "how"** - Commands, patterns, conventions
+3. **Use `/init`** - Let Claude generate a starter, then refine
+4. **Update regularly** - Treat as living documentation
+
+### Don'ts
+
+1. **Don't auto-generate** - Manually craft for best results
+2. **Don't dump everything** - Use progressive disclosure
+3. **Don't include obvious things** - Claude already knows Python syntax
+
+### Pro Tip: Progressive Disclosure
+
+```markdown
+# For detailed API documentation, see: docs/api/README.md
+# For database schema details, see: docs/schema.md
+```
+
+Tell Claude **where** to find information, not all the information itself.
+
+---
+
+## Skills: Modular Expertise
+
+### What are Skills?
+
+- **Modular chunks** of CLAUDE.md that load only when needed
+- Follow the [Agent Skills open standard](https://agentskills.org/)
+- Can include scripts, templates, and supporting files
+
+### Skill Structure
+
+```
+.claude/skills/
+├── deploy/
+│   ├── SKILL.md           # Skill definition
+│   ├── deploy.sh          # Supporting script
+│   └── config.template    # Template file
+├── review-pr/
+│   └── SKILL.md
+└── database-migrate/
+    └── SKILL.md
+```
+
+### SKILL.md Example
+
+```markdown
+---
+invocation: explicit      # Only when user calls /deploy
+context: fork             # Run in isolated subagent
+agent: general-purpose    # Which agent to use
+---
+
+# Deploy to Production
+
+Follow these steps to deploy:
+1. Run tests: `uv run pytest`
+2. Build: `docker build -t app .`
+3. Push: `docker push registry/app`
+4. Deploy: `kubectl apply -f k8s/`
+```
+
+---
+
+## Skills: Invocation Modes
+
+### Three Ways Skills Activate
+
+| Mode | Frontmatter | Behavior |
+|------|-------------|----------|
+| **Explicit** | `invocation: explicit` | Only via `/skill-name` command |
+| **Automatic** | `invocation: automatic` | Claude loads when relevant |
+| **Implicit** | (default) | Available but not auto-loaded |
+
+### Custom Commands = Skills
+
+```
+.claude/commands/fix-issue.md  →  /project:fix-issue
+.claude/skills/fix-issue/SKILL.md  →  /fix-issue
+```
+
+Both create commands! Skills add: directories, frontmatter, subagent support.
+
+### Passing Arguments
+
+```bash
+/project:fix-github-issue 1234
+```
+
+In `fix-github-issue.md`:
+```markdown
+Fix GitHub issue #$1
+First, read the issue details...
+```
+
+---
+
+## Subagents: Isolated Workers
+
+### What are Subagents?
+
+- **Isolated Claude instances** with their own context window
+- Delegate entire tasks, get results back
+- Keep main conversation context clean
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Main Claude Session                                    │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │ Your conversation history + CLAUDE.md context     │  │
+│  └───────────────────────────────────────────────────┘  │
+│                         │                               │
+│            ┌────────────┴────────────┐                  │
+│            ▼                         ▼                  │
+│  ┌─────────────────┐      ┌─────────────────┐          │
+│  │ Subagent: Explore│      │ Subagent: Plan  │          │
+│  │ (Read-only)      │      │ (Architecture)  │          │
+│  │ Own context      │      │ Own context     │          │
+│  └────────┬─────────┘      └────────┬────────┘          │
+│           │                         │                   │
+│           └─────────┬───────────────┘                   │
+│                     ▼                                   │
+│           Results returned to main                      │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Subagents: Built-in Types
+
+### Available Subagents
+
+| Agent | Purpose | Tools Available |
+|-------|---------|-----------------|
+| **Explore** | Codebase exploration | Glob, Grep, Read (no Edit) |
+| **Plan** | Architecture design | All read tools, no write |
+| **general-purpose** | Full capabilities | All tools |
+| **Custom** | Your definition | Configurable |
+
+### Using Subagents in Skills
+
+```markdown
+---
+context: fork           # Creates isolated subagent
+agent: Explore          # Use Explore agent type
+---
+
+# Find Authentication Code
+Search the codebase for all authentication-related files.
+Look for: login, logout, JWT, session, auth middleware.
+```
+
+### Why Use Subagents?
+
+1. **Context efficiency** - Don't pollute main conversation
+2. **Parallel execution** - Multiple subagents can work simultaneously
+3. **Safety** - Explore agent can't modify files
+
+---
+
+## Hooks: Deterministic Automation
+
+### What are Hooks?
+
+- **Shell commands that trigger automatically** during Claude Code events
+- Programmable checkpoints for validation, formatting, integration
+- The "must-do" rules that complement CLAUDE.md "should-do" suggestions
+
+### Hook Lifecycle
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Claude Code Events                    │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  SessionStart ──► User types prompt                     │
+│       │                                                 │
+│       ▼                                                 │
+│  UserPromptSubmit ──► Claude processes                  │
+│       │                                                 │
+│       ▼                                                 │
+│  PreToolUse ──► [HOOK: Validate/Modify] ──► Tool runs  │
+│       │                                                 │
+│       ▼                                                 │
+│  PostToolUse ──► [HOOK: Format/Log] ──► Continue       │
+│       │                                                 │
+│       ▼                                                 │
+│  Notification ──► [HOOK: Alert user]                   │
+│       │                                                 │
+│       ▼                                                 │
+│  Stop ──► Agent completes response                     │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Hooks: Configuration
+
+### Hook Types and Exit Codes
+
+| Hook | When | Exit 0 | Exit 1 | Exit 2 |
+|------|------|--------|--------|--------|
+| **PreToolUse** | Before tool runs | Continue | Block + retry | Block + error |
+| **PostToolUse** | After tool completes | Continue | - | Show error |
+| **Notification** | On alerts | Continue | - | - |
+
+### Configuration in settings.json
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'About to modify: $TOOL_INPUT'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ruff format $FILE_PATH"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Hooks: Practical Examples
+
+### Auto-Format on Every Edit
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ $FILE_PATH == *.py ]]; then ruff format $FILE_PATH; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Block Dangerous Operations
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo $TOOL_INPUT | grep -q 'rm -rf'; then exit 1; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Slack Notification on Completion
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -X POST -d '{\"text\":\"Claude needs attention\"}' $SLACK_WEBHOOK"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Claude Code: Resources
+
+### Official Documentation
+
+- [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code)
+- [CLAUDE.md Guide](https://docs.anthropic.com/en/docs/claude-code/memory)
+- [Skills Reference](https://code.claude.com/docs/en/skills)
+- [Hooks Reference](https://code.claude.com/docs/en/hooks)
+
+### Community Resources
+
+- [Awesome Claude Code](https://github.com/hesreallyhim/awesome-claude-code) - Curated skills, hooks, plugins
+- [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices) - Official Anthropic guide
+- [The Complete Guide to CLAUDE.md](https://www.builder.io/blog/claude-md-guide)
+
+### Key Insight
+
+> "Hooks are huge and critical for steering Claude in a complex enterprise repo. They are the deterministic 'must-do' rules that complement the 'should-do' suggestions in CLAUDE.md."
+
+---
+
+## Spotlight: Google Antigravity
+
+### What is Antigravity?
+
+- **Agent-first IDE** from Google DeepMind (announced Nov 2025)
+- VS Code fork with deep AI integration
+- **Free for individuals** during public preview
+
+### Key Differentiators
+
+| Feature | Description |
+|---------|-------------|
+| **Multi-Agent Orchestration** | "Manager" view for parallel agent tasks |
+| **Artifacts** | Rich outputs (screenshots, diffs, recordings) for verification |
+| **Three Modes** | Agent-driven, Review-driven, Agent-assisted |
+| **Multi-Model** | Gemini 3, Claude Sonnet/Opus 4, GPT-OSS-120b |
+
+### Performance
+
+- **SWE-bench Verified**: 76.2% (1% behind Claude Sonnet 4.5)
+- **Terminal-Bench 2.0**: 54.2% (vs GPT-5.1's 47.6%)
+
+### Download
+
+- [antigravity.google](https://antigravity.google) - macOS, Windows, Linux
+
+---
+
+## Spotlight: AWS Kiro
+
+### What is Kiro?
+
+- **Agentic IDE + CLI** from AWS
+- Spec-driven development with agent hooks and "powers"
+- **Free tier available** - 500 bonus credits for new users
+
+### Kiro CLI Installation
+
+```bash
+# macOS (Homebrew)
+brew install --cask kiro-cli
+
+# Linux (one-liner)
+curl -fsSL https://kiro.dev/install.sh | sh
+
+# Verify installation
+kiro-cli --version
+```
+
+### Getting Started
+
+```bash
+# Login with AWS Builder ID, GitHub, or Google
+kiro-cli auth login
+
+# Start interactive chat
+kiro-cli chat
+
+# Select model (Auto recommended)
+# Options: Auto (1x), claude-sonnet-4.5 (1.3x), claude-haiku-4.5 (0.4x)
+```
+
+### Key Features
+
+- **Steering files** - Similar to CLAUDE.md
+- **MCP integration** - Connect external tools
+- **Powers** - Modular agent capabilities
+- **Works with Kiro IDE** - Shared configuration
+
+### Resources
+
+- [Kiro Downloads](https://kiro.dev/downloads/)
+- [Kiro CLI Docs](https://kiro.dev/cli/)
+- [Kiro FAQ](https://kiro.dev/faq/)
+
+---
+
+## Technique: Spec-Driven Development
+
+- **The Problem**: Vague prompts lead to hallucinated or poor code.
+- **The Fix**: **Plan First / Code Later**.
+- **Process**:
+  1. **Draft a Spec**: Create a markdown file describing requirements (API, Data Models).
+  2. **Human Review**: You review the design.
+  3. **Agent Reflection**: Ask the LLM: *"Review this spec for edge cases or security flaws."*
+  4. **Execute**: Only generate code once the plan is solid.
+
+---
+
+## Technique: Team Persona
+
+- **Concept**: Simulate a full engineering team.
+- **Prompting Strategy**:
+  - "Act as a **Product Manager**: Are requirements clear?"
+  - "Act as a **Frontend Engineer**: Is the UI UX-friendly?"
+  - "Act as a **Backend Engineer**: Is the DB schema normalized?"
+  - "Act as **Infra/SRE**: How do we deploy this?"
+- **Benefit**: Catch issues across different concerns before writing code.
+
+---
+
+## References and Further Reading
+
+---
+
+## References: Foundational Papers
+
+- Brown et al. (2020). "Language Models are Few-Shot Learners." [GPT-3 Paper](https://arxiv.org/pdf/2005.14165)
+- Wei et al. (2022). "Chain of Thought Prompting Elicits Reasoning in Large Language Models." [link](https://arxiv.org/pdf/2201.11903)
+- Min et al. (2022). "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?" [link](https://arxiv.org/pdf/2202.12837)
+- Touvron et al. (2023). "LLaMA: Open and Efficient Foundation Language Models." [link](https://arxiv.org/pdf/2302.13971)
+
+---
+
+## References: Context Engineering & DSPy
+
+### Context Engineering
+- [Context Engineering Guide - Prompting Guide](https://www.promptingguide.ai/guides/context-engineering-guide)
+- [From Prompt Engineering to Context Engineering](https://www.ajeetraina.com/from-prompt-engineering-to-context-engineering/)
+- [Context Engineering: A Complete Guide 2026](https://codeconductor.ai/blog/context-engineering/)
+
+### DSPy Framework
+- [DSPy Official Site](https://dspy.ai/)
+- [GitHub: stanfordnlp/dspy](https://github.com/stanfordnlp/dspy)
+- [DSPy Tutorial 2025](https://www.pondhouse-data.com/blog/dspy-build-better-ai-systems-with-automated-prompt-optimization/)
+
+---
+
+## References: Prompt Engineering by Model
+
+| Model Family | Official Prompt Engineering Guide |
+|--------------|-----------------------------------|
+| Amazon Nova | [docs.aws.amazon.com/nova](https://docs.aws.amazon.com/nova/latest/userguide/prompting.html) |
+| Anthropic Claude | [docs.anthropic.com](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/) |
+| Meta LLaMA | [llama.com/docs](https://www.llama.com/docs/how-to-guides/prompting/) |
+
+### Evaluation & Testing
+- [Promptfoo Documentation](https://www.promptfoo.dev/)
+- [Anthropic Evaluation Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/evaluation)
+
+---
+
+## References: AI Coding Assistants
+
+### Claude Code
+- [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code)
+- [CLAUDE.md Guide](https://docs.anthropic.com/en/docs/claude-code/memory)
+- [Skills Reference](https://code.claude.com/docs/en/skills)
+- [Hooks Reference](https://code.claude.com/docs/en/hooks)
+- [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
+- [The Complete Guide to CLAUDE.md](https://www.builder.io/blog/claude-md-guide)
+- [Awesome Claude Code](https://github.com/hesreallyhim/awesome-claude-code)
+
+### Other Tools
+- [Cursor](https://cursor.com) | [Cursor Statistics](https://devgraphiq.com/cursor-statistics/)
+- [AWS Kiro](https://kiro.dev/) | [Kiro CLI Docs](https://kiro.dev/cli/)
+- [Google Antigravity](https://antigravity.google)
+- [Aider](https://aider.chat)
+- [Roo Code](https://roocode.com)
+
+---
+
+## References: Industry Case Studies
+
+- [Stripe Agentic Commerce Suite](https://stripe.com/newsroom/news/agentic-commerce-suite) (Dec 2025)
+- [Notion 3.0: Agents](https://www.notion.com/releases/2025-09-18) (Sep 2025)
+- [Cursor Adoption Trends](https://opsera.ai/blog/cursor-ai-adoption-trends-real-data-from-the-fastest-growing-coding-tool/)
+
+### Code Samples
+- [Prompt Engineering Examples](https://github.com/NirDiamant/Prompt_Engineering/tree/main)
+
+

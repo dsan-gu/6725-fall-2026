@@ -1,0 +1,112 @@
+---
+title: "Week 8: Guardrails and Evaluation of Generative Models"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Responsible AI and Guardrails
+
+### Overview
+
+- **Why Guardrails?**: Ensuring safe and appropriate AI behavior
+- **Risk Mitigation**: Preventing harmful outputs
+- **Compliance**: Meeting regulatory requirements
+- **Trust Building**: User confidence in AI systems
+
+## Types of Guardrails
+
+### Content Safety
+
+- **Toxicity Detection**: Filtering harmful content
+- **PII Protection**: Preventing sensitive data leakage
+- **Bias Mitigation**: Reducing unfair outputs
+- **Prompt Injection Defense**: Security against adversarial inputs
+
+## Implementing Guardrails
+
+### Tools and Frameworks
+
+- **Amazon Bedrock Guardrails**: Cloud-based content filtering
+- **NVIDIA NeMo Guardrails**: Open-source guardrail framework
+- **LlamaGuard**: Meta's content safety model
+- **Custom Guardrails**: Building domain-specific filters
+
+## Data Security
+
+### Protecting Sensitive Information
+
+- **Input Sanitization**: Cleaning user inputs
+- **Output Filtering**: Removing sensitive data
+- **Access Controls**: Role-based permissions
+- **Audit Logging**: Tracking data access
+
+## Ethics and Bias
+
+### Ethical Considerations
+
+- **Fairness**: Ensuring equitable outcomes
+- **Transparency**: Explainable AI decisions
+- **Accountability**: Clear responsibility
+- **Privacy**: Protecting user data
+
+## Evaluation Frameworks
+
+### Why Evaluate?
+
+- **Quality Assurance**: Measuring model performance
+- **Continuous Improvement**: Tracking progress
+- **Comparison**: Selecting the best model
+- **Compliance**: Meeting requirements
+
+## Evaluation Metrics
+
+### Key Metrics
+
+- **Accuracy**: Correctness of outputs
+- **Relevance**: Answering the right question
+- **Consistency**: Reproducible results
+- **Safety**: Adherence to guardrails
+- **Latency**: Response time
+- **Cost**: Resource efficiency
+
+## Automated Evaluation
+
+### Tools and Techniques
+
+- **RAGAS**: RAG Assessment framework
+- **DeepEval**: LLM evaluation library
+- **TruLens**: Feedback and evaluation
+- **LangChain Evaluators**: Built-in evaluation tools
+
+## Human Evaluation
+
+### Best Practices
+
+- **Annotation Guidelines**: Clear criteria
+- **Inter-Annotator Agreement**: Consistency checks
+- **Continuous Feedback**: Iterative improvement
+- **Production Monitoring**: Real-world performance
+
+## Hands-on Lab
+
+### Implementing Guardrails and Evaluation
+
+*Practical exercise and demonstration*
+
+- Setting up Amazon Bedrock Guardrails
+- Implementing custom content filters
+- Creating evaluation pipelines
+- Measuring model performance
+
+---
+
+*Content placeholder - detailed guardrails and evaluation implementation coming soon*

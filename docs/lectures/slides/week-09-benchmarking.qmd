@@ -1,0 +1,207 @@
+---
+title: "Week 8: Foundation model benchmarking"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Introduction
+
+- **Foundation Models (FMs)**: Large-scale models trained on diverse datasets, enabling various applications.
+- **Benchmarking Need**:  
+  - Ensures models meet application-specific **performance**, **cost**, and **accuracy** requirements.  
+  - Enables **fair comparisons** across platforms and architectures.  
+
+---
+
+## Why Benchmarking Matters?
+
+1. **Cost vs. Performance Trade-offs**  
+   - Cloud inference costs scale with model size and usage.  
+   - Need to optimize instance type, model quantization, and batch processing.  
+
+2. **Latency & Throughput Considerations**  
+   - Real-time applications require low latency.  
+   - High-throughput systems must efficiently batch requests.  
+
+3. **Accuracy & Model Quality**  
+   - Evaluating FMs on task-specific datasets ensures reliability.  
+   - Comparing outputs across models helps in **fine-tuning** selection.  
+
+---
+
+---
+
+## Back to basics
+
+![](./img/fm_perf_bg.png)
+---
+
+
+## Key Benchmarking Tools
+
+| Tool       | Scope                          | Focus Areas |
+|------------|--------------------------------|-------------|
+| **NVIDIA MLPerf** | **Training & Inference** benchmarks across ML tasks | Standardized for GPUs, CPUs, AI accelerators |
+| **Ray LLMPerf**   | **LLM-Specific Load Testing** | Measures scalability, latency, and output correctness |
+| **FMBench**       | **Foundation Model Benchmarking on AWS** | Supports cost, latency, throughput, and LLM-based evaluations |
+
+---
+
+## **NVIDIA MLPerf**
+
+- **Industry Standard**:  
+  - Developed by MLCommons, supported by NVIDIA and other hardware vendors.  
+  - Benchmarks AI **training and inference performance** across **GPUs, TPUs, CPUs**.  
+
+- **Key Benchmarks**:  
+  - **MLPerf Training**: Measures time to reach a certain accuracy on various tasks.  
+  - **MLPerf Inference**: Tests inference latency and throughput.  
+  - **Edge MLPerf**: Evaluates AI model efficiency on edge devices.  
+
+- **Why it Matters?**  
+  - Useful for comparing AI accelerators like **NVIDIA A100 vs. H100**.  
+  - Helps in hardware selection for cloud and on-premise deployments.  
+
+---
+
+## **Ray LLMPerf**
+
+- **Purpose**:  
+  - Specifically designed for benchmarking **Large Language Models (LLMs)**.  
+  - Provides **scalability testing** with **distributed inference**.  
+
+- **Key Features**:  
+  - **Load Testing**: Simulates concurrent user requests to evaluate response time.  
+  - **Correctness Testing**: Ensures model outputs align with expected results.  
+  - **Multi-Node Benchmarking**: Useful for **distributed LLM inference**.  
+
+- **Why It Matters?**  
+  - Helps **fine-tune inference strategies** in cloud environments.  
+  - Optimizes serving LLMs in high-traffic applications.  
+
+---
+
+## **FMBench: Foundation Model Benchmarking on AWS**
+
+- **Designed for benchmarking models deployed on AWS**:
+  - Supports **SageMaker, Bedrock, EKS, and EC2**.  
+  - Works with **open-source, proprietary, and third-party models**.  
+
+- **Key Capabilities**:
+  1. **Performance Metrics**  
+     - Measures **latency, throughput, and cost** per request.  
+  2. **LLM-Based Evaluation**  
+     - Uses a **panel of LLM judges** to assess response quality.  
+  3. **Custom Dataset Support**  
+     - Allows bringing your own dataset for benchmarking.  
+  4. **Flexible Serving**  
+     - Supports multiple model hosting and inference setups.  
+
+---
+
+## **FMBench: Model Evaluation with LLM Judges**
+
+- **Why LLM Judges?**  
+  - Automates response quality evaluation.  
+  - Reduces need for manual human annotations.  
+
+- **How It Works?**  
+  - A panel of **pre-selected LLMs** reviews model outputs.  
+  - Scores responses based on **relevance, correctness, coherence**.  
+
+- **Example Use Case**:  
+  - Comparing **Mistral-7B** vs. **Claude-3 Sonnet** on summarization tasks.  
+
+---
+
+## **FMBench: Bring Your Own Dataset (BYOD)**
+
+- **Support for Custom Datasets**:
+  - Upload **domain-specific** datasets (e.g., legal, medical, finance).  
+  - Run model evaluations on **real-world** or **simulated** tasks.  
+
+- **Use Cases**:
+  - Evaluating **retrieval-augmented generation (RAG)** models.  
+  - Benchmarking **multimodal (text + image) models**.  
+
+---
+
+## **FMBench: Flexible Serving Options**
+
+- **Supports Multiple Deployment Options**:
+  1. **Amazon SageMaker**  
+     - Fully managed, optimized for **scalable inference**.  
+  2. **AWS Bedrock**  
+     - Serverless, with access to **multiple foundation models**.  
+  3. **Amazon EKS**  
+     - Kubernetes-based hosting for **custom AI workloads**.  
+  4. **EC2 & Custom Inference Containers**  
+     - Deploy models with **custom dependencies**.  
+
+- **Why It Matters?**  
+  - Ensures benchmarking results reflect **real-world serving environments**.  
+
+---
+
+## **Comparing MLPerf, LLMPerf, and FMBench**
+
+![](./img/benchmarking_tools.png)
+
+---
+
+## **Case Study: Benchmarking Llama2-13B on AWS SageMaker**
+
+- **Objective**:  
+  - Evaluate Llama2-13B performance on **different instance types** using **Q&A tasks**.  
+
+- **Methodology**:  
+  - Used **LongBench dataset** (3000-3840 tokens per request).  
+  - Measured:  
+    - **Latency per request**  
+    - **Throughput (requests/min)**  
+    - **Cost per 1M tokens**  
+
+- **Findings**:  
+  - **Higher-end instances** (e.g., `ml.g5.12xlarge`) had lower latency.  
+  - **Inference costs varied significantly** across instances.  
+
+---
+
+---
+
+## **How to get started with FMBench**
+
+![](./img/fmbench.png)
+
+---
+
+## **Conclusion**
+
+- **Benchmarking FMs is Essential**  
+  - Ensures **cost-effective**, **high-performance**, and **accurate** deployments.  
+
+- **FMBench Offers a Holistic Solution**  
+  - Provides **LLM-based evaluation**, **custom dataset support**, and **multi-platform deployment**.  
+  - Ideal for benchmarking models **in real-world AWS environments**.  
+
+- **Future Directions**  
+  - Expanding benchmarks to **multimodal AI**.  
+  - Fine-tuning models based on **benchmark insights**.  
+
+---
+
+## **References**
+- [Netflix talk on FMBench at re:Invent 2024](https://www.youtube.com/watch?v=zUjWhiRrp0Y)
+- [FMBench GitHub Repository](https://github.com/aws-samples/foundation-model-benchmarking-tool)  
+- [NVIDIA MLPerf](https://developer.nvidia.com/mlperf)  
+- [Ray LLMPerf](https://github.com/ray-project/llmperf)  
+- [AWS Blog on Benchmarking Amazon Nova and GPT-4o](https://aws.amazon.com/blogs/machine-learning/)  

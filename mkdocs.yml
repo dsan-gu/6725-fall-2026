@@ -1,0 +1,107 @@
+site_name: Applied Generative AI for developers
+site_url: https://example.com/course
+repo_url: https://github.com/dsan-gu/6725-spring-2026
+repo_name: DAN6725 Spring 2026
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  logo: assets/images/logo.png
+  favicon: assets/images/favicon.png
+
+plugins:
+  - search
+  - tags
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - mkdocs-revealjs
+
+use_directory_urls: false  # This helps with path resolution
+extra:
+  static_folder: assets
+
+# RevealJS specific configuration
+mkdocs-revealjs:
+  theme: white  # or any other reveal.js theme
+  transition: slide
+  enable_chalkboard: true  # optional
+  enable_menu: true  # optional
+  enable_spotlight: true  # optional
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Syllabus: syllabus.md
+  - Schedule: schedule.md
+  - Materials:
+    - Lectures:
+      - Overview: lectures/index.md
+      - Week 1: lectures/week1.md
+      - Week 2: lectures/week2.md
+      - Week 3: lectures/week3.md
+      - Week 4: lectures/week4.md
+      - Week 5: lectures/week5.md
+      - Week 6: lectures/week6.md
+      - Week 7: lectures/week7.md
+      - Week 8: lectures/week8.md
+      - Week 9: lectures/week9.md
+      - Week 10: lectures/week10.md
+      - Week 11: lectures/week11.md
+    - Labs:
+      - Overview: labs/index.md
+      - Lab 1: labs/lab1.md
+      - Lab 2: labs/lab2.md
+      - Lab 3: labs/lab3.md
+    - Project:
+      - Overview: project/index.md
+      - Guidelines: project/guidelines.md
+      - Rubric: project/rubric.md
+  - Resources: resources.md
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/aarora79
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/aarora79
+
+copyright: Copyright &copy; 2026 Amit Arora

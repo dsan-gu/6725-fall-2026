@@ -1,0 +1,597 @@
+---
+title: "Week 5: Agentic AI - Part 1"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agentic AI {.center}
+
+From tool-using LLMs to autonomous AI systems
+
+> "I think AI agent workflows will drive massive AI progress this year -- perhaps even more than the next generation of foundation models." -- Andrew Ng, 2024
+
+---
+
+## What is Agentic AI?
+
+- **Agentic AI**: An autonomous AI system that can act independently to achieve pre-determined goals
+- The term **"agentic"** emphasizes **agency** -- the capacity for independent, goal-driven action
+- Unlike traditional AI that requires step-by-step guidance, agentic systems are **proactive** and perform complex tasks with minimal human oversight
+
+> Source: [AWS -- What is Agentic AI?](https://aws.amazon.com/what-is/agentic-ai/)
+
+---
+
+## Four Characteristics of Agentic AI
+
+| Characteristic | Description |
+|----------------|-------------|
+| **Proactive** | Anticipates needs, identifies patterns, takes initiative before issues escalate |
+| **Adaptable** | Adjusts actions based on real-time input and domain-specific context |
+| **Collaborative** | Works alongside humans and other AI agents, accepts human oversight |
+| **Specialized** | Multiple hyperspecialized agents, each focused on narrow expertise areas |
+
+> Source: [AWS -- What is Agentic AI?](https://aws.amazon.com/what-is/agentic-ai/)
+
+---
+
+## Agentic AI Infrastructure Primitives {.center}
+
+The building blocks for creating, deploying, and operating AI agents
+
+---
+
+## Amazon Bedrock AgentCore Primitives
+
+Amazon Bedrock AgentCore provides the foundational infrastructure for building agents at scale:
+
+| Primitive | Purpose |
+|-----------|---------|
+| **Runtime** | Serverless agent deployment with session isolation |
+| **Gateway** | Converts APIs and Lambda functions into agent-compatible tools |
+| **Memory** | Maintains context across interactions |
+| **Identity** | Secure access management and authentication |
+| **Observability** | CloudWatch-powered monitoring, latency, token usage |
+| **Policy** | Real-time enforcement of agent action boundaries |
+| **Code Interpreter** | Execute code for programmatic tasks and visualizations |
+
+> Source: [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
+
+---
+
+## Why These Primitives Matter
+
+- **Tool Use**: Agents need to call external APIs, databases, and services
+- **Memory**: Context must persist across turns and sessions
+- **Identity**: Agents act on behalf of users and need proper credentials
+- **Observability**: You must monitor agent behavior, costs, and errors
+- **Guardrails/Policy**: Agents need boundaries to prevent harmful or unintended actions
+- **Runtime**: Agents need infrastructure that can handle long-running, stateful sessions
+
+These primitives apply regardless of which agent framework you choose.
+
+---
+
+## The Progression to Agents
+
+![Progression to agents](https://miro.medium.com/v2/resize:fit:1100/format:webp/0*5dWPE7IUOXB2f6ap.png)
+
+Source: [MongoDB](https://www.mongodb.com/pt-br/library/resources/ai-agents)
+
+---
+
+## From Prompting to Agents
+
+1. **Simple Prompting**: Send a question, get an answer (no external data)
+2. **In-Context Learning**: Provide examples in the prompt for better responses
+3. **RAG**: Retrieve relevant documents to augment the prompt
+4. **Tool Use**: LLM can call functions to interact with external systems
+5. **Agents**: LLM autonomously decides which tools to use, in what order, and iterates until the task is complete
+
+Each step builds on the previous -- agents represent the most capable pattern.
+
+---
+
+## Anthropic's Definition of Agents {.center}
+
+"LLMs using tools based on environmental feedback in a loop"
+
+---
+
+## The Augmented LLM
+
+The foundation of any agentic system is the **augmented LLM** -- an LLM enhanced with:
+
+- **Retrieval**: Generating search queries and pulling relevant information
+- **Tools**: Selecting and invoking appropriate functions
+- **Memory**: Determining what information to retain across interactions
+
+> "Our current models can actively use these capabilities -- generating their own search queries, selecting appropriate tools, and determining what information to retain."
+
+Source: [Anthropic -- Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)
+
+---
+
+## Workflows vs. Agents
+
+Anthropic distinguishes between two types of agentic systems:
+
+### Workflows
+- LLMs and tools orchestrated through **predefined code paths**
+- Developer defines the sequence of steps
+- Offer **predictability and consistency**
+
+### Agents
+- LLMs **dynamically direct their own processes** and tool usage
+- The model decides the sequence of steps at runtime
+- Suited for **open-ended problems** where the number of steps is unpredictable
+
+> **Key insight**: "Start simple. Many patterns can be implemented in a few lines of code."
+
+---
+
+## When to Use Agents vs. Workflows
+
+- Use **workflows** when tasks are well-defined and predictable
+- Use **agents** when "it's difficult or impossible to predict the required number of steps, and where you can't hardcode a fixed path"
+- **Start with the simplest solution** -- add agentic complexity only when needed
+- A direct LLM API call is often sufficient before reaching for a framework
+
+Source: [Anthropic -- Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)
+
+---
+
+## The Agentic Loop
+
+At its core, an agent is an LLM running in a loop:
+
+```
+while not task_complete:
+    1. Observe: Receive input or environmental feedback
+    2. Think:  Reason about the current state and goal
+    3. Act:    Select and invoke a tool (or respond)
+    4. Reflect: Evaluate the result
+```
+
+This is why Anthropic defines an agent as **"tool use in a loop"** -- the LLM keeps iterating until it determines the task is complete.
+
+---
+
+## AWS Four-Stage Agentic AI Pathway {.center}
+
+Perceive, Reason, Act, Learn
+
+---
+
+## Perceive and Reason
+
+### Perceive
+- Agents collect **real-time data** from diverse sources via APIs, services, and applications
+- Process structured, semi-structured, and unstructured data
+- Determine **relevance** of information to current tasks
+
+### Reason
+- LLMs interpret context and develop **action plans**
+- Employ **semantic reasoning** and error handling
+- Leverage long-term memory for consistency
+- Adapt plans using new information received during execution
+
+---
+
+## Act and Learn
+
+### Act
+- Execute actions via plugins and integrations with external software
+- Perform subtasks **sequentially** -- from API calls to code execution
+- **Human-in-the-loop** verification can gate certain actions for safety
+
+### Learn
+- Reinforcement learning techniques refine actions based on task success
+- Systems learn from autonomous feedback, LLMs, or human input
+- Track metrics like latency, confidence, and success rates for continuous improvement
+
+> Source: [AWS -- What is Agentic AI?](https://aws.amazon.com/what-is/agentic-ai/)
+
+---
+
+## Agentic Design Patterns {.center}
+
+Five workflow patterns from Anthropic's "Building Effective Agents"
+
+---
+
+## Pattern 1: Prompt Chaining
+
+- **What**: Decompose a task into a **sequence of LLM calls**, where each step processes the output of the previous one
+- **How**: Add **programmatic validation gates** between steps to check quality before proceeding
+- **When to use**: Tasks that can be cleanly decomposed into fixed subtasks
+- **Example**: Generate a document outline, then write each section, then edit for consistency
+
+```
+[LLM Call 1] → Gate → [LLM Call 2] → Gate → [LLM Call 3]
+```
+
+---
+
+## Pattern 2: Routing
+
+- **What**: **Classify** an input and direct it to a specialized downstream handler
+- **How**: An LLM (or classifier) examines the input and selects the appropriate path
+- **When to use**: Complex tasks where different categories need fundamentally different approaches
+- **Example**: Customer support -- route billing questions to finance, technical issues to engineering, general inquiries to FAQ
+
+```
+                    ┌→ [Handler A]
+[Classifier LLM] → ├→ [Handler B]
+                    └→ [Handler C]
+```
+
+---
+
+## Pattern 3: Parallelization
+
+Two variants of running LLM calls simultaneously:
+
+### Sectioning
+- Split a task into **independent subtasks** that run in parallel
+- Example: Analyze sentiment, extract entities, and summarize -- all at once
+
+### Voting
+- Run the **same task multiple times** for higher confidence
+- Aggregate results (majority vote, best-of-N)
+- Example: Code review from three independent LLM passes
+
+```
+         ┌→ [LLM Call A] →┐
+Input →  ├→ [LLM Call B] →├→ Aggregate
+         └→ [LLM Call C] →┘
+```
+
+---
+
+## Pattern 4: Orchestrator-Workers
+
+- **What**: A central **orchestrator LLM** dynamically breaks down tasks and delegates to **worker LLMs**
+- **How**: The orchestrator analyzes the input, creates a plan, assigns subtasks to workers, and synthesizes results
+- **When to use**: Complex tasks where subtasks cannot be predicted in advance
+- **Example**: A coding agent that plans a feature, delegates file edits to workers, then reviews the result
+
+```
+                   ┌→ [Worker A] →┐
+[Orchestrator] →   ├→ [Worker B] →├→ [Synthesizer]
+                   └→ [Worker C] →┘
+```
+
+---
+
+## Pattern 5: Evaluator-Optimizer
+
+- **What**: One LLM **generates** a response, another LLM **evaluates** and provides feedback in a loop
+- **How**: The generator improves its output based on evaluator feedback until quality criteria are met
+- **When to use**: Tasks with clear evaluation criteria where iterative refinement adds value
+- **Example**: Code generation where an evaluator checks for bugs and style, and the generator refines
+
+```
+[Generator] → [Evaluator] → feedback → [Generator] → ... → Done
+```
+
+---
+
+## Choosing the Right Pattern
+
+| Pattern | Predictability | Complexity | Best For |
+|---------|---------------|------------|----------|
+| **Prompt Chaining** | High | Low | Sequential, well-defined tasks |
+| **Routing** | High | Low | Multi-category classification |
+| **Parallelization** | High | Medium | Independent subtasks or consensus |
+| **Orchestrator-Workers** | Medium | High | Dynamic task decomposition |
+| **Evaluator-Optimizer** | Medium | High | Quality-critical iterative tasks |
+| **Full Agent** | Low | Highest | Open-ended, unpredictable tasks |
+
+> Start simple and move to more complex patterns only when needed.
+
+---
+
+## Agentic RAG {.center}
+
+When retrieval becomes an agent capability, not just a pipeline step
+
+---
+
+## What is Agentic RAG?
+
+**Traditional RAG**: A fixed pipeline -- query → retrieve → generate
+
+**Agentic RAG**: The agent **decides** when and how to retrieve information
+
+Key differences:
+
+- **Query Routing**: Agent selects the right data source for each query
+- **Query Reformulation**: Agent rewrites queries for better retrieval
+- **Self-Reflection**: Agent evaluates retrieved results and decides if they are sufficient
+- **Iterative Retrieval**: Agent performs multiple rounds of retrieval, refining each time
+- **Tool-Augmented Retrieval**: Agent combines retrieval with other tools (calculators, APIs, code execution)
+
+---
+
+## Agentic RAG Patterns
+
+### Adaptive Retrieval
+- Agent decides **whether retrieval is needed** at all (some queries can be answered from LLM knowledge)
+
+### Multi-Source Routing
+- Agent selects from **multiple knowledge bases** (vector DB, SQL database, web search, APIs)
+
+### Iterative Refinement
+- Agent retrieves → evaluates quality → reformulates query → retrieves again
+- Continues until the answer meets quality threshold
+
+### Corrective RAG (CRAG)
+- Agent grades retrieved documents for relevance
+- Triggers web search or alternative sources when retrieval quality is low
+
+---
+
+## Agentic RAG vs. Traditional RAG
+
+| Aspect | Traditional RAG | Agentic RAG |
+|--------|----------------|-------------|
+| **Retrieval** | Fixed pipeline, always retrieves | Agent decides when to retrieve |
+| **Query** | User query passed as-is | Agent reformulates for better results |
+| **Sources** | Single knowledge base | Multiple sources, dynamically selected |
+| **Evaluation** | No self-assessment | Agent evaluates result quality |
+| **Iteration** | Single pass | Multiple rounds until satisfied |
+| **Tools** | Retrieval only | Retrieval + code execution + APIs |
+
+---
+
+## Agent Frameworks Landscape {.center}
+
+Open-source frameworks and managed services for building agents (2025-2026)
+
+---
+
+## Agent Frameworks Overview
+
+The agent framework ecosystem has matured significantly:
+
+| Framework | Provider | Key Approach | License |
+|-----------|----------|--------------|---------|
+| **LangGraph** | LangChain | Graph-based state machines | MIT |
+| **Strands Agents** | AWS | Model-driven, minimal code | Apache 2.0 |
+| **Claude Agent SDK** | Anthropic | Built on Claude Code | MIT |
+| **Agents SDK** | OpenAI | Minimal primitives, handoffs | MIT |
+| **Agent Development Kit** | Google | Code-first, Gemini-optimized | Apache 2.0 |
+| **Bedrock AgentCore** | AWS | Managed infrastructure | Managed service |
+
+---
+
+## LangGraph
+
+**Graph-based agent orchestration** from LangChain
+
+- Agents defined as **state machines** with nodes (computation) and edges (transitions)
+- **Explicit state management** throughout execution -- deterministic, traceable
+- **Human-in-the-loop**: Built-in statefulness for review and approval workflows
+- **Memory**: Conversation histories persist across sessions
+- **Streaming**: Token-by-token output with intermediate step visualization
+- Supports single-agent, multi-agent, hierarchical, and sequential architectures
+
+```python
+from langgraph.graph import StateGraph
+
+graph = StateGraph(AgentState)
+graph.add_node("agent", call_model)
+graph.add_node("tools", tool_node)
+graph.add_edge("agent", "tools")
+```
+
+> Source: [LangGraph](https://www.langchain.com/langgraph)
+
+---
+
+## AWS Strands Agents SDK
+
+**Model-driven agents in a few lines of code**
+
+- Open-source framework by AWS -- "a model-driven approach to building AI agents"
+- **Model-agnostic**: Supports Amazon Bedrock, Anthropic, OpenAI, Gemini, Ollama, and more
+- **Native MCP support**: Integrate any MCP server as agent tools
+- **Multi-agent primitives**: Built-in handoffs, swarms, and graph workflows
+- Deploys to Bedrock AgentCore, Lambda, EKS, Fargate, and more
+
+```python
+from strands import Agent, tool
+
+@tool
+def word_count(text: str) -> int:
+    """Count words in text."""
+    return len(text.split())
+
+agent = Agent(tools=[word_count])
+agent("How many words are in this sentence?")
+```
+
+> Source: [Strands Agents](https://strandsagents.com/)
+
+---
+
+## Claude Agent SDK
+
+**Build agents with Claude Code** from Anthropic
+
+- Official SDK for building agents powered by Claude
+- Two APIs: `query()` for simple async calls, `ClaudeSDKClient` for interactive sessions
+- **Custom tools via SDK MCP servers** -- define Python functions as tools without separate processes
+- **Hooks system** for programmatic control over agent actions (approve, deny, modify)
+- Built-in tools: Read, Write, Bash, and more
+
+```python
+from claude_agent_sdk import query
+import anyio
+
+async def main():
+    async for message in query(prompt="What is 2 + 2?"):
+        print(message)
+
+anyio.run(main)
+```
+
+> Source: [Claude Agent SDK](https://github.com/anthropics/claude-code-sdk-python)
+
+---
+
+## OpenAI Agents SDK
+
+**Minimal primitives, maximum flexibility**
+
+- Production-ready evolution of OpenAI's experimental "Swarm" project
+- Intentionally minimal design: **Agents**, **Handoffs**, and **Guardrails**
+- **Agent loop**: Built-in tool invocation loop with environmental feedback
+- **Handoffs**: Agents delegate to specialized agents seamlessly
+- **Guardrails**: Parallel validation of inputs and outputs
+- Built-in MCP support, sessions for persistent memory, and tracing for debugging
+
+```python
+from agents import Agent, Runner
+
+agent = Agent(
+    name="assistant",
+    instructions="You are a helpful assistant.",
+)
+result = Runner.run_sync(agent, "Write a haiku about recursion.")
+print(result.final_output)
+```
+
+> Source: [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
+
+---
+
+## Google Agent Development Kit (ADK)
+
+**Code-first Python framework** for sophisticated AI agents
+
+- Optimized for Gemini but **model-agnostic** and **deployment-agnostic**
+- **Multi-agent systems**: Define sub-agents with coordinator/child relationships
+- **Agent-to-Agent (A2A) protocol**: Standard for remote agent communication
+- Rich tool ecosystem: MCP tools, OpenAPI specs, custom functions
+- Built-in development UI for testing, evaluation, and debugging
+
+```python
+from google.adk.agents import Agent
+from google.adk.tools import google_search
+
+root_agent = Agent(
+    name="search_assistant",
+    model="gemini-2.5-flash",
+    instruction="Answer questions using Google Search when needed.",
+    tools=[google_search]
+)
+```
+
+> Source: [Google ADK](https://github.com/google/adk-python)
+
+---
+
+## Amazon Bedrock AgentCore
+
+**Managed infrastructure** -- not a framework, but the platform underneath
+
+- **Build**: Persistent memory, secure tool connectivity, code interpreter, secure browser runtime
+- **Deploy**: Serverless with session isolation, workloads up to 8 hours, identity provider integration
+- **Monitor**: CloudWatch dashboards for token usage, latency, error rates, quality evaluation
+
+### Works with any framework
+- Strands Agents, LangGraph, CrewAI, or custom code
+- You build the agent logic; AgentCore handles the infrastructure
+
+> Source: [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
+
+---
+
+## Multi-Agent Orchestration {.center}
+
+When one agent is not enough
+
+---
+
+## Modern Multi-Agent Architectures
+
+The industry uses two primary multi-agent structures:
+
+### Horizontal Architecture
+- Multiple agents with **equal technical proficiency**
+- Each specializes narrowly and collaborates **laterally**
+- Example: Research agent + coding agent + review agent working as peers
+
+### Vertical Architecture
+- **Hierarchical** structure with orchestrator and worker agents
+- Higher-level agents handle reasoning and decision-making
+- Lower-level agents manage data collection and task execution
+- Example: Supervisor agent delegates to specialized sub-agents
+
+> Detailed multi-agent patterns, memory, and state sharing covered in **Week 6**.
+
+---
+
+## Agent-to-Agent (A2A) Protocol
+
+- **Open protocol** for communication between opaque agentic applications
+- Originally contributed by Google, now hosted by the **Linux Foundation**
+- **Complementary to MCP**: MCP connects agents to tools and resources; A2A connects agents to other agents
+- Agents collaborate **without sharing internal memory, proprietary logic, or tool implementations**
+- SDKs available in Python, Go, JavaScript, Java, and .NET
+- Supported by Google ADK, Strands Agents, and other frameworks
+
+> Source: [A2A Protocol](https://github.com/a2aproject/A2A)
+
+---
+
+## Summary
+
+- **Agentic AI** = autonomous AI systems with agency (proactive, adaptable, collaborative, specialized)
+- **Agent primitives**: Tool use, memory, identity, observability, guardrails, runtime
+- **Anthropic's definition**: An agent is "LLMs using tools based on environmental feedback in a loop"
+- **Workflows vs. Agents**: Use workflows for predictable tasks, agents for open-ended problems
+- **Five design patterns**: Prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer
+- **Agentic RAG**: Agent-driven retrieval with query routing, self-reflection, and iterative refinement
+- **Frameworks**: LangGraph, Strands Agents, Claude Agent SDK, OpenAI Agents SDK, Google ADK, Bedrock AgentCore
+- **Multi-agent**: Horizontal (peer) and vertical (hierarchical) architectures; A2A protocol for cross-agent communication
+
+---
+
+## References
+
+**Definitions and Concepts:**
+
+- [AWS -- What is Agentic AI?](https://aws.amazon.com/what-is/agentic-ai/)
+- [Anthropic -- Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)
+
+**Agent Frameworks:**
+
+- [LangGraph](https://www.langchain.com/langgraph)
+- [AWS Strands Agents SDK](https://strandsagents.com/)
+- [Claude Agent SDK](https://github.com/anthropics/claude-code-sdk-python)
+- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
+- [Google Agent Development Kit (ADK)](https://github.com/google/adk-python)
+- [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
+
+**Protocols and Standards:**
+
+- [Agent-to-Agent (A2A) Protocol](https://github.com/a2aproject/A2A)
+- [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
+
+**Additional Resources:**
+
+- [Andrew Ng -- Agentic Design Patterns](https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/)
+- [MongoDB -- AI Agents Overview](https://www.mongodb.com/pt-br/library/resources/ai-agents)
+- [AWS -- Multi-Agent Collaboration on Amazon Bedrock](https://aws.amazon.com/blogs/machine-learning/unlocking-complex-problem-solving-with-multi-agent-collaboration-on-amazon-bedrock/)

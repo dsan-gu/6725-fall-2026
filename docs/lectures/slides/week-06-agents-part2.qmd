@@ -1,0 +1,151 @@
+---
+title: "Week 6: Agent Memory, State Sharing, and Multi-Agent Collaboration"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Overview
+
+- Understanding **memory** in agentic AI
+- Sharing **state** between tools
+- **Multi-agent collaboration** patterns
+- Practical applications and examples
+
+---
+
+## Agent Memory with `langmem`
+
+### Why Use Memory?
+
+- Maintain **context** across interactions
+- Store **conversation history** for personalized responses
+- Reduce **redundant API calls** by caching relevant information
+
+### Types of Memory
+
+- **Short-term memory:** Stores temporary information during execution
+- **Long-term memory:** Persists data across multiple sessions
+- **Ephemeral memory:** Exists only during a single agent’s lifetime
+
+### Example: Memory in Customer Support Chatbot
+
+- Tracks user issues
+- Remembers user preferences (e.g., preferred troubleshooting methods)
+- Offers recommendations based on past interactions
+
+---
+
+## Sharing State Between Tools
+
+### When to Use State Sharing
+
+- When multiple tools need **access to shared knowledge**
+- When avoiding redundant **reprocessing of the same data**
+- When agents/tools are handling **different stages of a pipeline**
+
+### Techniques for State Sharing
+
+- Using a **centralized state manager** (e.g., Redis, database)
+- Passing **shared context** via function parameters
+- Leveraging **embedding stores** for dynamic knowledge retrieval
+
+### Example: State Sharing in an AI Research Assistant
+
+- Tool 1: Web search for papers
+- Tool 2: Summarization agent
+- Tool 3: Citation formatter
+- **Shared state ensures context persistence** across these tools
+
+---
+
+## Multi-Agent Systems
+
+### Overview
+
+- **Definition:** Systems where multiple agents collaborate to achieve complex tasks.
+- **Benefits:** Divide-and-conquer approach enhances efficiency and specialization.
+
+---
+
+## Architectures
+
+### 1. **Multi-Agent Network**
+
+- **Structure:** Agents represented as graph nodes, each capable of communicating with others.
+- **Functionality:** Agents execute tasks and decide on subsequent actions or handoffs.
+- **Example:** Specialized agents for web search, summarization, and citation formatting collaborating in a research assistant application.
+
+---
+
+### 2. **Agent Supervisor Model**
+
+- **Structure:** An LLM-based supervisor orchestrates and delegates tasks to individual agents.
+- **Functionality:** The supervisor assigns tasks based on agent specialization and monitors progress.
+- **Example:** In a customer support system, the supervisor routes technical queries to a tech support agent and billing issues to a finance agent.
+
+---
+
+### 3. **Hierarchical Agent Teams**
+
+- **Structure:** Nested teams of agents with defined roles and tools.
+- **Functionality:** Teams operate at different levels, with higher-level agents coordinating lower-level agents.
+- **Example:** In content creation, a high-level agent oversees drafting, editing, and publishing agents to streamline workflow.
+
+---
+
+## Practical Examples
+
+### Where to Use Memory
+
+- **Chatbots & virtual assistants**
+- **Personalized AI tutors**
+- **Task automation with evolving context**
+
+### Where to Use State Sharing
+
+- **Complex AI pipelines** (e.g., research assistants, legal AI, financial analysis)
+- **Multi-tool AI workflows** (e.g., LangChain + external APIs)
+
+### Examples of Multi-Agent Collaboration
+
+- **Customer service AI:** One agent handles FAQs, another escalates to human support.
+- **AI-driven content generation:** One agent drafts, another reviews, a third refines.
+- **Healthcare AI:** Diagnostic agents collaborating with recommendation agents.
+
+---
+
+## Code samples
+
+1. https://github.com/virattt/ai-hedge-fund
+1. https://github.com/aws-samples/multi-agent-code-gen-and-execution/tree/main
+
+---
+
+## References
+
+- LangChain documentation: [https://python.langchain.com](https://python.langchain.com)
+- `langmem` GitHub repository: [https://github.com/langchain/langmem](https://github.com/langchain/langmem)
+- LangGraph Multi-Agent Systems Tutorial: [https://langchain-ai.github.io/langgraph/tutorials/#multi-agent-systems](https://langchain-ai.github.io/langgraph/tutorials/#multi-agent-systems)
+
+---
+
+## The Future of Multi-Agent Systems with Generative AI
+
+Increased Autonomy and Adaptability: Future multi-agent systems will feature agents capable of independent decision-making in dynamic environments, such as self-driving cars and smart cities. This trend is driven by advancements in AI technologies like generative AI, which enhance adaptability and real-time response capabilities13.
+
+Integration with Large Language Models (LLMs): The integration of LLMs with multi-agent systems is a significant trend. LLMs enable agents to perform natural language processing tasks, improving communication and collaboration among agents. This integration is crucial for applications like AI chatbots and complex decision-making processes27.
+
+Enhanced Creativity and Problem-Solving: Multi-agent generative systems (MAGS) leverage generative models to enhance creativity and problem-solving capabilities. These systems can dynamically generate new strategies and solutions, making them suitable for industries like manufacturing and supply chain management2.
+
+Improved Human-Agent Collaboration: Future systems will focus on seamless human-agent interaction, including collaborative decision-making on complex issues. This involves developing agents with emotional intelligence that can understand and respond to human emotions effectively9.
+
+Cross-Domain Applications: Multi-agent systems will increasingly be applied across industries, sharing knowledge and skills to address global challenges. This includes applications in healthcare, finance, and urban planning, where MAS can optimize resource allocation and improve outcomes59.

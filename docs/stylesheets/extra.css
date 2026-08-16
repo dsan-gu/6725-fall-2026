@@ -1,0 +1,65 @@
+/* Custom styles for the course website */
+
+/* Logo sizing */
+.md-header__button.md-logo img {
+    height: 2rem;
+}
+
+/* Custom hero section for landing page */
+.hero {
+    margin: 2rem 0;
+    padding: 3rem 0;
+    text-align: center;
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+}
+
+.hero h1 {
+    margin-bottom: 1rem;
+    color: var(--md-primary-bg-color);
+}
+
+/* Grid layout for course info */
+.course-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.info-card {
+    padding: 1.5rem;
+    border-radius: 4px;
+    background: var(--md-code-bg-color);
+}
+
+/* Schedule table styling */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 0.75rem;
+    border: 1px solid var(--md-typeset-table-color);
+}
+
+.schedule-table th {
+    background: var(--md-code-bg-color);
+}
+
+/* Announcement boxes */
+.announcement {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-left: 4px solid var(--md-primary-fg-color);
+    background: var(--md-code-bg-color);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 76.1875em) {
+    .course-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,102 @@
+---
+title: "Week 7: Gen AI App Best Practices and Observability"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Production-Ready GenAI Applications
+
+### Overview
+
+- **From Prototype to Production**: Key considerations
+- **Scalability**: Handling increased load
+- **Reliability**: Ensuring consistent performance
+- **Cost Management**: Optimizing resource usage
+
+## Best Practices for GenAI Apps
+
+### Architecture Patterns
+
+- **Modular Design**: Separation of concerns
+- **Caching Strategies**: Reducing API calls and costs
+- **Error Handling**: Graceful degradation
+- **Rate Limiting**: Managing API quotas
+
+## Observability Fundamentals
+
+### What is Observability?
+
+- **Definition**: Understanding system behavior through outputs
+- **Three Pillars**:
+  - Metrics: Quantitative measurements
+  - Logs: Detailed event records
+  - Traces: Request flow tracking
+
+## Monitoring GenAI Applications
+
+### Key Metrics
+
+- **Latency**: Response time tracking
+- **Token Usage**: Cost and performance monitoring
+- **Error Rates**: Failure tracking
+- **User Satisfaction**: Quality metrics
+
+## Logging Best Practices
+
+### Structured Logging
+
+- **JSON Logging**: Machine-readable logs
+- **Context Enrichment**: Adding metadata
+- **Log Levels**: Appropriate use of DEBUG, INFO, WARN, ERROR
+- **Sensitive Data**: PII and secret handling
+
+## Distributed Tracing
+
+### Understanding Request Flows
+
+- **Trace Context**: Following requests across services
+- **Span Analysis**: Breaking down latency
+- **Bottleneck Identification**: Performance optimization
+
+## Evaluation and Monitoring Tools
+
+### Popular Tools
+
+- **OpenTelemetry**: Standard for observability
+- **Langfuse**: LLM application monitoring
+- **Weights & Biases**: Experiment tracking
+- **Arize AI**: ML observability platform
+- **Phoenix**: LLM evaluation and tracing
+
+## Continuous Evaluation
+
+### Production Monitoring
+
+- **Online Evaluation**: Real-time quality assessment
+- **A/B Testing**: Comparing model versions
+- **Feedback Loops**: Learning from production
+- **Alerting**: Automated issue detection
+
+## Hands-on Lab
+
+### Implementing Observability
+
+*Practical exercise and demonstration*
+
+- Setting up observability tools
+- Instrumenting GenAI applications
+- Creating dashboards and alerts
+- Analyzing production traces
+
+---
+
+*Content placeholder - detailed observability implementation coming soon*

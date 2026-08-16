@@ -1,0 +1,239 @@
+---
+title: "Applied Generative AI"
+subtitle: "Week 11: Generative AI Platforms - Architecture, Components, and Implementation"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda
+
+- Why Do We Need Generative AI Platforms?
+- Key Components of a GenAI Platform
+- Reference Architectures
+- Real-World Examples
+- Implementation Considerations
+- Future Trends
+
+## Why Do We Need Generative AI Platforms?
+
+::: {.incremental}
+- **Complexity Management**: LLMs require specialized infrastructure and workflows
+- **Resource Optimization**: Efficient utilization of compute resources
+- **Governance & Security**: Control access, usage, and ensure compliance
+- **Scalability**: Handle variable workloads across the organization
+- **Standardization**: Create consistent development patterns
+- **Cost Control**: Manage and monitor cloud resource usage
+:::
+
+## The Challenge Without a Platform
+
+Individual implementations lead to:
+
+::: {.incremental}
+- Duplicated infrastructure
+- Inconsistent security practices
+- Lack of reusable components
+- No centralized monitoring
+- Variable user experiences
+- Higher overall costs
+- Knowledge silos
+:::
+
+## Key Components of a GenAI Platform {.smaller}
+
+::: {.incremental}
+1. **Model Management Layer**
+2. **Data Processing & Orchestration**
+3. **Development Environments**
+4. **Security & Governance**
+5. **Monitoring & Observability**
+6. **User Interfaces & APIs**
+7. **Infrastructure Management**
+:::
+
+## Model Management Layer {.smaller}
+
+::: {.incremental}
+- **Model Repository**: Version-controlled storage for models
+- **Model Registry**: Metadata, lineage, and deployment tracking
+- **Model Serving**: Scalable inference endpoints
+- **Model Evaluation**: Benchmarking and quality assessment
+- **Model Selection**: Optimal model routing based on task requirements
+- **Multi-model Orchestration**: Managing chains of models working together
+:::
+
+## Data Processing & Orchestration {.smaller}
+
+::: {.incremental}
+- **Vector Databases**: For retrieval-augmented generation (RAG)
+- **Data Connectors**: Integration with enterprise data sources
+- **ETL Pipelines**: Data preparation and transformation
+- **Caching Layer**: Response caching for efficiency
+- **Workflow Management**: Orchestrating complex LLM pipelines
+- **Prompt Management**: Version control and optimization for prompts
+:::
+
+## Development Environments {.smaller}
+
+::: {.incremental}
+- **SDKs & Libraries**: Language-specific toolkits
+- **Notebooks**: Interactive development environments
+- **IDE Integrations**: Code completion, testing tools
+- **Templates & Patterns**: Reusable architectural patterns
+- **CI/CD Pipelines**: Automated testing and deployment
+- **Debugging Tools**: LLM-specific debugging capabilities
+:::
+
+## Security & Governance {.smaller}
+
+::: {.incremental}
+- **Authentication & Authorization**: Role-based access control
+- **PII Detection & Redaction**: Protecting sensitive information
+- **Prompt Injection Protection**: Defending against attacks
+- **Input/Output Filtering**: Content moderation and safety
+- **Audit Logging**: Tracking all interactions
+- **Compliance Frameworks**: Industry-specific regulatory compliance
+:::
+
+## Monitoring & Observability {.smaller}
+
+::: {.incremental}
+- **Performance Metrics**: Latency, throughput, availability
+- **Cost Tracking**: Per-model, per-endpoint, per-application
+- **Quality Monitoring**: Accuracy, relevance, hallucination rates
+- **Usage Analytics**: User patterns and common use cases
+- **Drift Detection**: Identifying model degradation
+- **Alerting Systems**: Proactive notification of issues
+:::
+
+## User Interfaces & APIs {.smaller}
+
+::: {.incremental}
+- **API Gateway**: Unified API access with rate limiting
+- **Web Interfaces**: For non-technical users
+- **CLI Tools**: For developers and operations
+- **Custom UX Components**: Specialized interfaces for different use cases
+- **Integration Points**: Connections to existing enterprise systems
+- **SDK Extensions**: Custom connectors for business applications
+:::
+
+## Infrastructure Management {.smaller}
+
+::: {.incremental}
+- **Compute Resources**: GPU provisioning
+- **Auto-scaling**: Adjusting resources based on demand
+- **High Availability**: Redundancy and failover
+- **Network Optimization**: Low-latency data transfer
+- **Storage Management**: Efficient data access patterns
+- **Cost Optimization**: Right-sizing and resource scheduling
+:::
+
+
+## Reference Architecture: Enterprise GenAI Platform {.smaller}
+
+```{mermaid}
+flowchart TB
+    subgraph "Foundation"
+      A[Compute Infrastructure] 
+      B[Storage & Databases]
+      C[Networking]
+      D[Identity & Access]
+    end
+    
+    subgraph "Model Management"
+      E[Model Registry]
+      F[Model Serving]
+      G[Model Monitoring]
+    end
+    
+    subgraph "Data Management"
+      H[Data Connectors]
+      I[Vector Stores]
+      J[Knowledge Bases]
+    end
+    
+    subgraph "Development Layer"
+      K[SDKs & Libraries]
+      L[Workflow Orchestration]
+      M[Testing Framework]
+    end
+    
+    subgraph "Application Layer"
+      N[API Gateway]
+      O[Web Applications]
+      P[Chat Interfaces]
+      Q[Document Processing]
+    end
+    
+    subgraph "Governance"
+      R[Security Controls]
+      S[Audit & Compliance]
+      T[Cost Management]
+    end
+    
+    A --> E
+    E --> K
+    K --> N
+    H --> I
+    I --> K
+    R --> all
+```
+
+
+## Real-World Example: Intuit GenOS {.smaller}
+
+[Medium blog: Intui GenOS](https://medium.com/intuit-engineering/how-to-accelerate-development-velocity-in-the-genai-era-build-a-genos-e71ac2e17b82)
+![GenOS Architecture](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*VIKtfUQRHBb_BlXo3ZpK6g.png){width=75%}
+
+## Real-World Example: Scale.com Gen AI platform {.smaller}
+
+[Scale GenAI platform](https://scale.com/genai-platform)
+![Scale GenAI platform](https://scale.com/_next/image?url=https%3A%2F%2Fsite-assets.plasmic.app%2Fe45822d60c657617bf2c7211c0973655.png&w=1920&q=75){width=75%}
+
+## Real-World Example: Scale.com Gen AI platform {.smaller}
+
+[Scale GenAI platform](https://scale.com/genai-platform)
+![Scale GenAI platform](https://scale.com/_next/image?url=https%3A%2F%2Fsite-assets.plasmic.app%2Fe45822d60c657617bf2c7211c0973655.png&w=1920&q=75){width=75%}
+
+## Real-World Example: DataStax Gen AI platform {.smaller}
+
+[DataStax GenAI platform](https://www.datastax.com/products/ai-platform-as-a-service-paas?)
+![DataStax GenAI platform](https://cdn.sanity.io/images/bbnkhnhl/production/de33ad1b68461392ae5ee26d4d5f42b04dde5f7c-1992x1202.png?w=3840&q=75&fit=clip&auto=format){width=75%}
+
+## Real-World Example: AiBrix {.smaller}
+
+[AiBrix paper](https://github.com/vllm-project/aibrix/blob/main/docs/paper/AIBrix_White_Paper_0219_2026.pdf)
+![AiBrix](img/aibrix.png){width=75%}
+
+
+
+## Implementation Considerations {.smaller}
+
+::: {.incremental}
+- **Buy vs. Build**: Leveraging managed services vs. custom infrastructure
+- **Centralized vs. Federated**: Organization-wide vs. team-specific platforms
+- **On-prem vs. Cloud**: Data sovereignty and security requirements
+- **Open vs. Closed Source**: Model availability and customization needs
+- **Specialized vs. General Purpose**: Domain-specific optimization
+- **Cost vs. Performance**: Balancing budget and capabilities
+:::
+
+
+## Key Takeaways {.smaller}
+
+::: {.incremental}
+1. GenAI platforms must balance innovation with governance
+2. Modular architecture enables flexibility and evolution
+3. Integration with existing enterprise systems is critical
+4. Security and compliance must be built in from the start
+5. Observability is essential for maintaining quality and trust
+6. Cost management becomes increasingly important at scale
+:::

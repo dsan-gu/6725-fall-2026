@@ -1,0 +1,479 @@
+---
+title: "Week 1: Introduction to Generative AI and Coding Assistants"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Course Welcome
+
+- **Course Title**: Applied Generative AI for AI Developers
+- **Week 1 Focus**: Generative AI Landscape and AI-Powered Coding Tools
+- **Key Objectives**:
+  - Understand the breadth of generative AI technologies
+  - Explore core generative model architectures
+  - Introduction to AI coding assistants
+  - Gain insights into practical applications
+
+## Course Structure
+
+### Key Components
+
+- **Syllabus**: Course policies, grading, schedule
+- **Weekly Lectures**: Slides and recordings
+- **Labs**: Hands-on exercises with GenAI tools
+- **Assignments**: Individual coding assignments
+- **Quizzes**: 6 quizzes throughout the semester
+- **Capstone Project**: Team-based GenAI application
+
+### Important Resources
+
+- [Course Repository](https://github.com/dsan-gu/6725-spring-2026)
+- [Bookmarks Repo](https://github.com/gu-dsan6725/bookmarks) - Curated GenAI links and resources
+
+## Capstone Project Overview
+
+### Project Guidelines
+
+- **Team Size**: 2-4 students per team
+- **Multiple teams can work on the same project idea**
+- Maintain a running list of project ideas throughout the semester
+- Project proposal due mid-semester
+- Final presentation and deliverable at end of semester
+
+### Deliverables
+
+1. Project proposal with problem statement
+2. Mid-project checkpoint
+3. Final presentation
+4. Code repository with documentation
+5. Written report
+
+## Project Ideas
+
+### Potential Areas to Explore
+
+- **Memory MCP Server for Coding Assistants**
+  - Persistent memory layer for AI coding tools
+  - Context retention across sessions
+
+- **Semantic Layer for Data**
+  - Natural language interface to databases
+  - Business logic abstraction for LLMs
+
+- **Agent Evaluations Framework**
+  - Benchmarking multi-step agent tasks
+  - Measuring tool use and reasoning
+
+- **Log File Analysis with GenAI**
+  - Automated anomaly detection
+  - Natural language log queries
+
+- **RAG-based Documentation Assistant**
+  - Domain-specific knowledge retrieval
+  - Multi-document synthesis
+
+## What is Generative AI?
+
+- **Definition**: AI systems that can create new content
+
+>Generative AI can be thought of as a machine-learning model that is trained to create new data, rather than making a prediction about a specific dataset. A generative AI system is one that learns to generate more objects that look like the data it was trained on.
+
+_Source: https://news.mit.edu/2023/explained-generative-ai-1109_
+
+## What is Generative AI (contd.)?
+
+- **Core Characteristics**:
+  - Learning from existing data
+  - Generating novel, contextually relevant outputs
+  - Spanning multiple modalities (text, image, code, audio)
+
+## Generative Model Landscape: Key Generative Model Architectures
+
+1. **Language Models**
+   - GPT (Generative Pre-trained Transformer)
+   - BERT (Bidirectional Encoder Representations)
+
+2. **Image Generation Models**
+   - DALL-E
+   - Stable Diffusion
+   - Midjourney
+
+3. **Multimodal Models**
+   - Amazon Nova (Pro, Lite, Micro)
+   - Anthropic Claude (3.5 Sonnet, Opus 4)
+   - Meta Llama 3.3 and Llama 4
+   - Google Gemini 2.0
+   - OpenAI GPT-4o and o1
+   - Mistral Large
+
+# Transformer Architecture - Fundamental Concepts
+
+## NLP prior to embeddings and transformers
+
+- **Pre-Embedding NLP Representations: Bag of Words**
+  - Discrete, non-contextual representation of text
+  - Treats documents as unordered collections of words
+  - Loses semantic meaning and word order
+  - High dimensionality with sparse vectors
+  - No understanding of word relationships
+
+
+## Origins of Modern Embeddings
+  - Word2Vec paper [Paper](Efficient Estimation of Word Representations in Vector Space), [Explainer video for word embeddings](https://www.youtube.com/watch?v=wgfSDrqYMJ4)
+  - Breakthrough in sequence-to-sequence learning
+  - Replaced previous RNN and LSTM architectures
+  - Enabled dense, contextual word representations
+  - Captured semantic relationships between words
+
+## Core Components of Transformer Architecture
+
+1. Introduced in "Attention Is All You Need" (Google, 2017). [Paper](https://arxiv.org/abs/1706.03762), [Explainer video](https://www.youtube.com/watch?v=iDulhoQ2pro) and also [this video](https://www.youtube.com/watch?v=5MaWmXwxFNQ)
+
+1. **MUST READ**: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+1. **Interactive Tool**: [Transformer Explainer](https://poloclub.github.io/transformer-explainer/) - Visual, interactive exploration of transformer architecture 
+1. Key Building Blocks
+
+    1. **Self-Attention Mechanism**
+       - Allows model to weigh importance of different parts of input
+       - Captures contextual relationships dynamically
+       - Enables parallel processing of entire sequences
+
+    1. **Positional Encoding**
+       - Adds location information to input embeddings
+       - Crucial for understanding sequence order
+       - Enables models to understand context beyond word positioning
+
+## Detailed Self-Attention Mechanism
+
+### How Self-Attention Works
+
+- **Key Components**:
+  - Query (Q)
+  - Key (K)
+  - Value (V)
+
+- **Attention Calculation**:
+  1. Generate Q, K, V matrices
+  2. Compute attention scores
+  3. Apply softmax
+  4. Create weighted representation
+
+## Deep Dive: Query, Key, Value (QKV) Matrices
+
+### Understanding QKV in Self-Attention
+
+- **Query (Q)**: "What am I looking for?"
+  - Represents the current token's search for relevant context
+  - Generated by multiplying input with learned weight matrix Wq
+
+- **Key (K)**: "What do I contain?"
+  - Represents what information each token offers
+  - Used to compute compatibility scores with queries
+
+- **Value (V)**: "What should I contribute?"
+  - The actual content that gets passed forward
+  - Weighted by attention scores
+
+### Resources:
+- [Transformer Explainer - Interactive Visualization](https://poloclub.github.io/transformer-explainer/)
+- [Understanding Q,K,V in Transformer](https://medium.com/analytics-vidhya/understanding-q-k-v-in-transformer-self-attention-9a5eddaa5960)
+- [The Q, K, V Matrices Explained](https://arpitbhayani.me/blogs/qkv-matrices/)
+
+## QKV: The Attention Calculation
+
+### Step-by-Step Process
+
+1. **Create QKV vectors**: Input embeddings multiplied by Wq, Wk, Wv matrices
+2. **Compute attention scores**: $Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V$
+3. **Scale by sqrt(d_k)**: Prevents dot products from growing too large
+4. **Apply softmax**: Convert scores to probabilities
+5. **Multiply by V**: Get weighted combination of values
+
+### Multi-Head Attention
+- Split Q, K, V into multiple "heads" (e.g., 12 in GPT-2)
+- Each head learns different relationship patterns
+- Results concatenated and projected back
+
+## Flash Attention: IO-Aware Attention
+
+### The Problem with Standard Attention
+
+- Standard attention requires O(N^2) memory for attention matrix
+- Heavy memory reads/writes between GPU HBM and SRAM
+- Memory bandwidth becomes the bottleneck, not compute
+
+### Flash Attention Solution (Tri Dao, 2022)
+
+- **Key Insight**: Make attention IO-aware
+- **Technique**: Tiling - compute attention in blocks
+- **Result**: Reduce HBM reads/writes by orders of magnitude
+- **Bonus**: Exact computation (no approximation)
+
+### Resources:
+- [FlashAttention Paper](https://arxiv.org/abs/2205.14135)
+- [FlashAttention-2 Paper](https://arxiv.org/abs/2307.08691)
+- [Tri Dao's FlashAttention-3 Blog](https://tridao.me/blog/2024/flash3/)
+
+## Flash Attention Evolution
+
+### Version History
+
+| Version | Year | Key Innovation | Speedup |
+|---------|------|----------------|---------|
+| Flash Attention | 2022 | IO-aware tiling | 2-4x |
+| Flash Attention 2 | 2023 | Better parallelism, work partitioning | 2x over FA1 |
+| Flash Attention 3 | 2024 | Async ops, FP8 support (Hopper GPUs) | 1.5-2x over FA2 |
+| Flash Attention 4 | 2025 | Blackwell SM optimization | ~20% over FA3 |
+
+### Impact on LLM Development
+- Enabled context length explosion: 2K -> 128K -> 1M tokens
+- Now standard in most LLM training and inference systems
+- [GitHub: Dao-AILab/flash-attention](https://github.com/Dao-AILab/flash-attention)
+
+## PagedAttention and vLLM
+
+### The KV Cache Memory Problem
+
+- During inference, KV cache stores computed keys/values
+- Each request needs large, dynamically growing memory
+- Traditional systems: 60-80% memory wasted due to fragmentation
+- Limits batch size and throughput
+
+### PagedAttention Solution (vLLM, 2023)
+
+- Inspired by OS virtual memory and paging
+- Divide KV cache into fixed-size **blocks** (like memory pages)
+- Use **block tables** to map logical to physical blocks
+- Blocks can be non-contiguous in GPU memory
+
+### Resources:
+- [PagedAttention Paper](https://arxiv.org/abs/2309.06180)
+- [vLLM Paged Attention Docs](https://docs.vllm.ai/en/stable/design/paged_attention/)
+- [Red Hat: How PagedAttention Resolves Memory Waste](https://developers.redhat.com/articles/2025/07/24/how-pagedattention-resolves-memory-waste-llm-systems)
+
+## PagedAttention: How It Works
+
+### Virtual Memory for KV Cache
+
+```
+Traditional: [Request 1 KV Cache         ][Wasted][Request 2 KV Cache    ][Wasted]
+PagedAttention: [Block][Block][Block][Block][Block][Block][Block][Block]
+                  R1     R1     R2     R1     R2     R2     R1     R2
+```
+
+### Key Benefits
+- **Near-zero waste**: Under 4% memory waste vs 60-80% traditional
+- **Flexible sharing**: KV cache can be shared across requests
+- **Dynamic allocation**: Blocks allocated/freed as needed
+- **Result**: 2-4x throughput improvement, up to 24x vs HuggingFace
+
+## Continuous Batching for LLM Inference
+
+### The Static Batching Problem
+
+- Traditional batching: Wait for ALL sequences to finish
+- LLM outputs have variable lengths
+- Short sequences wait for long ones -> GPU underutilization
+
+### Continuous Batching Solution
+
+- Operate at **token level**, not sequence level
+- Completed sequences immediately replaced with new requests
+- GPU stays fully utilized throughout inference
+
+### Resources:
+- [Anyscale: Continuous Batching Explained](https://www.anyscale.com/blog/continuous-batching-llm-inference)
+- [HuggingFace: Continuous Batching from First Principles](https://huggingface.co/blog/continuous_batching)
+- [vLLM Blog: Anatomy of High-Throughput LLM Inference](https://blog.vllm.ai/2025/09/05/anatomy-of-vllm.html)
+- [Baseten: Continuous vs Dynamic Batching](https://www.baseten.co/blog/continuous-vs-dynamic-batching-for-ai-inference/#continuous-batching-for-llm-inference-in-production)
+
+## Continuous Batching: Three Key Techniques
+
+### Combined for Maximum Throughput
+
+1. **KV Caching**
+   - Avoid recomputing past token representations
+   - Store and reuse computed keys/values
+
+2. **Chunked Prefill**
+   - Handle variable-length prompts within memory constraints
+   - Process prompts in manageable chunks
+
+3. **Ragged Batching + Dynamic Scheduling**
+   - Eliminate padding waste
+   - Mix prefill and decode operations
+   - Preemption support for priority requests
+
+### Result: 23x throughput improvement possible (Anyscale benchmarks)
+
+## Transformer Architecture Visualization
+
+### Encoder-Decoder Structure
+
+- **Encoder**
+  - Processes input sequence
+  - Generates contextual representations
+- **Decoder**
+  - Generates output sequence
+  - Uses encoder representations
+- **Multi-Head Attention**
+  - Multiple attention mechanisms in parallel
+  - Captures different types of dependencies
+
+## Transformer Advantages
+
+### Why Transformers Changed Everything
+
+- **Parallel Processing**
+  - Unlike RNNs, can process entire sequences simultaneously
+- **Long-Range Dependencies**
+  - Effectively capture distant contextual relationships
+- **Scalability**
+  - Easily parallelizable
+  - Supports massive model architectures
+
+## Limitations and Challenges
+
+### Transformer Architecture Considerations
+
+- **Computational Complexity**
+  - Quadratic complexity with sequence length
+- **Memory Requirements**
+  - Large models need significant computational resources
+- **Potential Mitigation Strategies**
+  - Flash Attention and Flash Attention 2
+  - Sparse Attention
+  - Mixture of Experts (MoE) architectures
+  - Efficient Transformer variants
+  - Model distillation techniques
+  - Extended context windows (100K+ tokens now common)
+
+## Practical Implications
+
+### Transformers in Real-World Applications
+
+- Natural Language Processing
+- Machine Translation
+- Code Generation
+- Multimodal AI Systems
+- Conversational AI
+
+## References and Deep Dive Resources
+
+### Recommended Learning Materials
+
+1. **Foundational Papers**
+   - "Efficient Estimation of Word Representations in Vector Space" (Mikolov et al., 2013)
+     - Word2Vec: Pioneering word embedding techniques
+   - "Attention Is All You Need" (Vaswani et al., 2017)
+     - Original Transformer architecture paper
+
+2. **Practical Implementation Resources**
+   - Karpathy's nanoGPT
+     - GitHub: https://github.com/karpathy/nanoGPT
+     - Minimalist GPT implementation
+     - Educational reference for transformer internals
+
+3. **Video Explanations**
+   - Andrej Karpathy's "LLMs in a Hurry" 
+     - [video](https://www.youtube.com/watch?v=zjkBMFhNj_g): Comprehensive overview of LLM internals
+   - 3Blue1Brown Transformer Visualization
+     - [video](https://www.3blue1brown.com/lessons/attention): Intuitive mathematical explanation
+
+4. **Online Resources**
+   - [Hugging Face Transformer Documentation](https://huggingface.co/docs/transformers/en/index)
+   - [Jay Alammar's "Illustrated Transformer"](https://jalammar.github.io/illustrated-transformer/)
+   - [Stanford CS224N lectures on Transformers](https://www.youtube.com/watch?v=LWMzyfvuehA)
+   - [Anthropic Claude Documentation](https://docs.anthropic.com/)
+   - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+
+
+## Next Week Preview
+
+### Week 2 Focus: In-Context Learning (ICL)
+
+- Few-shot learning mechanisms
+- Practical ICL implementation
+- Advanced prompt engineering techniques
+
+
+## AI-Powered Coding Assistants
+
+### Introduction to Coding Assistants
+
+- **Evolution of Development Tools**: From syntax highlighting to AI-powered code generation
+- **Modern Coding Assistants**:
+  - GitHub Copilot
+  - Amazon Q Developer
+  - Cursor
+  - Claude Code (Anthropic)
+  - Windsurf
+  - Aider
+  - Continue.dev
+  - Tabnine
+
+## How Coding Assistants Work
+
+- **Underlying Technology**: Large Language Models trained on code
+- **Key Capabilities**:
+  - Code completion and suggestion
+  - Natural language to code translation
+  - Code explanation and documentation
+  - Bug detection and fixing
+  - Test generation
+
+## Practical Applications
+
+- **Accelerating Development**: Faster prototyping and iteration
+- **Learning Tool**: Understanding new languages and frameworks
+- **Code Quality**: Consistent patterns and best practices
+- **Developer Productivity**: Focus on architecture and logic
+
+## Coding Assistants Demo
+
+*Live demonstration and hands-on examples*
+
+- Setting up coding assistants in your IDE
+- Using natural language prompts
+- Context-aware code generation
+- Best practices for working with AI assistants
+
+## Agentic Coding: The Next Evolution
+
+### From Assistants to Agents
+
+- **Traditional Assistants**: Code completion, suggestions within IDE
+- **Agentic Coding Tools**: Autonomous multi-step task execution
+  - Claude Code: Terminal-based agentic coding
+  - Cursor Agent: IDE-integrated autonomous coding
+  - Aider: Git-aware AI pair programming
+- **Key Capabilities**:
+  - Read and understand entire codebases
+  - Execute multi-file refactoring autonomously
+  - Run tests and fix failures iteratively
+  - Interact with tools (git, terminal, APIs)
+
+## Reasoning Models
+
+### A New Paradigm in AI
+
+- **What are Reasoning Models?**
+  - Models that "think" before responding
+  - Extended inference time for complex problems
+- **Examples**:
+  - OpenAI o1 and o3
+  - Anthropic Claude with extended thinking
+  - DeepSeek-R1
+- **Use Cases**:
+  - Complex code generation and debugging
+  - Multi-step problem solving
+  - Mathematical and logical reasoning
