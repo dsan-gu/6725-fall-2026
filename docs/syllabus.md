@@ -1,10 +1,10 @@
 # Syllabus - DSAN 6725 Applied Generative AI for Developers
 
 **Professor**: Amit Arora
-**Email**: TBD
-**Class Time**: Tuesdays 9:30 AM - 12:00 PM
-**Classroom**: Intercultural Center 107
-**First Class**: January 13, 2026, 9:30 AM - 12:00 PM
+**Email**: aa1603@georgetown.edu
+**Class Time**: Tuesdays 8:00 AM - 10:30 AM
+**Classroom**: CBN-203 (Car Barn 203)
+**First Class**: September 1, 2026, 8:00 AM - 10:30 AM (14 classes total, every Tuesday)
 
 **Office Hours**:
 
@@ -18,13 +18,15 @@ Professor's Office hours are by appointment only. Please use the following links
 
 ## Teaching Assistants (TA)
 
-**Name**: Zixu "Michael" Hao
-**Email**: zh301@georgetown.edu
-**Office Hours**: Mondays 2:00 PM - 3:00 PM, Fridays 2:00 PM - 3:00 PM
+**Name**: Sazan Khalid
+**Email**: sk2153@georgetown.edu
+**Office Hours**: TBD
 
 ## Textbooks
 
-There is no required textbook for the course. However, you can consider the following if you like:
+The field is changing so fast that there is no textbook for this course. Instead, we maintain a running list of material of interest — papers, talks, blog posts, and tools — in the [bookmarks repo](https://github.com/gu-dsan6725/bookmarks). We ask you to contribute to it as well: when you find a paper or talk worth sharing, open a pull request to add it.
+
+That said, you can consider the following books if you like:
 
 - [Hands-On Large Language Models: Language Understanding and Generation](https://www.amazon.com/Hands-Large-Language-Models-Understanding/dp/1098150961/ref=sr_1_1?crid=2L8JBIHIZUKO1&dib=eyJ2IjoiMSJ9.y8jTOKNtfaF-RUePWCWwsdnAIo4v5YE_XE2TIlLVQCBGA6Q716R03HVJHfrq-uS1.J-n8l0ZZvrzb7ARZx8p_xTnaPW7Za1bED91saKrAKlE&dib_tag=se&keywords=Hands-On+Large+Language+Models%3A+Language+Understanding+and+Generation&qid=1734626165&s=books&sprefix=hands-on+large+language+models+language+understanding+and+generation+%2Cstripbooks%2C98&sr=1-1)
 - [Generative AI Foundations in Python: Discover key techniques and navigate modern challenges in LLMs](https://www.amazon.com/Generative-Foundations-Python-techniques-challenges/dp/1835460828) chapters 5, 6, 7 and 8.
@@ -34,6 +36,8 @@ We may also provide supplemental materials (articles, links, videos, etc.) to co
 **You must read assigned readings prior to the lectures.**
 
 ## Prerequisites
+
+### Skills
 
 - Experience with Python and invoking REST APIs.
 - Experience with git and GitHub
@@ -45,11 +49,22 @@ Some tutorials to brush up on these skills:
 - [Nico Riedmann's Learn git concepts, not commands](https://dev.to/unseenwizzard/learn-git-concepts-not-commands-4gjc)
 - [Python course](https://github.com/gitdagray/python-course/tree/main)
 
+### Model Access
+
+- **Frontier model access (required)**: For assignments and labs you will need API access to at least one frontier model. We do not mandate a specific provider — Anthropic Claude and OpenAI GPT-5 are the strongest options, but you are free to use GLM, Qwen, DeepSeek, or other models that you may be able to find for free or at much lower cost.
+- **Local models**: You will also run small open-weight models locally (e.g., Gemma 3 4B, Qwen 3 4B/8B). Models in the 4B-8B range run comfortably on a MacBook with Apple Silicon and 16 GB of RAM (quantized, via ollama or similar).
+
+### Development Environment
+
+- A **MacBook** (Apple Silicon recommended) or a **Windows machine with WSL2** works well as your dev environment.
+- Alternatively, you can use an **Amazon EC2 instance** as your dev environment.
+- Every student will be provided an **AWS account with $50 in credits**.
+
 ## Course Description
 
-Applied Generative AI for developers is a graduate-level course that provides students with a deep understanding of building generative AI applications. This course is designed for AI developers aiming to build cutting-edge Generative AI (GenAI) applications. Focusing on the applied side of AI, students will explore key techniques such as in-context learning (ICL), retrieval-augmented generation (RAG), AI agents, and responsible AI principles.
+Applied Generative AI for developers is a graduate-level course that provides students with a deep understanding of building generative AI applications. This course is designed for AI developers aiming to build cutting-edge Generative AI (GenAI) applications. Focusing on the applied side of AI, students will explore key techniques such as retrieval-augmented generation (RAG), AI agents, the Model Context Protocol (MCP), Agent-to-Agent (A2A) collaboration, and responsible AI principles.
 
-The course covers advanced tools and methods, including embedding models, inference optimizations (e.g., quantization, multi-adapter swapping), fine-tuning of pre-trained models and benchmarking LLMs. Students will gain hands-on experience with open-source tools like LangChain, LlamaIndex, and platforms such as AWS, applying their skills in practical GenAI applications. The course culminates in a capstone project, preparing participants to deploy scalable, optimized AI systems in real-world scenarios. This course bridges the gap between data science knowledge and applied AI development, empowering students to solve industry-level challenges.
+The course covers advanced tools and methods, including inference optimizations (e.g., quantization, speculative decoding), context management and engineering, ontologies and the semantic layer, tokenomics (the economics of building and operating LLM-powered systems), fine-tuning of pre-trained models, and evaluating and observing GenAI applications in production. Students will compare open-weight models with frontier-lab proprietary models and learn how to design agentic platforms rather than one-off apps. Students will gain hands-on experience with AI coding assistants, open-source agent frameworks, and cloud platforms such as AWS, applying their skills in practical GenAI applications. The course culminates in a capstone project, preparing participants to deploy scalable, optimized AI systems in real-world scenarios. This course bridges the gap between data science knowledge and applied AI development, empowering students to solve industry-level challenges.
 
 ## Technology Inventory
 
@@ -57,7 +72,7 @@ This course uses Python as the primary programming language. Students will work 
 
 - **Python 3.11+**: Primary development language
 - **Cloud Platforms**: Amazon Web Services (AWS) for cloud-based development and deployment
-- **Gen AI Tools**: LangChain, LlamaIndex, Amazon Bedrock
+- **Gen AI Tools**: AI coding assistants (Claude Code, GitHub Copilot), agent frameworks (LangGraph, Strands Agents, CrewAI), MCP and A2A SDKs, Amazon Bedrock
 - **Development Tools**: git, GitHub, Docker, uv (Python package manager)
 - **AI Models**: Large Language Models (LLMs), embedding models
 
@@ -75,7 +90,7 @@ The course will use Canvas, https://canvas.georgetown.edu/. Announcements, homew
 
 ## Cloud Resources
 
-You will use cloud resources on [Amazon Web Services](http://aws.amazon.com). We will discuss how to set up your accounts and environments in class and lab within the first couple of weeks. You will get credits on both platforms that will be enough to support your coursework throughout the semester.
+You will use cloud resources on [Amazon Web Services](http://aws.amazon.com). Every student will be provided an AWS account with $50 in credits. We will discuss how to set up your accounts and environments in class and lab within the first couple of weeks.
 
 !!! warning "Managing cloud resources"
 **IT IS YOUR RESPONSIBILITY TO MANAGE THE CREDITS AND RESOURCES PROVIDED TO YOU. YOU MUST SHUT DOWN YOUR CLOUD RESOURCES WHEN NOT IN USE.**
@@ -86,30 +101,32 @@ You will use cloud resources on [Amazon Web Services](http://aws.amazon.com). We
 
 By the end of this course, students will be able to:
 
-1. Build GenAI applications with prompt engineering, RAG and AI Agents
-2. Fine-tune LLMs
-3. Apply Responsible AI principles
-4. Optimize inference for deploying apps at scale
-5. Complete a comprehensive capstone project
+1. Build GenAI applications with prompt engineering, RAG, and AI agents
+2. Integrate tools and data using MCP and build collaborating agents with A2A
+3. Design agentic systems with sound context management and a semantic layer over enterprise data
+4. Analyze the tokenomics (cost, price, performance) of GenAI systems
+5. Fine-tune LLMs and choose between open-weight and frontier-lab models
+6. Apply Responsible AI principles and evaluate/observe apps in production
+7. Complete a comprehensive capstone project
 
 A Google Spreadsheet overview of the course with topics, dates, and deliverables is available and will be updated along with the individual pages in Canvas.
 
 | Week  | Module                                               | Details                                                                                                  |
 |-------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| 1     | Introduction to Generative AI and Coding Assistants  | Overview of course objectives, introduction to GenAI, and AI-powered coding tools                    |
-| 2     | In-context Learning                           | Introduction to prompt engineering |
-| 3     | Retrieval Augmented Generation (RAG)         | Build Q&A systems using vector databases, foundation models, graph RAG, and advanced RAG techniques including chunking strategies and query rewrites              |
-| 4     | Model Context Protocol (MCP) Servers                     | Building MCP servers for tool integration, API wrapping, authentication, and deployment patterns (local and remote)
-| 5     | Agent-Based Architectures - Part 1                                  | Tool usage, build agents with LangChain, LlamaIndex and Amazon Bedrock      |
-| 6     | Agent-Based Architectures - Part 2                                  | Multi-agent collaboration and memory management       |
-| 7     | Gen AI app best practices and Observability                                   | Best practices for deploying GenAI apps in production with monitoring and evals           |
-| 8     | Guardrails and Evaluation of Generative Models                                        | Data security, guardrails, ethics, bias mitigation, and evaluation frameworks
-| 9     | Benchmarking and Performance Analysis        | Price, performance and accuracy benchmarking using open-source tools |
-| 10    | Embeddings Models and Representation Learning                      | Background on vector embeddings, fine-tuning embeddings models                             |
-| 11    | Model serving and Optimizations                                     | Inference servers, engines, speculative decoding, quantization, distillation, adapter swapping        |
-| 12    | Fine-tuning Generative AI models         | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques            |
-| 13    | Gen AI platform design, open-discussion            | How to build a platform and not just apps     |
-| 14    | Project presentation, open-discussion                             | Final project presentations and open discussion on course topics                                        |
+| 1     | GenAI Theory Foundations and Coding Assistants       | How LLMs work (transformers, tokens, sampling), in-context learning and prompt engineering; lab: AI coding assistants and agentic coding workflows |
+| 2     | Inference                                            | Inference servers and engines, quantization, speculative decoding, batching, API-based vs self-hosted serving |
+| 3     | Retrieval Augmented Generation (RAG) and Intro to Agents | Embeddings, vector databases, chunking strategies, advanced RAG techniques; first look at AI agents and tool use |
+| 4     | Agentic RAG and Model Context Protocol (MCP)         | Agent-driven retrieval and query planning; building MCP servers and clients for tool integration, authentication, and deployment |
+| 5     | Agent Architectures in Detail                        | Planning, memory, context management and engineering, single-agent vs multi-agent design patterns |
+| 6     | Evals, Observability, and Guardrails                 | Evaluation frameworks, monitoring GenAI apps in production, guardrails, and data security |
+| 7     | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
+| 8     | Tokenomics                                           | Token economics, cost engineering, prompt caching, price/performance/accuracy benchmarking of LLMs |
+| 9     | Agentic Platforms                                    | Designing platforms and not just apps: agent runtimes, deployment patterns, governance |
+| 10    | Agent-to-Agent (A2A) Collaboration                   | The A2A protocol, multi-agent collaboration, agent discovery and interoperability |
+| 11    | Fine-tuning Generative AI Models                     | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques; when to fine-tune vs RAG vs prompt |
+| 12    | Open-Weight Models vs Frontier Labs                  | The model landscape: open-weight models vs proprietary frontier-lab models, licensing, model selection, self-hosting vs third-party APIs |
+| 13    | AI Ethics and Responsible AI                         | Bias mitigation, safety, societal impact, regulation, and responsible deployment of GenAI systems |
+| 14    | Project Presentations, Open Discussion               | Final project presentations and open discussion on course topics |
 
 ## Final Grades
 
@@ -126,11 +143,13 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 
 ### Grading Scale
 
-- A: >= 92.5
-- A-: 89.5 - 92.49
+- A: >= 93.5 (rounds to 94%)
+- A-: 89.5 - 93.49
 - B+: 87.99 - 89.49
 - B: 81.5 - 87.98
 - B-: 79.5 - 81.49
+- C: 60 - 79.49
+- F: < 60
 
 We have no plans to curve the final grade.
 
@@ -151,6 +170,10 @@ On certain weeks, readings will be assigned to prepare you for the lecture mater
 ### Quizzes
 
 There will be 6 quizzes per semester. Quizzes ensure you are keeping up with the material presented in the class. Quizzes are meant to be brief and low-stress with a time limit of 5-10 minutes. The material will be drawn from lectures, labs, and readings.
+
+### In-Class Presentations on Latest AI Topics
+
+In each class, two teams or individuals (you may group up as you like) will present for 5 to 7 minutes on one of the latest topics of interest in AI — a new paper, model release, tool, or notable talk. A sign-up sheet will be shared at the start of the semester. These presentations are graded as a Quiz.
 
 ### Lab Deliverables
 

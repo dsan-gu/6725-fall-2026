@@ -2,19 +2,19 @@
 
 # Array of week files with their descriptive names
 week_files=(
-  "week-01-introduction"
-  "week-02-icl-and-coding-assistants"
-  "week-03-rag"
-  "week-04-mcp"
-  "week-05-agents-part1"
-  "week-06-agents-part2"
-  "week-07-observability"
-  "week-08-guardrails-evaluation"
-  "week-09-benchmarking"
-  "week-10-embeddings"
-  "week-11-optimization"
-  "week-12-finetuning"
-  "week-13-platforms"
+  "week-01-genai-foundations-and-coding-assistants"
+  "week-02-inference"
+  "week-03-rag-and-intro-to-agents"
+  "week-04-agentic-rag-and-mcp"
+  "week-05-agent-architectures"
+  "week-06-evals-observability-guardrails"
+  "week-07-ontology-semantic-layer"
+  "week-08-tokenomics"
+  "week-09-agentic-platforms"
+  "week-10-a2a"
+  "week-11-finetuning"
+  "week-12-open-weight-vs-frontier"
+  "week-13-ai-ethics"
 )
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,7 +24,7 @@ for week_file in "${week_files[@]}"; do
   input_file="${SCRIPT_DIR}/docs/lectures/slides/${week_file}.qmd"
   if [ -f "$input_file" ]; then
     # Extract week number for output filename (remove leading zero for single digits)
-    week_num=$(echo "$week_file" | grep -oP 'week-\K\d+' | sed 's/^0//')
+    week_num=$(echo "$week_file" | sed -E 's/^week-0?([0-9]+).*/\1/')
     output_file="week${week_num}.html"
 
     echo "Rendering ${week_file}..."

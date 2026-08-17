@@ -1,0 +1,217 @@
+---
+title: "Week 12: Open-Weight vs. Frontier Models"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda
+
+::: {.incremental}
+- The model landscape: who builds what
+- Open weights vs. open source — an important distinction
+- Licenses: Apache-2.0 vs. community licenses
+- Frontier labs and their model families
+- Open-weight model families
+- Model selection criteria
+- Self-hosting vs. third-party APIs
+- Distillation: how frontier capability flows downstream
+- Hands-on lab
+:::
+
+## The Two Worlds of LLMs
+
+### A Working Taxonomy
+
+- **Frontier / proprietary models**: weights never leave the lab; access via API only
+- **Open-weight models**: weights downloadable; run them anywhere
+- The capability gap has narrowed dramatically — the choice is now an engineering decision, not a foregone conclusion
+- Most real organizations end up with a **portfolio** of both
+
+## Frontier Labs: The Landscape
+
+### API-Only Model Families
+
+- **OpenAI**: GPT-5 family; reasoning-focused variants; realtime and multimodal endpoints
+- **Anthropic**: Claude 4.x family (Opus, Sonnet, Haiku tiers)
+- **Google DeepMind**: Gemini 2.5 / Gemini 3 family; deep Workspace/Cloud integration
+- Common traits: strongest raw capability, managed safety, rapid iteration, per-token pricing
+
+## Open-Weight Families
+
+### Downloadable Model Lines
+
+- **Meta Llama 4**: mixture-of-experts, multimodal, community license
+- **DeepSeek V3 / R1**: strong MoE base + open reasoning model, permissive licensing
+- **Qwen 3** (Alibaba): broad size range, strong multilingual and coding variants
+- **Mistral**: efficient dense and MoE models, mix of Apache-2.0 and research licenses
+- **gpt-oss** (OpenAI): open-weight reasoning models under Apache-2.0
+- Hugging Face Hub is the de facto distribution channel
+
+## Open Weights ≠ Open Source
+
+### The Distinction That Matters
+
+- **Open weights**: you get the trained parameters — enough to run, fine-tune, and deploy
+- **Open source (strict sense)**: also training code, data recipe, and an OSI-approved license
+- Most "open" LLMs release weights + inference code, **not** training data
+- The OSI's Open Source AI Definition formalizes what qualifies
+- Why it matters: reproducibility, auditability, and what your license actually permits
+
+## Licenses: Apache-2.0 vs. Community Licenses
+
+### Read Before You Ship
+
+- **Apache-2.0 / MIT** (e.g., many Mistral and Qwen releases, gpt-oss): permissive, commercial use, few strings
+- **Community licenses** (e.g., Llama): custom terms — acceptable-use policies, redistribution rules, thresholds for very large deployments
+- **Research-only licenses**: no commercial use at all
+- Derivative rules: what applies to your fine-tunes and distilled models?
+- Legal review is part of model selection, not an afterthought
+
+## What "Frontier" Buys You
+
+### Strengths of Proprietary APIs
+
+- Highest capability on the hardest tasks (long-horizon reasoning, agentic coding)
+- Zero infrastructure: no GPUs to run, patch, or scale
+- Fast access to new capabilities (multimodal, computer use, long context)
+- Managed safety systems and abuse monitoring
+- Enterprise contracts: SLAs, data-processing agreements
+
+## What Open Weights Buy You
+
+### Strengths of Self-Managed Models
+
+- **Control**: pin a version forever; no silent model updates or deprecations
+- **Privacy**: data never leaves your VPC or datacenter
+- **Customization**: full fine-tuning freedom (Week 11)
+- **Cost at scale**: high sustained volume can undercut per-token pricing
+- **Latency**: co-locate the model with your application
+- **No vendor lock-in**: portable across clouds and serving stacks
+
+## Model Selection Criteria
+
+### A Practical Checklist
+
+::: {.incremental}
+- **Task fit**: measured quality on *your* evals — not leaderboard rank
+- **Modality & context**: text/vision/audio, context window needs
+- **Latency budget**: interactive vs. batch
+- **Cost model**: per-token API vs. amortized GPU spend
+- **Data constraints**: residency, confidentiality, compliance regimes
+- **License**: permitted use, redistribution, derivatives
+- **Ecosystem**: tooling, serving support, community fine-tunes
+:::
+
+## Benchmarks and Their Limits
+
+### Evaluate for Yourself
+
+- Public leaderboards (e.g., LMArena, Hugging Face leaderboards) are a starting point, not a decision
+- **Contamination**: benchmark data leaks into training sets
+- **Saturation**: many classic benchmarks no longer discriminate at the top
+- **Goodhart's law**: labs optimize for what is measured
+- The Week 6 lesson applies: build a private eval set from your own traffic
+
+## Self-Host vs. Third-Party API
+
+### The Core Tradeoff Matrix
+
+| Dimension | 3P API (frontier) | Self-hosted (open weights) |
+|-----------|-------------------|----------------------------|
+| Capability ceiling | Highest | High and rising |
+| Data privacy | Provider-dependent | Full control |
+| Ops burden | None | GPUs, serving, upgrades |
+| Cost profile | Per-token, scales linearly | Fixed + marginal, wins at volume |
+| Version control | Provider-controlled | You pin the weights |
+| Time to start | Minutes | Days-weeks |
+
+## Self-Hosting: The Serving Stack
+
+### What Running Your Own Model Requires
+
+- **Inference engines**: vLLM, SGLang, TensorRT-LLM (from the inference week)
+- **Quantization**: FP8/INT4 to fit models on available GPUs
+- **Autoscaling and batching**: utilization determines real cost
+- **Middle path — managed open weights**: Amazon Bedrock, Azure AI Foundry, Together, Fireworks serve open models as APIs
+- You can adopt open weights without owning GPUs
+
+## Total Cost of Ownership
+
+### Beyond the Sticker Price
+
+- API costs: input/output tokens, cache discounts, batch tiers
+- Self-host costs: GPU hours, engineering time, idle capacity, on-call
+- Break-even depends on **sustained utilization** — bursty traffic favors APIs
+- Hidden costs both ways: migration effort, prompt re-tuning on model swaps, egress
+- Do the math with your own traffic — no universal answer
+
+## Distillation: Frontier → Open
+
+### How Capability Flows Downstream
+
+- **Knowledge distillation**: train a smaller student on a stronger teacher's outputs
+- Synthetic data generation from frontier models is now a standard training ingredient
+- Reasoning distillation: DeepSeek-R1 distilled variants brought chain-of-thought behavior to small open models
+- Caveat: most frontier API terms restrict using outputs to train competing models — licenses again
+- Result: the open ecosystem trails the frontier by months, not years
+
+## Small Models, Big Roles
+
+### Right-Sizing
+
+- Not every task needs a frontier model
+- Small open models (1B–14B) excel at: classification, extraction, routing, drafting
+- **Cascade / router patterns**: cheap model first, escalate hard cases to the frontier
+- Fine-tuned small model on a narrow task can match a general frontier model at a fraction of the cost
+
+## Strategic Considerations
+
+### Organizational View
+
+- **Portfolio strategy**: frontier API for hard reasoning, open weights for volume and sensitive data
+- **Abstraction layer**: route through a gateway so models are swappable
+- **Exit planning**: what happens when a provider deprecates your model?
+- **Geopolitics and sovereignty**: national/sector rules may mandate on-prem open weights
+- Re-evaluate quarterly — this landscape moves fast
+
+## Case Discussion
+
+### You Are the Architect
+
+- Healthcare startup: patient-note summarization under HIPAA — which way and why?
+- Consumer app with 50M requests/day of simple classification — which way and why?
+- Internal coding agent for a bank's proprietary codebase — which way and why?
+- Defend your choice on capability, privacy, cost, and license grounds
+
+## Hands-on Lab
+
+### Comparing Open-Weight and Frontier Models
+
+- Take one task from your project and a small private eval set
+- Run it against a frontier API model and a self-served open-weight model (vLLM)
+- Compare: quality on your evals, latency, cost per 1K requests
+- Write a one-page model-selection recommendation
+
+## References
+
+- [Hugging Face Model Hub](https://huggingface.co/models)
+- [Meta Llama — Models and License](https://www.llama.com/)
+- [DeepSeek on Hugging Face](https://huggingface.co/deepseek-ai)
+- [Qwen Documentation](https://qwen.readthedocs.io/)
+- [Mistral AI Models](https://docs.mistral.ai/getting-started/models/)
+- [OpenAI gpt-oss](https://openai.com/open-models/)
+- [OSI Open Source AI Definition](https://opensource.org/ai)
+- [vLLM Documentation](https://docs.vllm.ai/)
+
+## Thank You!
+
+Any questions?

@@ -1,0 +1,274 @@
+---
+title: "Applied Generative AI"
+subtitle: "Week 10: Agent-to-Agent (A2A) Protocol"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda
+
+- Why agent interoperability?
+- The A2A protocol: core concepts
+- Agent Cards and discovery
+- Tasks, messages, and artifacts
+- A2A vs. MCP: complementary protocols
+- Governance: Linux Foundation stewardship
+- Multi-agent collaboration patterns
+- Security considerations
+- Hands-on lab
+
+---
+
+## The Problem: Agent Silos
+
+::: {.incremental}
+- Enterprises are deploying agents built on **different frameworks**: LangGraph, CrewAI, Strands Agents, Google ADK, Semantic Kernel
+- Each framework has its own internal message format, memory model, and tool interface
+- Agents from **different vendors cannot talk to each other**
+- Result: the same integration problem we had with tools before MCP, now at the agent level
+:::
+
+---
+
+## Why Agent Interoperability Matters
+
+::: {.incremental}
+- **Cross-vendor workflows**: a procurement agent from vendor A delegates to a logistics agent from vendor B
+- **Opaque collaboration**: agents cooperate **without sharing internal memory, proprietary logic, or tool implementations**
+- **Organizational boundaries**: agents in different departments (or companies) interoperate over standard HTTP
+- **Avoid lock-in**: swap an agent implementation without rewriting every peer that calls it
+:::
+
+---
+
+## What is A2A?
+
+- **Agent2Agent (A2A)**: an open protocol for communication between AI agents
+- Announced by Google (April 2025) with 50+ launch partners; now governed by the **Linux Foundation**
+- Built on familiar web standards:
+  - **HTTP(S)** as transport
+  - **JSON-RPC 2.0** for requests
+  - **Server-Sent Events (SSE)** for streaming updates
+- SDKs available in Python, Go, JavaScript, Java, and .NET
+
+> Source: [A2A Protocol](https://a2a-protocol.org/)
+
+---
+
+## A2A Design Principles
+
+::: {.incremental}
+- **Embrace agentic capabilities**: agents collaborate in natural, unstructured modalities — not just rigid function calls
+- **Build on existing standards**: HTTP, SSE, JSON-RPC — easy to adopt in existing stacks
+- **Secure by default**: enterprise-grade auth, aligned with OpenAPI security schemes
+- **Support long-running tasks**: from instant answers to multi-day workflows with humans in the loop
+- **Modality agnostic**: text, files, forms, structured data, media
+:::
+
+---
+
+## Core Actors
+
+| Actor | Role |
+|-------|------|
+| **User** | The human or automated principal that initiates a request |
+| **Client agent** | Formulates and sends tasks on the user's behalf |
+| **Remote agent (server)** | Receives tasks, acts on them, returns results |
+
+- The remote agent is a "black box": the client sees its **advertised capabilities**, never its internals
+
+---
+
+## Agent Cards: Advertising Capabilities
+
+- Each A2A server publishes an **Agent Card** — a JSON document describing:
+  - Agent **identity**: name, description, provider
+  - **Skills**: what the agent can do, with examples
+  - **Endpoint URL** and supported transports
+  - **Authentication requirements** (API key, OAuth 2, etc.)
+  - Supported **input/output modalities**
+- Conventionally served at a well-known path: `/.well-known/agent-card.json`
+
+---
+
+## Discovery Patterns
+
+::: {.incremental}
+- **Well-known URI**: fetch the Agent Card from a known domain
+- **Curated registries**: enterprise catalogs of approved agents (like an internal app store)
+- **Direct configuration**: hard-coded or config-driven peers for closed systems
+- Discovery answers: *"Which agent can do this, and how do I reach it?"*
+:::
+
+---
+
+## Tasks: The Unit of Work
+
+::: {.incremental}
+- A **task** is the fundamental unit of A2A collaboration
+- Created when a client sends a message; identified by a unique ID
+- Tasks have a **lifecycle**: `submitted` → `working` → `input-required` → `completed` / `failed` / `canceled`
+- Long-running tasks report progress via **streaming (SSE)** or **push notifications** (webhooks)
+- Output is delivered as **artifacts** — files, structured data, or text produced by the remote agent
+:::
+
+---
+
+## Messages and Parts
+
+- A **message** is one turn of communication within a task
+- Each message contains one or more **parts**:
+
+| Part type | Contents |
+|-----------|----------|
+| `TextPart` | Plain or formatted text |
+| `FilePart` | File content (inline bytes or URI reference) |
+| `DataPart` | Structured JSON (e.g., forms, machine-readable payloads) |
+
+- Parts let agents negotiate **modality**: text chat, file exchange, structured forms
+
+---
+
+## A Typical A2A Interaction
+
+1. Client fetches the remote agent's **Agent Card**
+2. Client authenticates per the card's security scheme
+3. Client sends a **message** — a new task is created
+4. Remote agent works; streams **status updates** over SSE
+5. Remote agent may pause with `input-required` (human/agent feedback)
+6. Task completes; client receives **artifacts**
+
+---
+
+## A2A vs. MCP: Complementary, Not Competing
+
+| | **MCP** | **A2A** |
+|---|---------|---------|
+| Connects | Agent ↔ **tools & resources** | Agent ↔ **other agents** |
+| Peer is | Deterministic capability (function, API, data) | Autonomous, stateful, opaque agent |
+| Interaction | Structured tool calls with typed schemas | Multi-turn, possibly long-running collaboration |
+| Analogy | USB-C port for tools | The network protocol between devices |
+
+- A production agent typically speaks **both**: MCP downward to its tools, A2A sideways to its peers
+
+---
+
+## MCP + A2A in One Architecture
+
+```{mermaid}
+flowchart LR
+    U[User] --> C[Client Agent]
+    C -- A2A --> R1[Research Agent]
+    C -- A2A --> R2[Booking Agent]
+    R1 -- MCP --> T1[Web Search Tool]
+    R1 -- MCP --> T2[Vector DB]
+    R2 -- MCP --> T3[Payments API]
+```
+
+- A2A for **delegation and collaboration**; MCP for **capability access**
+
+---
+
+## Governance: Linux Foundation Stewardship
+
+::: {.incremental}
+- In June 2025, Google donated the A2A specification, SDKs, and tooling to the **Linux Foundation**
+- Vendor-neutral, open governance — contributions from Amazon, Microsoft, Cisco, Salesforce, SAP, ServiceNow, and many others
+- Why it matters:
+  - No single vendor controls the protocol's evolution
+  - Enterprises can adopt with confidence in longevity
+  - Same playbook that made Kubernetes an industry standard
+:::
+
+---
+
+## Multi-Agent Collaboration Patterns
+
+- **Supervisor / orchestrator**: a lead agent decomposes work and delegates to specialists over A2A
+- **Peer-to-peer (horizontal)**: equal specialists hand off laterally — research agent → coding agent → review agent
+- **Hierarchical (vertical)**: layers of managers and workers for complex, long-horizon workflows
+- **Marketplace**: clients discover and select remote agents dynamically from a registry
+
+---
+
+## Pattern Trade-offs
+
+| Pattern | Strengths | Risks |
+|---------|-----------|-------|
+| Supervisor | Clear accountability, easy tracing | Orchestrator becomes bottleneck |
+| Peer-to-peer | Flexible, resilient | Harder to debug, emergent behavior |
+| Hierarchical | Scales to large workflows | Latency compounds per layer |
+| Marketplace | Maximum reuse | Trust and quality control |
+
+---
+
+## Security Considerations {.smaller}
+
+::: {.incremental}
+- **Authentication**: Agent Cards declare required schemes (OAuth 2, API keys, mTLS); never accept anonymous agents in production
+- **Authorization**: least privilege per skill — an agent that *can* book travel shouldn't also read HR data
+- **Identity & delegation**: who is the request *really* for? Propagate user identity, don't let agents act as super-users
+- **Prompt injection across agents**: a malicious remote agent's output becomes *your* agent's input — treat peer output as untrusted
+- **Audit logging**: record every task, message, and artifact for compliance and forensics
+- **Supply chain**: registries need vetting, versioning, and revocation — an "agent store" has the same risks as a package registry
+:::
+
+---
+
+## Where A2A Is Heading
+
+- Registry and discovery standardization across vendors
+- Richer negotiation: dynamic capability and modality negotiation mid-task
+- Convergence of the agent stack: **MCP** (tools) + **A2A** (agents) + agent runtimes
+- Framework support today: Google ADK, LangGraph, CrewAI, Strands Agents, Semantic Kernel
+
+---
+
+## Hands-on Lab
+
+### Building Interoperable Agents with A2A
+
+*Lab repository: `gu-dsan6725/a2a-lab`*
+
+1. **Setup**: install the A2A Python SDK
+2. **Agent Card**: define and serve a card for a simple specialist agent
+3. **Serve**: expose the agent over HTTP with task lifecycle support
+4. **Client**: discover the card, send a task, stream status updates
+5. **Compose**: connect two agents from *different* frameworks via A2A
+
+---
+
+## Key Takeaways
+
+::: {.incremental}
+1. A2A standardizes **agent-to-agent** communication the way MCP standardized **agent-to-tool** access
+2. Agent Cards enable **discovery**; tasks/messages/artifacts structure **collaboration**
+3. Agents stay **opaque** — they interoperate without exposing internals
+4. Linux Foundation governance makes A2A a credible, vendor-neutral standard
+5. Security must be designed in: authenticate peers, propagate identity, treat peer output as untrusted
+:::
+
+---
+
+## References
+
+**Official A2A Resources:**
+
+- [A2A Protocol Site & Specification](https://a2a-protocol.org/)
+- [A2A GitHub Organization](https://github.com/a2aproject/A2A)
+- [A2A Python SDK](https://github.com/a2aproject/a2a-python)
+- [Google Announcement: A2A](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)
+- [Linux Foundation: A2A Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project)
+
+**Related:**
+
+- [Model Context Protocol](https://modelcontextprotocol.io/)
+- [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/)

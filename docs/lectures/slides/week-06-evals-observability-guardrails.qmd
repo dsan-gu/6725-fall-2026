@@ -1,0 +1,302 @@
+---
+title: "Week 6: Evals, Observability, and Guardrails"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda
+
+::: {.incremental}
+- Why evaluation is the hardest problem in GenAI engineering
+- Evaluation frameworks: LLM-as-a-judge, RAG evals, agent evals
+- Observability: tracing, metrics, and the OpenTelemetry GenAI conventions
+- Guardrails: input/output filtering, PII, prompt injection defenses
+- Data security for GenAI applications
+- Hands-on lab
+:::
+
+## From Prototype to Production
+
+### Why This Week Matters
+
+- **Demos are easy, production is hard**: the gap is evals + observability
+- **Non-determinism**: same input, different outputs — traditional QA breaks down
+- **Silent failures**: LLM apps degrade without throwing exceptions
+- **Trust**: you cannot ship what you cannot measure or monitor
+
+## Evaluation: Why Evaluate?
+
+### The Case for Systematic Evals
+
+- **Quality assurance**: measuring model and application performance
+- **Regression detection**: catch degradation when you swap models or edit prompts
+- **Comparison**: selecting the best model, prompt, or pipeline variant
+- **Compliance**: demonstrating requirements are met
+- **Continuous improvement**: evals turn vibes into engineering
+
+## Evaluation Metrics
+
+### What to Measure
+
+- **Accuracy / correctness**: is the output right?
+- **Relevance**: does it answer the actual question?
+- **Faithfulness / groundedness**: is it supported by the provided context?
+- **Consistency**: reproducible results across runs
+- **Safety**: adherence to guardrails and policy
+- **Latency and cost**: operational quality is part of quality
+
+## LLM-as-a-Judge
+
+### Using Models to Grade Models
+
+- **Idea**: a strong LLM scores outputs against a rubric
+- **Modes**: pointwise scoring, pairwise comparison, reference-based grading
+- **Strengths**: scalable, cheap relative to humans, works on open-ended text
+- **Known biases**: position bias, verbosity bias, self-preference
+- **Mitigations**: randomize order, use rubrics, calibrate against human labels
+
+## Designing Good Judge Prompts
+
+### Rubrics Over Vibes
+
+- Define explicit criteria and a bounded score scale
+- Provide few-shot graded examples to anchor the scale
+- Ask for reasoning **before** the score (structured output)
+- Validate the judge itself: measure agreement with human annotations
+- Keep judges pinned to a model version for reproducibility
+
+## RAG Evaluation
+
+### Evaluating Retrieval and Generation Separately
+
+- **Retrieval metrics**: context precision, context recall, hit rate, MRR
+- **Generation metrics**: faithfulness (grounded in retrieved context), answer relevance
+- **End-to-end**: answer correctness against a golden dataset
+- **Key insight**: most RAG failures are retrieval failures — measure the stages independently
+
+## RAG Evaluation Tools
+
+### Frameworks
+
+- **RAGAS**: RAG assessment framework — faithfulness, context precision/recall
+- **DeepEval**: pytest-style LLM evaluation library
+- **TruLens**: feedback functions and the "RAG triad"
+- **Phoenix (Arize)**: evals plus tracing in one tool
+- Golden datasets: start small (50–100 curated examples), grow from production
+
+## Agent Evaluation
+
+### Beyond Single-Turn Quality
+
+- Agents produce **trajectories**, not just answers
+- **Outcome evals**: did the agent complete the task?
+- **Trajectory evals**: did it take reasonable steps? Correct tool selection, tool-call arguments, no loops
+- **Efficiency**: steps taken, tokens burned, wall-clock time
+- **Failure taxonomy**: wrong tool, bad arguments, premature stop, infinite loop, hallucinated tool output
+
+## Trajectory Evaluation in Practice
+
+### Techniques
+
+- Compare trajectories against reference paths (exact, in-order, any-order matching)
+- LLM-as-a-judge over the full trace: "was each step justified?"
+- Unit-test individual tools deterministically; eval the planner separately
+- Replay production traces as regression suites
+
+## Human Evaluation
+
+### Still the Gold Standard
+
+- **Annotation guidelines**: clear, written criteria
+- **Inter-annotator agreement**: consistency checks before trusting labels
+- **A/B testing**: comparing variants on live traffic
+- **Feedback loops**: thumbs up/down, edit-distance from accepted answers
+- Use humans to calibrate automated judges, then scale with automation
+
+## Observability Fundamentals
+
+### What is Observability?
+
+- **Definition**: understanding system behavior from its outputs
+- **Three pillars**:
+  - Metrics: quantitative measurements
+  - Logs: detailed event records
+  - Traces: request flow tracking
+- GenAI adds a fourth concern: **the content itself** (prompts, completions, tool calls)
+
+## Why LLM Apps Need Special Observability
+
+### GenAI-Specific Signals
+
+- **Token usage**: the cost driver — input, output, cached tokens
+- **Latency breakdown**: time-to-first-token vs. total generation time
+- **Prompt/completion capture**: you must see what the model saw
+- **Tool call traces**: agent steps as spans
+- **Quality signals**: user feedback, judge scores attached to traces
+
+## Distributed Tracing for GenAI
+
+### Traces and Spans
+
+- **Trace**: one user request end-to-end
+- **Spans**: retrieval call, LLM call, tool execution, guardrail check
+- **Span attributes**: model name, token counts, temperature, finish reason
+- **Bottleneck identification**: which span dominates latency?
+- Agent runs become trees of spans — essential for debugging multi-step failures
+
+## OpenTelemetry GenAI Conventions
+
+### An Emerging Standard
+
+- OpenTelemetry defines **semantic conventions for GenAI**: standardized span/attribute names for model calls (`gen_ai.*` attributes)
+- Captures: system (provider), model, token usage, prompt/completion events
+- Benefit: vendor-neutral instrumentation — switch backends without re-instrumenting
+- Supported by a growing ecosystem of LLM observability platforms
+
+## Observability Tools
+
+### The Landscape
+
+- **Langfuse**: open-source LLM engineering platform — traces, evals, prompt management
+- **Phoenix / Arize**: tracing plus evaluation
+- **LangSmith**: tracing and datasets for LangChain-based (and other) apps
+- **Weights & Biases Weave**: experiment tracking extended to LLM apps
+- **OpenTelemetry + your existing APM**: reuse infrastructure you already run
+
+## Logging Best Practices
+
+### Structured Logging
+
+- **JSON logging**: machine-readable events
+- **Context enrichment**: request IDs, user/session IDs, model versions
+- **Log levels**: appropriate use of DEBUG, INFO, WARN, ERROR
+- **Sensitive data**: redact PII and secrets **before** they hit logs
+- Link logs to traces via trace IDs
+
+## Continuous Evaluation in Production
+
+### Online Evaluation
+
+- **Online evals**: score a sample of live traffic with judges
+- **A/B testing**: compare model/prompt versions on real users
+- **Drift detection**: input distribution shifts over time
+- **Alerting**: automated detection of quality or cost regressions
+- Production traces become tomorrow's eval datasets
+
+## Guardrails: Why?
+
+### Motivation
+
+- **Risk mitigation**: preventing harmful or off-policy outputs
+- **Security**: LLM apps are a new attack surface
+- **Compliance**: meeting regulatory and organizational requirements
+- **Trust building**: user confidence in AI systems
+- Guardrails complement — never replace — good evals
+
+## Guardrail Architecture
+
+### Where Checks Live
+
+- **Input guardrails**: run before the model — topic filters, injection detection, PII scrubbing
+- **Output guardrails**: run after the model — toxicity, grounding, format validation
+- **In-loop guardrails**: constrain tool use and agent actions
+- Tradeoff: every guardrail adds latency and cost — run checks in parallel where possible
+
+## Content Safety Guardrails
+
+### Types
+
+- **Toxicity detection**: filtering harmful content
+- **Topic control**: keeping the app on its intended domain
+- **PII protection**: detect and redact names, emails, SSNs, account numbers
+- **Bias mitigation**: reducing unfair outputs
+- **Hallucination checks**: grounding validation against retrieved context
+
+## Prompt Injection
+
+### The #1 LLM Security Risk
+
+- **Direct injection**: user instructs the model to ignore its system prompt
+- **Indirect injection**: malicious instructions hidden in retrieved documents, web pages, or tool outputs
+- Listed as LLM01 in the OWASP Top 10 for LLM Applications
+- Agents raise the stakes: injected instructions can trigger real tool actions
+
+## Prompt Injection Defenses
+
+### Defense in Depth
+
+- **Privilege separation**: the model gets least-privilege tool access
+- **Input classifiers**: detect injection attempts before the model
+- **Instruction hierarchy**: system > developer > user > retrieved content
+- **Output validation**: never execute model output without checks
+- **Human-in-the-loop**: confirmation gates for irreversible actions
+- Accept reality: no defense is complete — design for containment
+
+## Guardrail Tools and Frameworks
+
+### Implementation Options
+
+- **Amazon Bedrock Guardrails**: managed content filtering, PII, grounding checks
+- **NVIDIA NeMo Guardrails**: open-source programmable rails
+- **Llama Guard**: Meta's open safety classifier models
+- **Guardrails AI**: output validation and structured-output enforcement
+- **Custom filters**: regex + classifiers for domain-specific policies
+
+## Data Security
+
+### Protecting Sensitive Information
+
+- **Input sanitization**: cleaning user inputs before they reach models
+- **Output filtering**: removing sensitive data from responses
+- **Access controls**: role-based permissions on data sources and tools
+- **Audit logging**: tracking who accessed what through the model
+- **Data residency**: where do prompts go? Provider retention policies matter
+
+## Putting It Together
+
+### The Reliability Stack
+
+```{mermaid}
+flowchart LR
+    A[Input Guardrails] --> B[LLM / Agent]
+    B --> C[Output Guardrails]
+    B -.traces.-> D[Observability]
+    D -.datasets.-> E[Evals]
+    E -.regressions.-> B
+```
+
+- Guardrails protect the request path
+- Observability captures what happened
+- Evals close the loop and drive improvement
+
+## Hands-on Lab
+
+### Evals, Tracing, and Guardrails
+
+- Instrument a RAG/agent app with Langfuse tracing
+- Build an eval dataset and run LLM-as-a-judge scoring
+- Add input/output guardrails (PII + injection checks)
+- Inspect traces to debug a failing trajectory
+
+## References
+
+- [OpenTelemetry GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
+- [Langfuse Documentation](https://langfuse.com/docs)
+- [RAGAS Documentation](https://docs.ragas.io/)
+- [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+- [NVIDIA NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails)
+- [Amazon Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/)
+- [Arize Phoenix](https://docs.arize.com/phoenix)
+
+## Thank You!
+
+Any questions?

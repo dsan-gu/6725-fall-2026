@@ -1,5 +1,5 @@
 ---
-title: "Week 5: Agentic AI - Part 1"
+title: "Week 5: Agent Architectures"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
@@ -11,6 +11,20 @@ format:
     background-transition: fade
     highlight-style: ayu-mirage
     code-copy: true
+---
+
+## Agenda
+
+- What is Agentic AI?
+- Agent infrastructure primitives
+- Workflows vs. agents; the agentic loop
+- Agentic design patterns (planning, tool use, reflection)
+- Agent frameworks landscape
+- Multi-agent collaboration architectures
+- Agent memory and state sharing
+- **Context management & context engineering**
+- Hands-on lab, references
+
 ---
 
 ## Agentic AI {.center}
@@ -301,59 +315,6 @@ Input →  ├→ [LLM Call B] →├→ Aggregate
 
 ---
 
-## Agentic RAG {.center}
-
-When retrieval becomes an agent capability, not just a pipeline step
-
----
-
-## What is Agentic RAG?
-
-**Traditional RAG**: A fixed pipeline -- query → retrieve → generate
-
-**Agentic RAG**: The agent **decides** when and how to retrieve information
-
-Key differences:
-
-- **Query Routing**: Agent selects the right data source for each query
-- **Query Reformulation**: Agent rewrites queries for better retrieval
-- **Self-Reflection**: Agent evaluates retrieved results and decides if they are sufficient
-- **Iterative Retrieval**: Agent performs multiple rounds of retrieval, refining each time
-- **Tool-Augmented Retrieval**: Agent combines retrieval with other tools (calculators, APIs, code execution)
-
----
-
-## Agentic RAG Patterns
-
-### Adaptive Retrieval
-- Agent decides **whether retrieval is needed** at all (some queries can be answered from LLM knowledge)
-
-### Multi-Source Routing
-- Agent selects from **multiple knowledge bases** (vector DB, SQL database, web search, APIs)
-
-### Iterative Refinement
-- Agent retrieves → evaluates quality → reformulates query → retrieves again
-- Continues until the answer meets quality threshold
-
-### Corrective RAG (CRAG)
-- Agent grades retrieved documents for relevance
-- Triggers web search or alternative sources when retrieval quality is low
-
----
-
-## Agentic RAG vs. Traditional RAG
-
-| Aspect | Traditional RAG | Agentic RAG |
-|--------|----------------|-------------|
-| **Retrieval** | Fixed pipeline, always retrieves | Agent decides when to retrieve |
-| **Query** | User query passed as-is | Agent reformulates for better results |
-| **Sources** | Single knowledge base | Multiple sources, dynamically selected |
-| **Evaluation** | No self-assessment | Agent evaluates result quality |
-| **Iteration** | Single pass | Multiple rounds until satisfied |
-| **Tools** | Retrieval only | Retrieval + code execution + APIs |
-
----
-
 ## Agent Frameworks Landscape {.center}
 
 Open-source frameworks and managed services for building agents (2025-2026)
@@ -368,6 +329,7 @@ The agent framework ecosystem has matured significantly:
 |-----------|----------|--------------|---------|
 | **LangGraph** | LangChain | Graph-based state machines | MIT |
 | **Strands Agents** | AWS | Model-driven, minimal code | Apache 2.0 |
+| **CrewAI** | CrewAI | Role-based agent crews | MIT |
 | **Claude Agent SDK** | Anthropic | Built on Claude Code | MIT |
 | **Agents SDK** | OpenAI | Minimal primitives, handoffs | MIT |
 | **Agent Development Kit** | Google | Code-first, Gemini-optimized | Apache 2.0 |
@@ -422,6 +384,34 @@ agent("How many words are in this sentence?")
 ```
 
 > Source: [Strands Agents](https://strandsagents.com/)
+
+---
+
+## CrewAI
+
+**Role-based multi-agent "crews"**
+
+- Agents defined by **role, goal, and backstory** -- intuitive mental model
+- **Crews**: Autonomous teams of agents collaborating on tasks
+- **Flows**: Event-driven, fine-grained control for production pipelines
+- Built-in support for tools, memory, and human-in-the-loop
+- Independent framework (not built on LangChain)
+
+```python
+from crewai import Agent, Crew, Task
+
+researcher = Agent(
+    role="Research Analyst",
+    goal="Find and summarize relevant sources",
+    backstory="Meticulous analyst who cites everything.",
+)
+task = Task(description="Research LLM serving engines",
+            expected_output="A sourced summary", agent=researcher)
+crew = Crew(agents=[researcher], tasks=[task])
+result = crew.kickoff()
+```
+
+> Source: [CrewAI](https://docs.crewai.com/)
 
 ---
 
@@ -518,15 +508,85 @@ root_agent = Agent(
 
 ---
 
-## Multi-Agent Orchestration {.center}
+## Agent Memory {.center}
+
+What agents remember, and how
+
+---
+
+## Why Agents Need Memory
+
+- Maintain **context** across interactions
+- Store **conversation history** for personalized responses
+- Reduce **redundant API calls** by caching relevant information
+
+### Types of Memory
+
+- **Short-term memory:** The current context window -- temporary information during execution
+- **Long-term memory:** Persists data across multiple sessions (stores, files, databases)
+- **Ephemeral memory:** Exists only during a single agent's lifetime
+
+### Example: Memory in a Customer Support Chatbot
+
+- Tracks user issues
+- Remembers user preferences (e.g., preferred troubleshooting methods)
+- Offers recommendations based on past interactions
+
+---
+
+## Long-Term Memory Categories
+
+A useful taxonomy (used by LangMem, AgentCore Memory, and others):
+
+| Type | Stores | Example |
+|------|--------|---------|
+| **Semantic** | Facts and knowledge about the user/domain | "User's deployment target is EKS" |
+| **Episodic** | Past events and successful interactions | "Last time, restarting the pod fixed it" |
+| **Procedural** | Learned rules and behaviors | "Always answer this user in Spanish" |
+
+- Memory is **written** by the agent (explicit tool calls) or **extracted** in the background from conversations
+- Retrieval at runtime: query the memory store and inject relevant items into context
+
+> Source: [LangMem](https://github.com/langchain-ai/langmem)
+
+---
+
+## Sharing State Between Tools
+
+### When to Use State Sharing
+
+- When multiple tools need **access to shared knowledge**
+- When avoiding redundant **reprocessing of the same data**
+- When agents/tools are handling **different stages of a pipeline**
+
+### Techniques for State Sharing
+
+- Using a **centralized state manager** (e.g., Redis, database)
+- Passing **shared context** via function parameters (or a graph state object in LangGraph)
+- Leveraging **embedding stores** for dynamic knowledge retrieval
+
+### Example: State Sharing in an AI Research Assistant
+
+- Tool 1: Web search for papers
+- Tool 2: Summarization agent
+- Tool 3: Citation formatter
+- **Shared state ensures context persistence** across these tools
+
+---
+
+## Multi-Agent Collaboration {.center}
 
 When one agent is not enough
 
 ---
 
-## Modern Multi-Agent Architectures
+## Why Multi-Agent Systems?
 
-The industry uses two primary multi-agent structures:
+- **Definition:** Systems where multiple agents collaborate to achieve complex tasks
+- **Benefits:** Divide-and-conquer approach enhances efficiency and specialization
+- Each agent gets a **focused role, focused tools, and a focused context** -- smaller, cleaner prompts outperform one overloaded agent
+
+The industry uses two primary structural styles:
 
 ### Horizontal Architecture
 - Multiple agents with **equal technical proficiency**
@@ -537,9 +597,30 @@ The industry uses two primary multi-agent structures:
 - **Hierarchical** structure with orchestrator and worker agents
 - Higher-level agents handle reasoning and decision-making
 - Lower-level agents manage data collection and task execution
-- Example: Supervisor agent delegates to specialized sub-agents
 
-> Detailed multi-agent patterns, memory, and state sharing covered in **Week 6**.
+---
+
+## Multi-Agent Architecture 1: Agent Network
+
+- **Structure:** Agents represented as graph nodes, each capable of communicating with others
+- **Functionality:** Agents execute tasks and decide on subsequent actions or handoffs
+- **Example:** Specialized agents for web search, summarization, and citation formatting collaborating in a research assistant application
+
+---
+
+## Multi-Agent Architecture 2: Agent Supervisor
+
+- **Structure:** An LLM-based supervisor orchestrates and delegates tasks to individual agents
+- **Functionality:** The supervisor assigns tasks based on agent specialization and monitors progress
+- **Example:** In a customer support system, the supervisor routes technical queries to a tech support agent and billing issues to a finance agent
+
+---
+
+## Multi-Agent Architecture 3: Hierarchical Agent Teams
+
+- **Structure:** Nested teams of agents with defined roles and tools
+- **Functionality:** Teams operate at different levels, with higher-level agents coordinating lower-level agents
+- **Example:** In content creation, a high-level agent oversees drafting, editing, and publishing agents to streamline workflow
 
 ---
 
@@ -552,7 +633,120 @@ The industry uses two primary multi-agent structures:
 - SDKs available in Python, Go, JavaScript, Java, and .NET
 - Supported by Google ADK, Strands Agents, and other frameworks
 
-> Source: [A2A Protocol](https://github.com/a2aproject/A2A)
+> A2A is covered in depth in **Week 10**. Source: [A2A Protocol](https://github.com/a2aproject/A2A)
+
+---
+
+## Context Management & Context Engineering {.center}
+
+The context window is the scarcest resource in an agent -- spend it deliberately
+
+---
+
+## From Prompt Engineering to Context Engineering
+
+- **Prompt engineering**: Crafting the wording of a single instruction
+- **Context engineering**: Curating **everything** the model sees at each step of the loop
+  - System prompt, tool schemas, conversation history, retrieved documents, memory, tool results
+- Agents run for **many turns** -- context accumulates every iteration
+- Two failure modes as context grows:
+  - **Overflow**: You simply run out of window
+  - **Degradation ("context rot")**: Attention gets diluted; the model misses instructions buried in a 100k-token history
+- Goal: the **smallest set of high-signal tokens** that maximizes the likelihood of the desired outcome
+
+---
+
+## Context Window Budgeting
+
+Treat the window like a memory budget with line items:
+
+| Component | Typical share | Notes |
+|-----------|---------------|-------|
+| System prompt | Small, fixed | Keep it lean; every turn pays for it |
+| Tool definitions | Grows with tool count | Prune unused tools; too many tools degrades selection |
+| Conversation history | Grows every turn | The main thing to manage |
+| Retrieved context / files | Bursty | Trim to what's needed *now* |
+| Output headroom | Reserve it | Long generations need space too |
+
+- Measure token usage per component -- observability tooling (Week 6) makes this visible
+- Long context is **not free** even when it fits: cost and latency scale with input tokens
+
+---
+
+## Compaction and Summarization
+
+When history approaches the budget, **compress it**:
+
+- **Compaction**: Replace older turns with an LLM-written summary that preserves decisions, constraints, and open questions
+  - Coding agents (e.g., Claude Code) do this automatically near the window limit
+- **Selective pruning**: Drop verbose tool outputs after they've been acted on; keep the conclusion, not the raw dump
+- **Rolling summaries**: Summarize every N turns instead of one big compaction
+- **What must survive compaction**: goals, decisions made, files/entities touched, unresolved errors
+- **What can go**: raw logs, superseded drafts, dead-end explorations
+
+**Risk**: Summaries lose detail -- keep pointers (file paths, IDs) so details can be re-fetched.
+
+---
+
+## Retrieval vs. Stuffing
+
+Two strategies for getting knowledge into context:
+
+### Stuffing (pre-loading)
+- Load everything potentially relevant up front
+- Simple; works for small corpora and short tasks
+- Wastes budget and dilutes attention on long tasks
+
+### Just-in-time retrieval
+- Keep **lightweight references** (paths, IDs, queries); fetch content only when needed
+- The agent uses tools (search, file read, SQL) to pull data at the moment of use
+- Mirrors how humans work: bookmarks, not memorized libraries
+
+**Practical hybrid**: A small always-in-context core (instructions, key facts) + tools for everything else.
+
+---
+
+## Sub-Agent Context Isolation
+
+Multi-agent architectures are also a **context management strategy**:
+
+- Each sub-agent gets a **clean, focused window**: its task, its tools, nothing else
+- The orchestrator sends a **task brief**, not its whole history
+- Sub-agents return **distilled summaries** (e.g., "the bug is in `parse_config`, line 42"), not raw transcripts
+- Deep-research and coding systems use this to explore in parallel: workers may each burn tens of thousands of tokens, while the lead agent's context stays small
+- Rule of thumb: **isolate exploration** (high token churn) from **decision-making** (needs a clean view)
+
+---
+
+## Structured Note-Taking and Memory Files
+
+Persist important context **outside** the window:
+
+- **Agent memory files**: e.g., `CLAUDE.md` / `AGENTS.md` -- durable project conventions loaded at session start
+- **Scratchpads / to-do files**: The agent writes plans and progress notes to a file, re-reading them after compaction -- notes survive; context doesn't
+- **Structured memory stores**: LangMem, AgentCore Memory -- semantic/episodic/procedural records retrieved on demand
+- Pattern: *write down what future-you will need, in a place future-you will look*
+
+```
+memory/
+  plan.md        # current goal, steps, status
+  decisions.md   # choices made and why
+  learnings.md   # gotchas discovered along the way
+```
+
+---
+
+## Context Engineering: Practical Guidelines
+
+1. **Start minimal**: Add context only when its absence demonstrably hurts
+2. **Budget explicitly**: Know your per-component token spend
+3. **Compact before you overflow**: Summarize at ~70-80% utilization, not at the wall
+4. **Prefer references over payloads**: Retrieve just-in-time
+5. **Isolate sub-tasks**: Fresh windows for exploration-heavy work
+6. **Persist to files**: Notes, plans, and memories outlive the window
+7. **Curate tools**: Fewer, well-described tools beat a large ambiguous toolbox
+
+> Source: [Anthropic -- Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 
 ---
 
@@ -563,9 +757,29 @@ The industry uses two primary multi-agent structures:
 - **Anthropic's definition**: An agent is "LLMs using tools based on environmental feedback in a loop"
 - **Workflows vs. Agents**: Use workflows for predictable tasks, agents for open-ended problems
 - **Five design patterns**: Prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer
-- **Agentic RAG**: Agent-driven retrieval with query routing, self-reflection, and iterative refinement
-- **Frameworks**: LangGraph, Strands Agents, Claude Agent SDK, OpenAI Agents SDK, Google ADK, Bedrock AgentCore
-- **Multi-agent**: Horizontal (peer) and vertical (hierarchical) architectures; A2A protocol for cross-agent communication
+- **Frameworks**: LangGraph, Strands Agents, CrewAI, Claude Agent SDK, OpenAI Agents SDK, Google ADK, Bedrock AgentCore
+- **Multi-agent**: Network, supervisor, and hierarchical team architectures; A2A protocol (Week 10)
+- **Memory & state**: Semantic/episodic/procedural memory; shared state across tools
+- **Context engineering**: Budget the window, compact history, retrieve just-in-time, isolate sub-agents, persist notes to files
+
+---
+
+## Hands-on Lab
+
+### Building a Multi-Agent System with Context Management
+
+*Practical exercise and demonstration*
+
+1. **Single agent**: Build a tool-using agent with LangGraph or Strands Agents
+2. **Supervisor**: Add a second specialized agent and a supervisor to route between them
+3. **Memory**: Persist facts across sessions with a memory store
+4. **Context audit**: Log token usage per component; watch history grow across turns
+5. **Compact**: Add a summarization step and a notes file; verify the agent recovers state after compaction
+
+### Code samples
+
+- [AI Hedge Fund (multi-agent example)](https://github.com/virattt/ai-hedge-fund)
+- [Multi-agent code generation and execution (AWS samples)](https://github.com/aws-samples/multi-agent-code-gen-and-execution)
 
 ---
 
@@ -575,15 +789,23 @@ The industry uses two primary multi-agent structures:
 
 - [AWS -- What is Agentic AI?](https://aws.amazon.com/what-is/agentic-ai/)
 - [Anthropic -- Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)
+- [Anthropic -- Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 
 **Agent Frameworks:**
 
 - [LangGraph](https://www.langchain.com/langgraph)
 - [AWS Strands Agents SDK](https://strandsagents.com/)
+- [CrewAI](https://docs.crewai.com/)
 - [Claude Agent SDK](https://github.com/anthropics/claude-code-sdk-python)
 - [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
 - [Google Agent Development Kit (ADK)](https://github.com/google/adk-python)
 - [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
+
+**Memory and Multi-Agent:**
+
+- [LangMem](https://github.com/langchain-ai/langmem)
+- [LangGraph Multi-Agent Systems Tutorial](https://langchain-ai.github.io/langgraph/tutorials/#multi-agent-systems)
+- [AWS -- Multi-Agent Collaboration on Amazon Bedrock](https://aws.amazon.com/blogs/machine-learning/unlocking-complex-problem-solving-with-multi-agent-collaboration-on-amazon-bedrock/)
 
 **Protocols and Standards:**
 
@@ -594,4 +816,3 @@ The industry uses two primary multi-agent structures:
 
 - [Andrew Ng -- Agentic Design Patterns](https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/)
 - [MongoDB -- AI Agents Overview](https://www.mongodb.com/pt-br/library/resources/ai-agents)
-- [AWS -- Multi-Agent Collaboration on Amazon Bedrock](https://aws.amazon.com/blogs/machine-learning/unlocking-complex-problem-solving-with-multi-agent-collaboration-on-amazon-bedrock/)

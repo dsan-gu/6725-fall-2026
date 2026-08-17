@@ -1,5 +1,5 @@
 ---
-title: "Week 7: Fine-tuning"
+title: "Week 11: Fine-tuning"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
@@ -18,12 +18,13 @@ format:
 ::: {.incremental}
 - Why fine-tuning matters
 - Fine-tuning in the model customization spectrum
+- When to fine-tune vs. RAG vs. prompt engineering
 - Parameter-Efficient Fine-Tuning (PEFT) methods
 - Types of LoRA techniques
-- Challenges: Catastrophic forgetting and accuracy concerns
+- Data preparation
+- Challenges: catastrophic forgetting and accuracy concerns
 - Evaluation methodologies
-- Ethical considerations
-- Future directions
+- Hands-on lab: fine-tuning with Unsloth on EC2
 :::
 
 ## Why Fine-Tune Large Language Models?
@@ -53,6 +54,16 @@ flowchart LR
     style D fill:#ffccbc
     style E fill:#ffaba0
 ```
+
+## When to Fine-Tune vs. RAG vs. Prompting
+
+::: {.incremental}
+- **Prompt engineering first**: cheapest, fastest to iterate — exhaust it before anything else
+- **RAG** when the problem is *knowledge*: facts change, are proprietary, or must be cited
+- **Fine-tuning** when the problem is *behavior*: style, format, domain jargon, tool-use patterns
+- They compose: fine-tuned model + RAG is common in production
+- Fine-tuning does **not** reliably add new facts — it shapes how the model responds
+:::
 
 ## Cost-Benefit Analysis
 
@@ -100,7 +111,10 @@ flowchart LR
 
 ## LoRA: Low-Rank Adaptation
 
-![LoRA approach to fine-tuning](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/peft/LoRA_diagram.png)
+- Freeze the pre-trained weights $W_0$; learn a low-rank update
+- $W = W_0 + BA$ where $B \in \mathbb{R}^{d \times r}$, $A \in \mathbb{R}^{r \times k}$, $r \ll \min(d, k)$
+- Only $A$ and $B$ are trained — typically <1% of total parameters
+- At inference, $BA$ can be merged into $W_0$ (zero added latency) or kept as a swappable adapter
 
 ::: {.notes}
 LoRA freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, drastically reducing the number of trainable parameters for downstream tasks.
@@ -113,7 +127,7 @@ LoRA freezes the pre-trained model weights and injects trainable rank decomposit
 - **QLoRA**: Quantized LoRA for reduced memory footprint
 - **AdaLoRA**: Adaptive budget allocation across weight matrices
 - **DyLoRA**: Dynamic rank allocation during training
-- **DoRA**: Double low-rank adaptation with additional rescaling
+- **DoRA**: Weight-decomposed low-rank adaptation
 - **GLoRA**: Gated LoRA for improved control
 :::
 
@@ -145,9 +159,13 @@ LoRA freezes the pre-trained model weights and injects trainable rank decomposit
 :::
 
 ::: {.column width="40%"}
-![QLoRA memory efficiency](https://raw.githubusercontent.com/artidoro/qlora/main/assets/memory_plot.png){width="90%"}
+**Memory (7B model, illustrative)**
+
+- Full fine-tuning (16-bit): requires multiple data-center GPUs
+- LoRA (16-bit base): single high-memory GPU
+- QLoRA (4-bit base): fits on a single consumer GPU (~24 GB)
 :::
-:::
+::::
 
 ## Fine-Tuning Methods: Comparison
 
@@ -222,7 +240,7 @@ That thou, AI, art far more advanced than they.
 ::: {.column width="50%"}
 **Decoder-Only Models**
 
-- GPT family, LLaMA, Mistral
+- GPT family, Llama, Mistral, Qwen
 - Well-suited for:
   - Open-ended generation
   - Dialogue
@@ -235,9 +253,10 @@ That thou, AI, art far more advanced than they.
 
 ::: {.incremental}
 - **Hugging Face Transformers & PEFT**: Most common academic/research approach
-- **TRL (Transformer Reinforcement Learning)**: SFT & RLHF
-- **Unsloth**: Efficient LoRA fine-tuning
-- **LangChain**: Integration with other components 
+- **TRL (Transformer Reinforcement Learning)**: SFT & preference optimization
+- **Unsloth**: Memory-efficient LoRA/QLoRA fine-tuning
+- **Axolotl**: Config-driven fine-tuning of open models
+- **torchtune**: PyTorch-native fine-tuning library
 - **Cloud Providers**:
   - Amazon SageMaker
   - Azure OpenAI Service
@@ -253,7 +272,7 @@ That thou, AI, art far more advanced than they.
 - ROUGE, BLEU, METEOR
 - LLM-as-a-judge
 - Task-specific metrics
-- Benchmark suites (GLUE, SuperGLUE)
+- Benchmark suites (via LM Evaluation Harness)
 :::
 
 ::: {.column width="50%"}
@@ -273,10 +292,10 @@ That thou, AI, art far more advanced than they.
   - SFT → Reward Modeling → RL optimization
 - **DPO**: Direct Preference Optimization
   - Simplifies RLHF by eliminating reward model
-- **ORPO**: Offline Reinforced Preference Optimization
-- **GRPO**: Generative Reward Preference Optimization
-  - Uses an LLM to generate rewards for preference pairs
-  - Combines benefits of DPO with explicit reward modeling
+- **ORPO**: Odds Ratio Preference Optimization
+- **GRPO**: Group Relative Policy Optimization
+  - Compares groups of sampled responses instead of training a value model
+  - Popularized by DeepSeek's reasoning-model training
 - **Constitutional AI**: Constraining outputs to follow principles
 :::
 
@@ -319,12 +338,24 @@ That thou, AI, art far more advanced than they.
 8. Document your process and data for reproducibility
 :::
 
+## Hands-on Lab
+
+### Fine-Tuning with Unsloth on EC2
+
+- Repo: `gu-dsan6725/unsloth-finetune-ec2`
+- QLoRA fine-tune of an open-weight model on a GPU EC2 instance
+- Prepare an instruction dataset in chat format
+- Train with Unsloth, merge adapters, run inference on the result
+- Evaluate before/after with a small held-out set
+
 ## Resources
 
 - [Hugging Face PEFT Documentation](https://huggingface.co/docs/peft/index)
-- [Stanford CRFM Fine-tuning Tutorial](https://crfm.stanford.edu/2023/03/13/alpaca.html)
+- [Unsloth Documentation](https://docs.unsloth.ai/)
 - [QLoRA Paper](https://arxiv.org/abs/2305.14314)
 - [TRL Documentation](https://huggingface.co/docs/trl/index)
+- [Axolotl Documentation](https://docs.axolotl.ai/)
+- [torchtune Documentation](https://docs.pytorch.org/torchtune/)
 - [EleutherAI LM Evaluation Harness](https://github.com/EleutherAI/lm-evaluation-harness)
 - [OpenAI Fine-tuning Guide](https://platform.openai.com/docs/guides/fine-tuning)
 
@@ -336,6 +367,6 @@ Any questions?
 Time for Q&A - possible follow-up topics:
 - More details on specific PEFT methods
 - Cost comparisons across different approaches
-- Discussion of proprietary vs. open-source options
+- Discussion of proprietary vs. open-weight options
 - Specific use cases and implementation strategies
 :::

@@ -185,3 +185,6 @@ members
 
 # Quarto slide support files
 docs/lectures/slides/*_files/
+
+# Working plan file (local only)
+/PLAN.md

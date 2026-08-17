@@ -1,6 +1,6 @@
-# Applied Generative AI for AI developers (DSAN 6725) Spring 2026 <a href='https://github.com/dsan-gu/6725-spring-2026'><img src='docs/assets/images/logo.png' align="right" height="139" /></a>
+# Applied Generative AI for AI developers (DSAN 6725) Fall 2026 <a href='https://github.com/dsan-gu/6725-fall-2026'><img src='docs/assets/images/logo.png' align="right" height="139" /></a>
 
-[DSAN 6725 • Spring 2026](https://github.com/dsan-gu/6725-spring-2026)  
+[DSAN 6725 • Fall 2026](https://github.com/dsan-gu/6725-fall-2026)  
 [Amit Arora](https://www.linkedin.com/in/amit-arora-539120a/) • Graduate School of Arts & Sciences • Georgetown University
 
 ------------------------------------------------------------------------
@@ -55,7 +55,7 @@
     mkdocs build
     ```
 
-1. To publish the website on GitHub use the following command. This will publish the site to GitHub and provide the URL for accessing it, such as `https://gu-dsan.github.io/6725-spring-2026/`
+1. To publish the website on GitHub use the following command. This will publish the site to GitHub and provide the URL for accessing it, such as `https://gu-dsan.github.io/6725-fall-2026/`
 
     ```{.bash}
     mkdocs gh-deploy

@@ -1,0 +1,274 @@
+---
+title: "Applied Generative AI"
+subtitle: "Week 7: Ontologies, Knowledge Graphs, and the Semantic Layer"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda
+
+- Ontologies and knowledge representation
+- Knowledge graphs: concepts and stores
+- Graph RAG: retrieval over structured knowledge
+- Microsoft GraphRAG: entity extraction & community summarization
+- The semantic layer over enterprise data
+- Text-to-SQL grounding
+- Why agents need a semantic layer
+- Tooling landscape
+- Hands-on lab
+
+---
+
+## Why Structure Knowledge At All?
+
+::: {.incremental}
+- LLMs are fluent but **ungrounded**: they don't know *your* entities, relationships, or business definitions
+- Vector RAG retrieves **similar text**, not **connected facts**
+- Many real questions are relational: *"Which customers of our top supplier are also vendors?"*
+- Structured knowledge gives agents something vectors can't: **explicit, traversable, auditable relationships**
+:::
+
+---
+
+## Ontologies: The Vocabulary of a Domain
+
+- An **ontology** is a formal specification of a domain:
+  - **Classes** (types of things): `Person`, `Company`, `Drug`
+  - **Properties** (attributes): `foundedYear`, `dosage`
+  - **Relationships**: `worksFor`, `treats`, `acquiredBy`
+  - **Constraints**: a `Person` `worksFor` a `Company`, not vice versa
+- Encodes the *rules of what can be said* about a domain
+- Standards: **RDF** (triples), **RDFS**, **OWL** (W3C)
+
+---
+
+## Knowledge Representation Basics
+
+- The atomic unit: the **triple** — *(subject, predicate, object)*
+
+```
+(Bohr,      bornIn,           Copenhagen)
+(Bohr,      collaboratedWith, Heisenberg)
+(Heisenberg, developed,       UncertaintyPrinciple)
+```
+
+- Triples compose into a **graph**: nodes = entities, edges = relationships
+- Ontology = the schema; knowledge graph = the instance data
+
+---
+
+## Knowledge Graphs
+
+::: {.incremental}
+- A **knowledge graph (KG)** is entities + typed relationships + attributes at scale
+- Famous examples: Google Knowledge Graph, Wikidata, biomedical KGs (UMLS)
+- Two dominant data models:
+  - **RDF / SPARQL**: W3C standards, formal semantics, reasoning
+  - **Labeled Property Graph (LPG) / Cypher**: pragmatic, developer-friendly (Neo4j, Memgraph)
+- KGs excel at **multi-hop questions**: follow edges instead of hoping chunks co-occur
+:::
+
+---
+
+## Vector RAG vs. Graph RAG (Recap from Week 3)
+
+| | **Vector RAG** | **Graph RAG** |
+|---|---------------|---------------|
+| Retrieval | Nearest-neighbor over embeddings | Graph traversal queries |
+| Strength | Large unstructured corpora | Highly connected, relational data |
+| Multi-hop | Weak (chunks must co-occur) | Native (follow edges) |
+| Answer provenance | Similar chunks | Explicit paths — auditable |
+
+- Not either/or: **hybrid** systems retrieve from both and fuse
+
+---
+
+## Graph RAG: The Pipeline
+
+1. **Ingest** documents
+2. **Entity extraction**: LLM identifies entities and their types from text
+3. **Relationship extraction**: LLM identifies typed edges between entities
+4. **Graph construction**: merge/dedupe entities, load into a graph store
+5. **Query time**: translate the question into traversals (or local subgraph retrieval), pass the subgraph to the LLM as context
+
+---
+
+## Microsoft GraphRAG
+
+- An open-source, LLM-driven Graph RAG methodology from Microsoft Research
+- Key moves beyond naive graph construction:
+  - **LLM-based entity & relationship extraction** with descriptions
+  - **Community detection** (Leiden algorithm) clusters the graph into hierarchical communities
+  - **Community summarization**: LLM writes a summary report per community
+- Result: a **hierarchical map of the corpus's themes**, not just a pile of triples
+
+> Source: [Microsoft GraphRAG](https://microsoft.github.io/graphrag/)
+
+---
+
+## GraphRAG: Local vs. Global Search
+
+| Mode | How it works | Best for |
+|------|--------------|----------|
+| **Local search** | Start from entities matched to the query; expand to neighbors, related claims, and source chunks | Specific entity questions: *"What did X do?"* |
+| **Global search** | Map-reduce over community summaries | Corpus-level questions: *"What are the main themes?"* |
+
+- Global search answers "whole-dataset" questions that vector RAG structurally cannot
+
+---
+
+## Graph RAG: Costs and Trade-offs
+
+::: {.incremental}
+- **Indexing is expensive**: every chunk passes through the LLM for extraction; summaries add more calls
+- **Entity resolution is hard**: "IBM" vs. "International Business Machines" vs. "Big Blue"
+- **Freshness**: graph must be re-built or incrementally updated as documents change
+- Rule of thumb: use Graph RAG when questions are **relational or corpus-global**; plain vector RAG when they're **lookup-shaped**
+:::
+
+---
+
+## From Documents to Databases
+
+- So far: structuring **unstructured text**
+- The other half of enterprise knowledge lives in **structured data**: warehouses, lakes, transactional stores
+- LLMs face the same grounding problem there:
+  - Which table is the *real* revenue table?
+  - What does "active customer" mean, precisely?
+- Enter the **semantic layer**
+
+---
+
+## The Semantic Layer
+
+::: {.incremental}
+- A **semantic layer** sits between raw data and consumers, defining:
+  - **Metrics**: `revenue = sum(order_total) where status = 'complete'`
+  - **Dimensions**: time, region, product hierarchies
+  - **Entities & joins**: how tables relate
+  - **Business definitions**: one agreed meaning of "churn", "active user", "margin"
+- Consumers (BI tools, notebooks, **agents**) query *concepts*, not tables
+- Established tools: dbt Semantic Layer / MetricFlow, Cube, AtScale, Looker (LookML)
+:::
+
+---
+
+## Why Text-to-SQL Fails Without Grounding
+
+::: {.incremental}
+- Raw schema → LLM: hundreds of tables, cryptic column names, no definitions
+- The model guesses joins, invents filters, picks the wrong "revenue" column
+- Answers are **plausible and wrong** — the most dangerous failure mode in analytics
+- Benchmarks look fine on toy schemas; real warehouses are where it breaks
+:::
+
+---
+
+## Grounding Text-to-SQL with a Semantic Layer
+
+1. User asks: *"What was Q3 revenue by region?"*
+2. Agent queries the **semantic layer catalog**: finds the `revenue` metric, its definition, valid dimensions
+3. Agent emits a **metric query** (or SQL generated *from* the metric definition)
+4. Semantic layer compiles to correct, governed SQL
+5. One definition of revenue → **consistent answers everywhere**
+
+- The semantic layer converts text-to-SQL from *schema guessing* into *definition lookup*
+
+---
+
+## Ontology vs. Semantic Layer
+
+| | Ontology / KG | Semantic layer |
+|---|--------------|----------------|
+| Domain | Entities & relationships in the world | Metrics & dimensions in the warehouse |
+| Data shape | Graph (triples / property graph) | Relational (tables, cubes) |
+| Query | SPARQL / Cypher | Metric queries → SQL |
+| Answers | "How are things connected?" | "What is the number, precisely?" |
+
+- Both are **machine-readable meaning** — the connective tissue agents need
+
+---
+
+## Why Agents Need a Semantic Layer
+
+::: {.incremental}
+- **Determinism**: agents ground free-text requests in governed definitions instead of improvising SQL
+- **Trust**: an answer traceable to a metric definition or graph path is auditable; a raw LLM answer is not
+- **Access control**: the layer enforces row/column-level policy — the agent never touches raw tables
+- **Reuse**: one semantic model serves BI dashboards, notebooks, and every agent
+- **MCP fit**: expose the semantic layer / KG as an MCP server → any agent can query concepts as tools
+:::
+
+---
+
+## Tooling Landscape {.smaller}
+
+- **Graph stores**: Neo4j, Memgraph, Amazon Neptune, ArangoDB
+- **RDF / triple stores**: GraphDB, Apache Jena, Blazegraph
+- **Graph RAG frameworks**: Microsoft GraphRAG, LlamaIndex (KG index), LangChain graph chains, Neo4j GraphRAG package
+- **Semantic layers**: dbt MetricFlow, Cube, AtScale, Looker
+- **Query languages**: Cypher (LPG), SPARQL (RDF), GQL (ISO standard, 2024)
+
+---
+
+## Design Checklist for a Grounded Agent Stack
+
+1. Which questions are **relational**? → knowledge graph
+2. Which questions are **quantitative**? → semantic layer
+3. Which are **lookup-shaped**? → vector RAG
+4. Define the **ontology / metric definitions first**; extraction and SQL generation follow
+5. Expose each layer as a **tool (MCP)** with clear, typed contracts
+6. Log every traversal and query for **auditability**
+
+---
+
+## Hands-on Lab
+
+### Building a Graph RAG Pipeline
+
+*Lab repository: `gu-dsan6725/graph-rag`*
+
+1. **Setup**: launch Neo4j; install the Python driver and LLM SDK
+2. **Extract**: run LLM entity/relationship extraction over a document set
+3. **Load**: construct the knowledge graph; inspect it in Neo4j Browser
+4. **Query**: answer multi-hop questions via Cypher retrieval + LLM synthesis
+5. **Compare**: run the same questions through plain vector RAG and contrast the answers
+
+---
+
+## Key Takeaways
+
+::: {.incremental}
+1. Ontologies define *what can be said*; knowledge graphs hold *what is known*
+2. Graph RAG shines on **multi-hop and corpus-global** questions; GraphRAG adds community summarization for global search
+3. The semantic layer is the **metrics ontology of the warehouse** — it turns text-to-SQL guessing into definition lookup
+4. Agents need machine-readable meaning: **grounded, governed, auditable** access beats raw schema access
+5. Match the retrieval structure to the question shape: vector, graph, or semantic layer
+:::
+
+---
+
+## References
+
+**Knowledge Graphs & Graph RAG:**
+
+- [Microsoft GraphRAG Documentation](https://microsoft.github.io/graphrag/)
+- [Microsoft GraphRAG (GitHub)](https://github.com/microsoft/graphrag)
+- [Neo4j Documentation](https://neo4j.com/docs/)
+- [Neo4j GraphAcademy](https://graphacademy.neo4j.com/)
+- [W3C RDF Primer](https://www.w3.org/TR/rdf11-primer/)
+- [W3C OWL 2 Overview](https://www.w3.org/TR/owl2-overview/)
+
+**Semantic Layer & Text-to-SQL:**
+
+- [dbt Semantic Layer](https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl)
+- [Cube Documentation](https://cube.dev/docs)
+- [Course Bookmarks](https://github.com/gu-dsan6725/bookmarks)

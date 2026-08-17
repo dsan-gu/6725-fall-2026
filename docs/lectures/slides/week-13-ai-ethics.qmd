@@ -1,0 +1,215 @@
+---
+title: "Week 13: AI Ethics and Responsible AI"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda
+
+::: {.incremental}
+- Why ethics is an engineering concern, not a compliance checkbox
+- Bias and fairness
+- Hallucination and reliability harms
+- Privacy
+- Copyright and training-data provenance
+- Safety, misuse, and agent autonomy risks
+- Environmental cost
+- The regulation landscape
+- Responsible deployment in practice
+- Case discussions
+:::
+
+## Why This Is a Developer Problem
+
+### Ethics as Engineering
+
+- The people who build the system make most of the consequential choices: data, defaults, guardrails, UX
+- Harms usually come from **deployment decisions**, not model weights alone
+- "We just used the API" is not a defense — you own your application's behavior
+- This week: a vocabulary and a checklist, applied to the systems you built all semester
+
+## Bias and Fairness
+
+### Where Bias Enters
+
+- **Training data**: models mirror the internet's skews and stereotypes
+- **Annotation**: labeler demographics and instructions shape preferences
+- **Alignment**: RLHF encodes specific value judgments
+- **Application layer**: prompts, retrieval corpora, and personas add more
+- Bias is a pipeline property — you cannot fix it at one stage alone
+
+## Fairness in Practice
+
+### Measuring and Mitigating
+
+- Fairness has **competing formal definitions** (group vs. individual); pick one consciously per use case
+- Disaggregated evals: measure quality per demographic slice, not just in aggregate
+- High-stakes domains (hiring, lending, healthcare) carry legal anti-discrimination duties
+- Mitigations: data curation, output constraints, human review on consequential decisions
+- Document known limitations — model cards and system cards
+
+## Hallucination and Reliability Harms
+
+### When Confident Wrongness Hurts
+
+- LLMs generate plausible text, not verified facts
+- Real-world harms: fabricated legal citations, wrong medical guidance, invented references
+- Risk scales with **user trust** and **stakes**, not just error rate
+- Mitigations you already know: grounding via RAG, citations, evals, uncertainty communication
+- Design question: what happens to the user when the model is wrong?
+
+## Privacy
+
+### Data In, Data Out
+
+- **Training-time**: models can memorize and regurgitate personal data from training sets
+- **Inference-time**: prompts may contain PII — where do they go, how long are they retained?
+- **Inference attacks**: membership inference, data extraction
+- Regulatory hooks: GDPR, HIPAA, FERPA depending on domain
+- Controls: PII redaction (Week 6 guardrails), data-processing agreements, retention policies, on-prem open weights for sensitive workloads
+
+## Copyright and Training-Data Provenance
+
+### The Unsettled Questions
+
+- Is training on copyrighted text fair use? Active litigation in the US and elsewhere — genuinely unresolved
+- Can model **outputs** infringe? Memorized reproductions vs. style imitation
+- Who owns AI-generated content? US Copyright Office requires human authorship
+- Provenance responses: dataset documentation, opt-outs, licensed training corpora, indemnification offered by some vendors
+- For developers: know your model's training-data posture and your employer's exposure
+
+## Safety and Misuse
+
+### Dual-Use Reality
+
+- Misuse vectors: disinformation at scale, spear-phishing, non-consensual imagery, cyber-offense assistance, fraud
+- Lab-side mitigations: refusal training, usage policies, abuse monitoring
+- App-side mitigations: your guardrails, rate limits, identity, audit logs
+- Open-weight tension: safety fine-tuning can be removed by whoever holds the weights
+- Threat-model your own application: who would abuse it, and how?
+
+## Agent Autonomy Risks
+
+### When Models Act, Not Just Speak
+
+- Agents execute code, move money, send emails — errors become **actions**
+- Failure modes: goal misinterpretation, prompt-injection hijacking, cascading tool errors, runaway loops
+- Accountability gap: who is responsible when an autonomous agent causes damage?
+- Controls: least-privilege tools, spending/action limits, human-in-the-loop gates for irreversible steps, full trajectory logging
+- Autonomy should be **earned incrementally** as reliability is demonstrated
+
+## Environmental Cost
+
+### Compute Is Not Free
+
+- Costs concentrate in two places: training runs and aggregate inference at scale
+- Data centers consume electricity **and water**; siting decisions affect local grids
+- Inference now dominates lifetime footprint for widely deployed models
+- Developer levers: right-size models (small model where it suffices), caching, batching, efficient serving
+- Demand transparency: per-query energy reporting is still rare
+
+## Regulation Landscape
+
+### What's Coming (and Here)
+
+- **EU AI Act**: risk-tiered obligations; specific duties for general-purpose AI models; phased enforcement through 2026–2027
+- **United States**: sectoral enforcement (FTC, EEOC), state laws, executive actions — fragmented and shifting
+- **Elsewhere**: UK principles-based approach, China's generative AI measures, emerging national frameworks
+- Standards as soft law: NIST AI Risk Management Framework, ISO/IEC 42001
+- Practical takeaway: build the evidence trail (evals, logs, documentation) regulators will ask for
+
+## Responsible Deployment Checklist
+
+### Before You Ship
+
+::: {.incremental}
+1. **Purpose**: is the use case appropriate for a probabilistic system?
+2. **Evals**: measured performance, including disaggregated slices
+3. **Guardrails**: input/output filtering, injection defenses in place
+4. **Privacy**: PII handling, retention, and residency documented
+5. **Transparency**: users know they're talking to AI; limitations disclosed
+6. **Human oversight**: escalation and override paths for consequential actions
+7. **Monitoring**: observability + incident response plan
+8. **Documentation**: model/system cards, data provenance, decision log
+:::
+
+## Organizational Practices
+
+### Beyond the Checklist
+
+- Red-teaming before launch and periodically after
+- Incident response: rollback plans, user notification, postmortems
+- Staged rollouts: internal → limited beta → general availability
+- Diverse review: people who will spot harms you won't
+- Ethics review that can actually say "no" — or it's theater
+
+## Case Discussion 1
+
+### The Helpful Chatbot
+
+- A university deploys an LLM advising chatbot; it confidently misstates degree requirements and a student misses graduation
+- Questions:
+  - Where did the failure chain start — model, retrieval, UX, governance?
+  - What would the Week 6 reliability stack have caught?
+  - Who is accountable, and what remedy does the student get?
+
+## Case Discussion 2
+
+### The Autonomous Agent
+
+- A procurement agent with email and payment tools is prompt-injected by a malicious vendor invoice and initiates a fraudulent payment
+- Questions:
+  - Which controls (least privilege, HITL gates, anomaly detection) would have stopped it?
+  - How much autonomy should this agent have had at launch?
+  - Draft the incident postmortem: root cause and corrective actions
+
+## Case Discussion 3
+
+### The Fine-Tuned Screener
+
+- A company fine-tunes an open-weight model on past hiring decisions to screen resumes; historical bias is baked into the labels
+- Questions:
+  - What fairness measurement would surface the problem?
+  - Is "the model learned it from our data" a defense?
+  - Redesign the system: where do humans belong in the loop?
+
+## Hands-on Lab
+
+### Responsible AI Audit of Your Project
+
+- Apply the responsible deployment checklist to your semester project
+- Produce a short system card: intended use, data, evals, limitations, guardrails
+- Run a mini red-team exercise against a classmate's project
+- Present one identified risk and its mitigation
+
+## Course Wrap-Up
+
+### Where We've Been
+
+- Foundations → inference → RAG → agents and MCP → evals and guardrails → the semantic layer → tokenomics → platforms → A2A → fine-tuning → the model landscape → ethics
+- The through-line: **measure, monitor, and constrain** everything you build
+- The field will keep moving; the engineering discipline transfers
+
+## References
+
+- [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework)
+- [EU AI Act (EUR-Lex)](https://eur-lex.europa.eu/eli/reg/2024/1689/oj)
+- [OECD AI Principles](https://oecd.ai/en/ai-principles)
+- [US Copyright Office: Copyright and Artificial Intelligence](https://www.copyright.gov/ai/)
+- [Model Cards for Model Reporting (paper)](https://arxiv.org/abs/1810.03993)
+- [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+- [Anthropic Usage Policy](https://www.anthropic.com/legal/aup)
+- [OpenAI Usage Policies](https://openai.com/policies/usage-policies/)
+
+## Thank You!
+
+Any questions?
