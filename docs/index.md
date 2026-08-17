@@ -1,4 +1,4 @@
-# Applied Generative AI for Developers
+# Welcome
 
 <div class="hero">
     <img src="assets/images/logo.png" alt="Course Logo" style="max-width: 200px;">
@@ -25,10 +25,10 @@
     <div class="info-card">
         <h3>📋 Quick Links</h3>
         <ul>
-            <li><a href="syllabus/">Syllabus</a></li>
-            <li><a href="schedule/">Schedule</a></li>
-            <li><a href="lectures/">Lecture Notes</a></li>
-            <li><a href="labs/">Lab Materials</a></li>
+            <li><a href="syllabus.html">Syllabus</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="lectures/index.html">Lecture Notes</a></li>
+            <li><a href="labs/index.html">Lab Materials</a></li>
         </ul>
     </div>
 </div>

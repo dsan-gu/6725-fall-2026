@@ -1,0 +1,461 @@
+/* ==========================================================================
+   DSAN 6725 — Applied Generative AI for Developers
+   Modern academic design system. Fonts: Newsreader (display) + Inter (text).
+   ========================================================================== */
+
+:root {
+  --navy: #0b1f3f;
+  --navy-deep: #071429;
+  --navy-soft: #16305c;
+  --ink: #1c2733;
+  --ink-soft: #4a5a6a;
+  --paper: #faf9f6;
+  --card: #ffffff;
+  --line: #e5e1d8;
+  --accent: #2456a6;
+  --accent-warm: #b0863f;
+  --amber-bg: #fdf6e7;
+  --amber-line: #e2b93b;
+  --blue-bg: #eef3fb;
+  --code-bg: #f4f2ec;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(12, 26, 51, 0.06), 0 8px 24px -12px rgba(12, 26, 51, 0.18);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(180deg, var(--navy-deep), var(--navy));
+  border-bottom: 3px solid var(--accent-warm);
+}
+
+.header-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0.65rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: #fff;
+  margin-right: auto;
+}
+
+.brand img {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 2px;
+}
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text strong { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.02em; color: #fff; }
+.brand-text small { color: #b9c6dd; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; }
+
+.site-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+
+.nav-link {
+  color: #d7e0ef;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-link:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+.nav-link.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 -2px 0 var(--accent-warm);
+}
+
+.nav-toggle, .nav-toggle-label { display: none; }
+
+/* --------------------------------------------------------------------------
+   Page layout
+   -------------------------------------------------------------------------- */
+
+.page {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+.page.with-toc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 3rem;
+}
+
+.content { min-width: 0; max-width: 780px; }
+.page:not(.with-toc) .content { margin: 0 auto; }
+
+.toc { font-size: 0.83rem; }
+.toc-inner {
+  position: sticky;
+  top: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  border-left: 2px solid var(--line);
+  padding-left: 1rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+}
+.toc-title {
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin: 0 0 0.4rem;
+}
+.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 0.18rem 0;
+  line-height: 1.35;
+}
+.toc a:hover { color: var(--accent); }
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--navy);
+  line-height: 1.2;
+  scroll-margin-top: 5.5rem;
+}
+
+h1 { font-size: 2.35rem; font-weight: 600; margin: 0 0 1.2rem; letter-spacing: -0.01em; }
+
+h2 {
+  font-size: 1.55rem;
+  font-weight: 600;
+  margin: 2.6rem 0 0.9rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 { font-size: 1.2rem; font-weight: 600; margin: 1.8rem 0 0.6rem; }
+
+p { margin: 0.85rem 0; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2.5px; }
+a:hover { color: var(--navy-soft); }
+
+ul, ol { padding-left: 1.4rem; }
+li { margin: 0.3rem 0; }
+
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.2rem 1.25rem;
+  border-left: 3px solid var(--accent-warm);
+  background: var(--card);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+}
+
+hr { border: none; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+
+strong { color: var(--navy); }
+
+/* --------------------------------------------------------------------------
+   Code
+   -------------------------------------------------------------------------- */
+
+code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.12em 0.35em;
+}
+
+pre, .codehilite {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.codehilite { padding: 0; margin: 1.25rem 0; }
+.codehilite pre, pre { margin: 0; padding: 1rem 1.2rem; border: none; }
+pre code { background: none; border: none; padding: 0; font-size: 0.83rem; line-height: 1.55; }
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+th {
+  background: var(--navy);
+  color: #fff;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.7rem 0.9rem;
+}
+
+td {
+  padding: 0.65rem 0.9rem;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+tbody tr:hover { background: var(--blue-bg); }
+
+/* --------------------------------------------------------------------------
+   Admonitions (!!! note / warning)
+   -------------------------------------------------------------------------- */
+
+.admonition {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  background: var(--blue-bg);
+  font-size: 0.93rem;
+}
+
+.admonition-title {
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+}
+
+.admonition.warning {
+  background: var(--amber-bg);
+  border-left-color: var(--amber-line);
+}
+
+.admonition.warning .admonition-title { color: #7a5a10; }
+
+.admonition p:last-child { margin-bottom: 0; }
+
+/* --------------------------------------------------------------------------
+   Home page: hero, info cards, announcements
+   -------------------------------------------------------------------------- */
+
+.content > h1:first-child + .hero, .hero {
+  background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-soft) 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  margin: 0.5rem 0 2.5rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(600px 200px at 85% -20%, rgba(176, 134, 63, 0.35), transparent),
+    radial-gradient(400px 200px at 10% 120%, rgba(36, 86, 166, 0.5), transparent);
+  pointer-events: none;
+}
+
+/* Page h1 immediately followed by the hero is a document-title carrier only */
+.content > h1:has(+ .hero) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.hero > * { position: relative; z-index: 1; }
+
+.hero img { height: 84px; border-radius: 14px; background: #fff; padding: 4px; margin-bottom: 1rem; }
+
+.hero h1 {
+  color: #fff;
+  font-size: 2.2rem;
+  margin: 0.25rem 0 0.9rem;
+}
+
+.hero p {
+  color: #ccd7ea;
+  max-width: 620px;
+  margin: 0 auto;
+  font-size: 0.98rem;
+}
+
+.course-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.info-card h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.02rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--accent-warm);
+}
+
+.info-card h3 + h3, .info-card p + h3 { margin-top: 1.1rem; }
+.info-card p { margin: 0.4rem 0; font-size: 0.92rem; color: var(--ink-soft); }
+.info-card ul { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.92rem; }
+
+.announcement {
+  background: var(--amber-bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--amber-line);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 0.93rem;
+}
+
+/* --------------------------------------------------------------------------
+   Slide deck embeds (lecture week pages)
+   -------------------------------------------------------------------------- */
+
+iframe.deck, .content iframe {
+  width: 100%;
+  height: 76vh;
+  min-height: 480px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: #fff;
+}
+
+.deck-actions { margin: 0.75rem 0 0; font-size: 0.88rem; }
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  background: var(--navy-deep);
+  color: #b9c6dd;
+  margin-top: 2rem;
+}
+
+.footer-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 2.25rem 1.25rem;
+  font-size: 0.85rem;
+}
+
+.footer-inner p { margin: 0.25rem 0; }
+.footer-inner strong { color: #fff; }
+.footer-inner a { color: #d7e0ef; }
+.footer-fine { color: #7d8ca6; font-size: 0.78rem; margin-top: 0.75rem !important; }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .page.with-toc { grid-template-columns: 1fr; }
+  .toc { display: none; }
+
+  .header-inner { flex-wrap: wrap; }
+
+  .nav-toggle-label {
+    display: block;
+    cursor: pointer;
+    width: 28px;
+    height: 22px;
+    position: relative;
+  }
+
+  .nav-toggle-label span,
+  .nav-toggle-label span::before,
+  .nav-toggle-label span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2.5px;
+    background: #fff;
+    border-radius: 2px;
+    transition: transform 0.2s;
+  }
+
+  .nav-toggle-label span { top: 10px; }
+  .nav-toggle-label span::before { top: -8px; }
+  .nav-toggle-label span::after { top: 8px; }
+
+  .site-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    padding: 0.5rem 0 0.75rem;
+  }
+
+  .nav-toggle:checked ~ .site-nav { display: flex; }
+
+  h1 { font-size: 1.85rem; }
+  .hero { padding: 2.25rem 1.25rem; }
+  .hero h1 { font-size: 1.7rem; }
+  table { display: block; overflow-x: auto; }
+}
