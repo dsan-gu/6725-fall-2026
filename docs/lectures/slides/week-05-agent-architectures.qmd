@@ -5,8 +5,8 @@ author: "Amit Arora"
 format:
   revealjs:
     theme: custom.scss
-    slide-number: true
-    show-slide-number: print
+    slide-number: "c/t"
+    show-slide-number: all
     transition: fade
     background-transition: fade
     highlight-style: ayu-mirage
@@ -783,7 +783,7 @@ memory/
 
 ---
 
-## References
+## References {.smaller .scrollable}
 
 **Definitions and Concepts:**
 

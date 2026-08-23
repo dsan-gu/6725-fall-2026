@@ -5,8 +5,8 @@ author: "Amit Arora"
 format:
   revealjs:
     theme: custom.scss
-    slide-number: true
-    show-slide-number: print
+    slide-number: "c/t"
+    show-slide-number: all
     transition: fade
     background-transition: fade
     highlight-style: ayu-mirage
@@ -261,12 +261,11 @@ The building blocks that servers expose to AI clients
 
 ---
 
-## Server Primitives: Tools, Resources, Prompts
+## Server Primitives: Tools, Resources, Prompts {.smaller}
 
 ### Tools (Server → Client)
 - **Executable functions** the AI can invoke to perform actions
 - **Can have side effects**: write files, call APIs, modify databases
-- Each tool has a name, input schema (JSON Schema), and output
 - Example: `create_issue(title, body)`, `send_email(to, subject, message)`
 
 ### Resources (Server → Client)
@@ -283,13 +282,12 @@ The building blocks that servers expose to AI clients
 
 ---
 
-## Advanced Primitives: Sampling, Elicitation, Notifications
+## Advanced Primitives: Sampling, Elicitation, Notifications {.smaller}
 
 ### Sampling (Client ← Server)
 - **Reverse flow**: Server requests LLM completions from the client
 - Enables agentic patterns where tools need AI reasoning mid-execution
 - Server sends sampling request → Client runs LLM → Returns result to server
-- Use case: Tool that needs to classify/summarize data before proceeding
 
 ### Elicitation (Client ← Server)
 - Server requests **user input** when information is missing
@@ -299,9 +297,7 @@ The building blocks that servers expose to AI clients
 
 ### Notifications (Server → Client)
 - **One-way messages** from server to client (no response expected)
-- Progress updates for long-running operations
-- Log messages for debugging and monitoring
-- Real-time status changes
+- Progress updates for long-running operations, log messages, status changes
 - Example: `progress: 50%`, `log: Processing file 3 of 10`
 
 ---
@@ -486,7 +482,7 @@ Configure in `~/.claude.json` (user scope) or project-level `.mcp.json` (project
 
 ---
 
-## Security Considerations
+## Security Considerations {.smaller}
 
 ### Authentication
 
@@ -532,7 +528,7 @@ npx @modelcontextprotocol/inspector
 
 ---
 
-## References
+## References {.smaller}
 
 **Agentic RAG:**
 

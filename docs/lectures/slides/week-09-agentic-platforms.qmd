@@ -5,8 +5,8 @@ author: "Amit Arora"
 format:
   revealjs:
     theme: custom.scss
-    slide-number: true
-    show-slide-number: print
+    slide-number: "c/t"
+    show-slide-number: all
     transition: fade
     background-transition: fade
     highlight-style: ayu-mirage
@@ -262,7 +262,7 @@ flowchart TB
 ## Real-World Example: Intuit GenOS {.smaller}
 
 [Medium blog: Intuit GenOS](https://medium.com/intuit-engineering/how-to-accelerate-development-velocity-in-the-genai-era-build-a-genos-e71ac2e17b82)
-![GenOS Architecture](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*VIKtfUQRHBb_BlXo3ZpK6g.png){width=75%}
+![GenOS Architecture](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*VIKtfUQRHBb_BlXo3ZpK6g.png){height=480}
 
 ## Real-World Example: Scale.com Gen AI platform {.smaller}
 
@@ -283,7 +283,7 @@ flowchart TB
 ## Real-World Example: AIBrix {.smaller}
 
 [AIBrix paper](https://github.com/vllm-project/aibrix/blob/main/docs/paper/AIBrix_White_Paper_0219_2026.pdf)
-![AIBrix](img/aibrix.png){width=75%}
+![AIBrix](img/aibrix.png){height=480}
 
 
 ## Implementation Considerations {.smaller}

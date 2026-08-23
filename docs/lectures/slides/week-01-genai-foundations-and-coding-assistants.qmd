@@ -5,8 +5,8 @@ author: "Amit Arora"
 format:
   revealjs:
     theme: custom.scss
-    slide-number: true
-    show-slide-number: print
+    slide-number: "c/t"
+    show-slide-number: all
     transition: fade
     background-transition: fade
     highlight-style: ayu-mirage
@@ -21,9 +21,33 @@ format:
 - **Week 1 Focus**: Generative AI foundations and AI-powered coding tools
 - **Key Objectives**:
   - Understand the breadth of generative AI technologies
-  - Explore core generative model architectures
+  - Build a practical mental model of how LLMs work
   - Learn in-context learning and prompt engineering
   - Get hands-on with AI coding assistants
+
+## The Elephant in the Room
+
+::: {style="text-align: center;"}
+![](img/ai-homework-exam-distributions.png){height=270} ![](img/ai-exam-vs-homework.png){height=270} ![](img/ai-good-grade-survey.png){height=270}
+
+![](img/ai-student-usage.jpg){height=250} ![](img/ai-publications-growth.png){height=250}
+:::
+
+## The Elephant in the Room
+
+![](img/ai-elephant-collage.png){width=95%}
+
+**Let's talk about this.** This is, after all, a course on Applied Generative AI -- we obviously cannot say "don't use AI." So what should our posture be?
+
+## Opinions on AI Are on a Spectrum
+
+::: {style="text-align: center;"}
+![](img/asahi-genai-policy.png){height=440}
+:::
+
+Source: [asahilinux.org/docs/project/policies/slop](https://asahilinux.org/docs/project/policies/slop/) *(the highlight is ours, not part of the original documentation)*
+
+**To be clear: this is certainly not the policy of this class** -- but it is worth pointing out that opinions on AI span a full spectrum, from "expressly forbidden" to "AI-first."
 
 ## Course Structure
 
@@ -33,7 +57,10 @@ format:
 - **Weekly Lectures**: Slides and recordings (Tuesdays 8:00-10:30 AM, CBN-203)
 - **Labs**: Hands-on exercises with GenAI tools
 - **Assignments**: Individual coding assignments
-- **Quizzes**: 6 quizzes throughout the semester
+- **Weekly Presentations**: every student presents a topic individually (not as a team)
+  - 45 students across 14 weeks means about 3 presenters per week, 5 minutes each
+  - We will reserve the last 15 minutes of every class for this
+  - *If you suspect I am not going to finish the lecture in time to leave room for presentations, remind me during class -- and we will make it 20 minutes, just to be safe* 🙂
 - **Capstone Project**: Team-based GenAI application
 
 ### Important Resources
@@ -48,40 +75,55 @@ format:
 - **Team Size**: 2-4 students per team
 - **Multiple teams can work on the same project idea**
 - Maintain a running list of project ideas throughout the semester
+- **Project abstract submission is a trackable, graded milestone**
 - Project proposal due mid-semester
 - Final presentation and deliverable at end of semester
 
 ### Deliverables
 
-1. Project proposal with problem statement
-2. Mid-project checkpoint
-3. Final presentation
-4. Code repository with documentation
-5. Written report
+1. Project abstract (graded milestone)
+2. Project proposal with problem statement
+3. Mid-project checkpoint
+4. Final presentation
+5. Code repository with documentation
+6. Written report
 
-## Project Ideas
+## The Final Project Matters Most
+
+### Why It Deserves Your Attention Now
+
+- The final project is the **most important component of this course** — it carries the **maximum weight** in your grade
+- Start thinking about your project **from day one of the semester**, not when the proposal is due
+
+### Pick a Problem You Care About
+
+- Choose a problem that is **genuinely interesting to you** — something you deeply care about
+- Pick something you would want to stay invested in for the **next 6 to 12 months, even beyond this course**
+- That level of personal investment is what turns a course project into portfolio-defining work
+
+## Project Ideas {.smaller}
 
 ### Potential Areas to Explore
+
+- **Semantic Layer for Agents over Enterprise Data**
+  - Give agents a governed, business-aware view of enterprise data -- work with data that you already understand
+  - Explore emerging open standards such as Open Semantic Interchange (OSI)
+
+- **AI-Powered Code Transformation**
+  - Transform Python code to Go or Rust for performance optimization
+  - Imagine millions of agents optimized this way -- the aggregate compute savings are enormous
 
 - **Memory MCP Server for Coding Assistants**
   - Persistent memory layer for AI coding tools
   - Context retention across sessions
 
-- **Semantic Layer for Data**
-  - Natural language interface to databases
-  - Business logic abstraction for LLMs
-
 - **Agent Evaluations Framework**
   - Benchmarking multi-step agent tasks
   - Measuring tool use and reasoning
 
-- **Log File Analysis with GenAI**
-  - Automated anomaly detection
-  - Natural language log queries
-
-- **RAG-based Documentation Assistant**
-  - Domain-specific knowledge retrieval
-  - Multi-document synthesis
+::: {.idea-callout}
+Or explore any other idea that comes to mind -- these are just the areas that are of interest to me!
+:::
 
 ## What is Generative AI?
 
@@ -98,7 +140,12 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
   - Generating novel, contextually relevant outputs
   - Spanning multiple modalities (text, image, code, audio)
 
-## The Model Landscape (2026)
+## The Model Landscape (2026) {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### H1 2026
 
 1. **Frontier Multimodal Models**
    - Anthropic Claude (Sonnet 4.5, Opus 4.5)
@@ -114,25 +161,37 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
 
 3. **Image/Video Generation**
    - DALL-E, Stable Diffusion, Midjourney
+:::
 
-# Transformer Architecture - Fundamental Concepts
+::: {.column width="50%"}
+### H2 2026
 
-## NLP prior to embeddings and transformers
+1. **Frontier Multimodal Models**
+   - Anthropic Claude 5 family (Opus 5, Sonnet 5, Fable 5)
+   - OpenAI GPT-5.x refreshes and newer reasoning models
+   - xAI Grok 4.6
 
-- **Pre-Embedding NLP Representations: Bag of Words**
-  - Discrete, non-contextual representation of text
-  - Treats documents as unordered collections of words
-  - Loses semantic meaning and word order
-  - High dimensionality with sparse vectors
-  - No understanding of word relationships
+2. **Open-Weight Models**
+   - Qwen 3.8
+   - Moonshot AI Kimi K3
+   - Rapid release cadence continues from Chinese labs
 
+3. **The pattern**: capabilities keep leaping every quarter -- design applications so you can swap models easily
+:::
 
-## Origins of Modern Embeddings
-  - Word2Vec paper: [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781), [Explainer video for word embeddings](https://www.youtube.com/watch?v=wgfSDrqYMJ4)
-  - Breakthrough in sequence-to-sequence learning
-  - Replaced previous RNN and LSTM architectures
-  - Enabled dense, contextual word representations
-  - Captured semantic relationships between words
+::::
+
+# LLM Foundations: The Practitioner's View
+
+## An LLM in Five Ideas
+
+1. **Tokens**: text is split into subword units; models read and write tokens, not words
+2. **Next-token prediction**: an LLM predicts the next token given everything before it -- all capabilities emerge from this one trick
+3. **Context window**: the model sees only what fits in its context; what is not in context does not exist
+4. **Sampling and temperature**: output tokens are drawn from a probability distribution -- lower temperature is more deterministic, higher is more varied
+5. **In-context learning**: models pick up new tasks from instructions and examples in the prompt -- no retraining needed
+
+*The machinery underneath -- embeddings, self-attention, QKV, reasoning models -- is covered next week, after you have used these models hands-on.*
 
 ## Tokenization: How LLMs See Text
 
@@ -143,151 +202,6 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
   - Rare words, code, and non-English text split into more tokens
   - Digit/character-level quirks ("how many r's in strawberry") trace back to tokenization
 - **Try it**: [OpenAI Tokenizer](https://platform.openai.com/tokenizer), [Hugging Face Tokenizers](https://huggingface.co/docs/tokenizers/index)
-
-## Core Components of Transformer Architecture
-
-1. Introduced in "Attention Is All You Need" (Google, 2017). [Paper](https://arxiv.org/abs/1706.03762), [Explainer video](https://www.youtube.com/watch?v=iDulhoQ2pro) and also [this video](https://www.youtube.com/watch?v=5MaWmXwxFNQ)
-
-1. **MUST READ**: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
-1. **Interactive Tool**: [Transformer Explainer](https://poloclub.github.io/transformer-explainer/) - Visual, interactive exploration of transformer architecture
-1. Key Building Blocks
-
-    1. **Self-Attention Mechanism**
-       - Allows model to weigh importance of different parts of input
-       - Captures contextual relationships dynamically
-       - Enables parallel processing of entire sequences
-
-    1. **Positional Encoding**
-       - Adds location information to input embeddings
-       - Crucial for understanding sequence order
-       - Enables models to understand context beyond word positioning
-
-## Detailed Self-Attention Mechanism
-
-### How Self-Attention Works
-
-- **Key Components**:
-  - Query (Q)
-  - Key (K)
-  - Value (V)
-
-- **Attention Calculation**:
-  1. Generate Q, K, V matrices
-  2. Compute attention scores
-  3. Apply softmax
-  4. Create weighted representation
-
-## Deep Dive: Query, Key, Value (QKV) Matrices
-
-### Understanding QKV in Self-Attention
-
-- **Query (Q)**: "What am I looking for?"
-  - Represents the current token's search for relevant context
-  - Generated by multiplying input with learned weight matrix Wq
-
-- **Key (K)**: "What do I contain?"
-  - Represents what information each token offers
-  - Used to compute compatibility scores with queries
-
-- **Value (V)**: "What should I contribute?"
-  - The actual content that gets passed forward
-  - Weighted by attention scores
-
-### Resources:
-- [Transformer Explainer - Interactive Visualization](https://poloclub.github.io/transformer-explainer/)
-- [Understanding Q,K,V in Transformer](https://medium.com/analytics-vidhya/understanding-q-k-v-in-transformer-self-attention-9a5eddaa5960)
-- [The Q, K, V Matrices Explained](https://arpitbhayani.me/blogs/qkv-matrices/)
-
-## QKV: The Attention Calculation
-
-### Step-by-Step Process
-
-1. **Create QKV vectors**: Input embeddings multiplied by Wq, Wk, Wv matrices
-2. **Compute attention scores**: $Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V$
-3. **Scale by sqrt(d_k)**: Prevents dot products from growing too large
-4. **Apply softmax**: Convert scores to probabilities
-5. **Multiply by V**: Get weighted combination of values
-
-### Multi-Head Attention
-- Split Q, K, V into multiple "heads" (e.g., 12 in GPT-2)
-- Each head learns different relationship patterns
-- Results concatenated and projected back
-
-## Transformer Architecture Visualization
-
-### Encoder-Decoder Structure
-
-- **Encoder**
-  - Processes input sequence
-  - Generates contextual representations
-- **Decoder**
-  - Generates output sequence
-  - Uses encoder representations
-- **Multi-Head Attention**
-  - Multiple attention mechanisms in parallel
-  - Captures different types of dependencies
-- **Decoder-only models** (GPT, Claude, Llama): today's dominant LLM architecture -- next-token prediction with causal attention
-
-## Transformer Advantages
-
-### Why Transformers Changed Everything
-
-- **Parallel Processing**
-  - Unlike RNNs, can process entire sequences simultaneously
-- **Long-Range Dependencies**
-  - Effectively capture distant contextual relationships
-- **Scalability**
-  - Easily parallelizable
-  - Supports massive model architectures
-
-## Limitations and Challenges
-
-### Transformer Architecture Considerations
-
-- **Computational Complexity**
-  - Quadratic complexity with sequence length
-- **Memory Requirements**
-  - Large models need significant computational resources
-- **Mitigation Strategies** (deep dive in Week 2: Inference)
-  - Flash Attention, PagedAttention, continuous batching
-  - Sparse attention and efficient transformer variants
-  - Mixture of Experts (MoE) architectures
-  - Model distillation and quantization
-  - Extended context windows (200K+ tokens now common)
-
-## Sampling: How Models Pick the Next Token
-
-- The model outputs a **probability distribution** over the vocabulary; sampling turns it into text
-- **Greedy decoding**: always pick the most likely token -- deterministic but repetitive
-- **Temperature** (0-1+): rescales the distribution; lower = more deterministic, higher = more creative
-- **Top-k**: sample only from the k most likely tokens
-- **Top-p (nucleus)**: sample from the smallest set of tokens whose cumulative probability exceeds p
-- **Stop sequences**: strings that terminate generation (e.g., Llama's `<|eot_id|>`)
-
-## Inference Parameters in Practice
-
-Users can get tailored responses using the following parameters when invoking foundation models:
-
-  - `temperature` – Regulates the creativity of the model's responses. Use a lower temperature for more deterministic responses, higher for more creative or varied responses.
-  - `top_k` – The number of most-likely candidates the model considers for the next token. Lower values limit options to more likely outputs; higher values allow less likely outputs.
-  - `top_p` – Considers only the most probable token options based on a cumulative probability threshold (p). Values below 1.0 focus the model on likely choices, producing more stable, predictable completions.
-  - `stop sequences` – Control where the model stops generating (model-family specific, e.g. `<|eot_id|>` for Llama).
-
-## Reasoning Models
-
-### A New Paradigm in AI
-
-- **What are Reasoning Models?**
-  - Models that "think" before responding
-  - Extended inference-time compute for complex problems
-- **Examples**:
-  - OpenAI o-series and GPT-5 with reasoning effort levels
-  - Anthropic Claude with extended thinking (Sonnet/Opus 4.x)
-  - DeepSeek-R1, Qwen 3 thinking modes
-- **Use Cases**:
-  - Complex code generation and debugging
-  - Multi-step problem solving
-  - Mathematical and logical reasoning
 
 # In-Context Learning and Prompt Engineering
 
@@ -503,6 +417,69 @@ Respond in JSON format:
 Think step by step. Show your reasoning before the final answer.
 ```
 
+## The Prompting Checklist {.smaller}
+
+Six moves account for most of the gain:
+
+1. **Be clear and direct** -- state the output format, the constraints, and the steps in order
+   - Golden rule: if a colleague with no context would be confused, so is the model
+2. **Give the motivation** -- explaining *why* lets the model generalize to cases you did not enumerate
+3. **Show 3-5 examples** -- diverse, covering edge cases, wrapped in `<example>` tags
+4. **Structure with XML tags** -- `<instructions>`, `<context>`, `<input>`; consistent and nestable
+5. **Assign a role** in the system prompt -- focuses tone and domain vocabulary
+6. **Order matters in long context** -- put long documents *above* the question; Anthropic reports up to ~30% improvement
+
+### Say what to do, not what to avoid
+
+| Don't | Do |
+|-------|-----|
+| "Do not use markdown" | "Write in flowing prose paragraphs" |
+| "Don't be verbose" | "Answer in at most three sentences" |
+
+## Prompting Anti-Patterns {.smaller}
+
+| Anti-pattern | Why it hurts | Do instead |
+|---|---|---|
+| "Make it better" | No success criteria to optimize against | Name the target: latency, readability, coverage |
+| "Do not do X" | Negation still puts X in the context | Name the positive behavior you want |
+| "Think step by step" to a reasoning model | Reasoning is already built in; can degrade output | Give the problem and constraints; set effort instead |
+| Pasting the whole repo | Dilutes signal, burns context | Point to files and let the agent read them |
+| Contradictory rules across memory files | The model picks one arbitrarily | Audit and de-duplicate periodically |
+| One mega-prompt for a six-step task | Errors compound silently | Chain prompts; verify each step |
+
+## Treat Prompts Like Code {.smaller}
+
+### The loop
+
+1. **Draft** -- start from a metaprompt or prompt generator rather than a blank page
+2. **Version** -- prompts live in the repo, in git, reviewed in PRs like any other artifact
+3. **Evaluate** -- a small labeled set beats vibes; measure before and after every edit
+4. **Refine** -- change one thing at a time so you know what moved the number
+
+- Anthropic's [metaprompt notebook](https://colab.research.google.com/github/anthropics/claude-cookbooks/blob/main/misc/metaprompt.ipynb) gives you a first draft to critique
+- Systematic evaluation is a whole topic -- **Week 6: Evals, Observability, and Guardrails**
+
+### Rule of thumb
+
+> Exhaust prompt engineering before reaching for fine-tuning. It is the cheapest, fastest, and most reversible lever you have.
+
+## Prompt Engineering: Repos to Clone {.smaller}
+
+| Resource | What it gives you |
+|---|---|
+| [anthropics/prompt-eng-interactive-tutorial](https://github.com/anthropics/prompt-eng-interactive-tutorial) | Nine-chapter hands-on course in notebooks -- start here |
+| [anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks) | Runnable recipes: metaprompt, classification, RAG, tool use |
+| [dair-ai/Prompt-Engineering-Guide](https://github.com/dair-ai/Prompt-Engineering-Guide) | The community reference: techniques, papers, context engineering |
+| [NirDiamant/Prompt_Engineering](https://github.com/NirDiamant/Prompt_Engineering) | One notebook per technique, beginner to advanced |
+| [promptslab/Awesome-Prompt-Engineering](https://github.com/promptslab/Awesome-Prompt-Engineering) | Curated papers, tools, and datasets |
+| [openai/openai-cookbook](https://github.com/openai/openai-cookbook) | GPT-family prompting and reasoning-model guides |
+| [agentsmd/agents.md](https://github.com/agentsmd/agents.md) | The AGENTS.md format and example files |
+| [Anthropic prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) | The living reference -- reread it every semester |
+
+::: {.idea-callout}
+Clone one of these tonight and run a notebook. Reading about prompting is not prompting.
+:::
+
 ## From Prompt Engineering to Context Engineering
 
 ### The Paradigm Shift
@@ -661,6 +638,134 @@ This is a FastAPI e-commerce backend with Stripe integration.
 
 Tell Claude **where** to find information, not all the information itself.
 
+## AGENTS.md: One File, Every Agent
+
+### The problem
+
+- Every tool invented its own rules file: `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`, `.windsurfrules`, `.clinerules`
+- Same project, same conventions, five copies -- and they drift apart
+
+### The fix
+
+> "Think of AGENTS.md as a README for agents: a dedicated, predictable place to provide context and instructions to help AI coding agents work on your project."
+
+- Plain Markdown at the repo root -- no schema, no frontmatter, nothing to learn
+- **60,000+ open-source repos** have adopted it; now stewarded by the Agentic AI Foundation under the Linux Foundation
+- Read by Codex, Copilot, Cursor, Jules, Gemini CLI, Aider, Devin, Zed, Windsurf, Warp, Junie, and others
+- Canonical spec and examples: [agents.md](https://agents.md/) | [github.com/agentsmd/agents.md](https://github.com/agentsmd/agents.md)
+
+## AGENTS.md: What Goes In It {.smaller}
+
+All sections are optional -- it is just Markdown:
+
+```markdown
+# AGENTS.md
+
+## Dev environment
+- `uv sync` installs everything; Python 3.12+ required.
+
+## Build and run
+- Render slides: `./render_slides.sh`
+- Build the site: `uv run python build_site.py`
+
+## Testing
+- `uv run pytest -xvs`; all tests must pass before opening a PR.
+
+## Code style
+- Ruff for lint and format; type hints on every public function.
+
+## PR instructions
+- Title format: `[area] short description`
+```
+
+### Placement rules
+
+- A root `AGENTS.md` covers the repo; **nested** `AGENTS.md` files cover their own subtree
+- The agent reads the **closest** file up the directory tree -- monorepos get per-package instructions for free
+- An explicit instruction in your prompt always wins over the file
+
+## Sample: Apache Airflow's AGENTS.md
+
+- A real, actively maintained example from a top-level Apache project -- roughly **500 lines**, plus nested files such as `providers/AGENTS.md`
+- [github.com/apache/airflow/blob/main/AGENTS.md](https://github.com/apache/airflow/blob/main/AGENTS.md)
+
+```markdown
+## Naming
+Write **Dag** (title case) in all prose. Keep the all-caps or lowercase
+spelling only when reproducing a literal code token ...
+
+## Environment Setup
+- **Never run pytest, python, or airflow commands directly on the host**
+  -- always use `breeze`.
+
+## Commands
+- **Run a single test:**
+  `uv run --project <PROJECT> pytest path/to/test.py::TestClass::test_method -xvs`
+```
+
+Section headings: Naming, Environment Setup, Commands, Repository Structure, Architecture Boundaries, Security Model, Coding Standards, Testing Standards, Commits and PRs, Boundaries, References.
+
+## Airflow's AGENTS.md: What to Notice {.smaller}
+
+1. **Exact commands, not descriptions** -- copy-pasteable, with placeholders like `<PROJECT>` defined in the file
+2. **Hard boundaries in bold** -- *"Never run pytest, python, or airflow commands directly on the host"*; agents follow explicit prohibitions far better than vague guidance
+3. **Repo-specific traps an agent could never infer** -- `Dag` in prose but `DAG` in code; newsfragments for `airflow-core/` but never for `providers/`
+4. **Workflow, not just style** -- remote naming (`upstream` vs `origin`), *"Always push branches to `origin`"*, rebase before push, static checks before a PR
+5. **A human-review and attribution policy, in the repo** --
+
+> "NEVER add Co-Authored-By with yourself as co-author of the commit. Agents cannot be authors, humans can be, Agents are assistants."
+
+```
+Drafted-by: <Agent Name and Version> (no human review before posting)
+```
+
+### Discussion
+
+- Which of these rules could an agent have inferred from the code, and which *had* to be written down?
+- What is the equivalent trap in **your** capstone repo?
+
+## CLAUDE.md vs AGENTS.md: Do You Need Both? {.smaller}
+
+- **Claude Code reads `CLAUDE.md`, not `AGENTS.md`** -- they are complementary, not competing
+- Keep one source of truth by importing the file instead of duplicating it:
+
+```markdown
+<!-- CLAUDE.md -->
+@AGENTS.md
+
+## Claude Code
+Use plan mode for changes under `src/billing/`.
+```
+
+- A symlink works when you have nothing Claude-specific to add: `ln -s AGENTS.md CLAUDE.md`
+- `/init` generates a starter from your codebase (and reads existing Cursor/Copilot rules); `/import` pulls another agent's config in
+
+### In this course repo
+
+| File | Answers the question |
+|------|----------------------|
+| `CLAUDE.md` | *How do we write code here?* -- Python style, typing, testing, logging, security |
+| `AGENTS.md` | *How do I build and ship this site?* -- render slides, build, preview, deploy |
+
+## Prompting Agents Is a Different Sport {.smaller}
+
+Prompts that write code and call tools need rules a chat prompt never did:
+
+- **Be explicit about acting** -- "suggest some changes" gets suggestions; say *"implement the changes using tools"*
+- **Force investigation before assertion**:
+
+```xml
+<investigate_before_answering>
+Never speculate about code you have not opened. If the user references a
+specific file, you MUST read the file before answering.
+</investigate_before_answering>
+```
+
+- **Bound the blast radius** -- require confirmation for hard-to-reverse actions (`rm -rf`, `git push --force`, dropping tables)
+- **Curb over-engineering** -- "only make changes that are directly requested; no new abstractions, no defensive code for cases that cannot happen"
+- **Ban test-shaped solutions** -- "implement a solution that works for all valid inputs, not just the test cases; do not hard-code values"
+- **Parallelize** -- tell the model to issue independent tool calls simultaneously
+
 ## Technique: Spec-Driven Development
 
 - **The Problem**: Vague prompts lead to hallucinated or poor code.
@@ -676,7 +781,8 @@ Tell Claude **where** to find information, not all the information itself.
 ### Hands-on Exercise
 
 - Set up an AI coding assistant: Claude Code (CLI), Cursor, or GitHub Copilot agent mode
-- Create a `CLAUDE.md` (or equivalent rules file) for a starter project
+- Write an `AGENTS.md` for a starter project -- setup, build, test, and PR instructions
+- Add a `CLAUDE.md` that imports it, plus any Claude-specific rules
 - Drive an agentic workflow end-to-end:
   1. Describe a small feature in natural language
   2. Let the agent plan, edit multiple files, and run tests
@@ -686,11 +792,11 @@ Tell Claude **where** to find information, not all the information itself.
 
 ## Next Week Preview
 
-### Week 2 Focus: Inference
+### Week 2 Focus: LLM Internals and Inference
 
+- Under the hood: embeddings, self-attention, QKV, sampling, reasoning models
 - How LLMs serve tokens at scale: KV cache, Flash Attention, PagedAttention
-- Continuous batching and throughput optimization
-- Serving stacks: vLLM, SGLang
+- Continuous batching and throughput optimization; serving stacks: vLLM, SGLang
 - Latency, throughput, and cost trade-offs
 
 ## References and Deep Dive Resources
@@ -712,8 +818,17 @@ Tell Claude **where** to find information, not all the information itself.
 
 ### Prompt Engineering and Coding Assistants
 
-- [Anthropic Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/)
+- [Anthropic Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) - the living reference
+- [Anthropic Interactive Prompt Engineering Tutorial](https://github.com/anthropics/prompt-eng-interactive-tutorial)
+- [Claude Cookbooks](https://github.com/anthropics/claude-cookbooks) | [DAIR.AI Prompt Engineering Guide](https://github.com/dair-ai/Prompt-Engineering-Guide)
 - [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code)
 - [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
 - [Cursor](https://cursor.com) | [GitHub Copilot](https://github.com/features/copilot) | [Aider](https://aider.chat)
 - [Prompt Engineering Examples](https://github.com/NirDiamant/Prompt_Engineering/tree/main)
+
+### Agent Instruction Files
+
+- [AGENTS.md](https://agents.md/) - the open format | [agentsmd/agents.md](https://github.com/agentsmd/agents.md) - spec and examples
+- [Apache Airflow AGENTS.md](https://github.com/apache/airflow/blob/main/AGENTS.md) - the production sample we walked through
+- [Claude Code memory and CLAUDE.md](https://code.claude.com/docs/en/memory) - hierarchy, imports, and the `AGENTS.md` interop pattern
+- [This course repo's AGENTS.md](https://github.com/dsan-gu/6725-fall-2026/blob/main/AGENTS.md)

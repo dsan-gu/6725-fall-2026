@@ -114,7 +114,7 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | Week  | Module                                               | Details                                                                                                  |
 |-------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | 1     | GenAI Theory Foundations and Coding Assistants       | How LLMs work (transformers, tokens, sampling), in-context learning and prompt engineering; lab: AI coding assistants and agentic coding workflows |
-| 2     | Inference                                            | Inference servers and engines, quantization, speculative decoding, batching, API-based vs self-hosted serving |
+| 2     | LLM Internals and Inference                          | Transformer fundamentals (attention, QKV, sampling, reasoning models), inference servers and engines, quantization, speculative decoding, batching, API-based vs self-hosted serving |
 | 3     | Retrieval Augmented Generation (RAG) and Intro to Agents | Embeddings, vector databases, chunking strategies, advanced RAG techniques; first look at AI agents and tool use |
 | 4     | Agentic RAG and Model Context Protocol (MCP)         | Agent-driven retrieval and query planning; building MCP servers and clients for tool integration, authentication, and deployment |
 | 5     | Agent Architectures in Detail                        | Planning, memory, context management and engineering, single-agent vs multi-agent design patterns |
@@ -137,7 +137,7 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | Group Project | 40% |
 | Homework Assignments | 30% |
 | Lab Completions | 20% |
-| Quizzes | 10% |
+| Weekly Presentations | 10% |
 
 **Total: 100%**
 
@@ -167,13 +167,9 @@ We will start the labs in class but we will not finish. It is your responsibilit
 
 On certain weeks, readings will be assigned to prepare you for the lecture material being presented. These readings should take an hour or less per week.
 
-### Quizzes
+### Weekly Presentations on Latest AI Topics
 
-There will be 6 quizzes per semester. Quizzes ensure you are keeping up with the material presented in the class. Quizzes are meant to be brief and low-stress with a time limit of 5-10 minutes. The material will be drawn from lectures, labs, and readings.
-
-### In-Class Presentations on Latest AI Topics
-
-In each class, two teams or individuals (you may group up as you like) will present for 5 to 7 minutes on one of the latest topics of interest in AI — a new paper, model release, tool, or notable talk. A sign-up sheet will be shared at the start of the semester. These presentations are graded as a Quiz.
+Every student presents once during the semester, individually (not as a team), for 5 minutes on one of the latest topics of interest in AI — a new paper, model release, tool, or notable talk. With 45 students across 14 weeks, that works out to about 3 presenters per class. The last 15 minutes of every class are reserved for these presentations. A sign-up sheet will be shared at the start of the semester.
 
 ### Lab Deliverables
 
@@ -254,7 +250,7 @@ We realize life gets in the way sometimes and you may not be able to complete an
 
 **This does not apply to the final project.** The final project presentation and deliverables CANNOT be late for any reason.
 
-**This does not apply to quizzes.** Missed in-class quizzes cannot be made up and will receive a grade of zero unless there is an extenuating circumstance.
+**This does not apply to weekly presentations.** A missed presentation slot cannot be made up and will receive a grade of zero unless there is an extenuating circumstance; if you know in advance that you cannot present in your assigned week, arrange a swap with another student and let the instructor know.
 
 
 ## Class Communication

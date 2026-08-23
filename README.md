@@ -39,6 +39,12 @@ To render slides after editing (requires [Quarto](https://quarto.org/docs/downlo
 ./render_slides.sh
 ```
 
+The script finds `quarto` automatically: it checks `PATH` first, then common install locations (`~/opt/bin`, `/usr/local/bin`, `/opt/homebrew/bin`, `/Applications/quarto/bin`). If Quarto is installed somewhere else, point the script at it explicitly:
+
+```{.bash}
+QUARTO_BIN=/path/to/quarto ./render_slides.sh
+```
+
 This renders each deck to a self-contained `docs/assets/html/week<N>.html`, which the weekly wrapper pages (`docs/lectures/week<N>.md` — just a title plus an embed, rarely edited) display on the site. So the full slide workflow is:
 
 1. Edit `docs/lectures/slides/week-NN-*.qmd`

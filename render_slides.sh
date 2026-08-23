@@ -20,6 +20,28 @@ week_files=(
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT_DIR="${SCRIPT_DIR}/docs/assets/html"
 
+# Locate quarto: use QUARTO_BIN if set, then PATH, then known install locations
+QUARTO_BIN="${QUARTO_BIN:-}"
+if [ -z "$QUARTO_BIN" ]; then
+  if command -v quarto >/dev/null 2>&1; then
+    QUARTO_BIN="quarto"
+  else
+    for candidate in "$HOME/opt/bin/quarto" "/usr/local/bin/quarto" "/opt/homebrew/bin/quarto" "/Applications/quarto/bin/quarto"; do
+      if [ -x "$candidate" ]; then
+        QUARTO_BIN="$candidate"
+        break
+      fi
+    done
+  fi
+fi
+
+if [ -z "$QUARTO_BIN" ]; then
+  echo "Error: quarto not found. Install it (https://quarto.org/docs/download/) or set QUARTO_BIN to its path."
+  exit 1
+fi
+
+echo "Using quarto: $QUARTO_BIN"
+
 for week_file in "${week_files[@]}"; do
   input_file="${SCRIPT_DIR}/docs/lectures/slides/${week_file}.qmd"
   if [ -f "$input_file" ]; then
@@ -30,7 +52,7 @@ for week_file in "${week_files[@]}"; do
     echo "Rendering ${week_file}..."
     # Render to the slides directory first
     cd "${SCRIPT_DIR}/docs/lectures/slides"
-    quarto render "${week_file}.qmd" --output "$output_file" -M embed-resources=true
+    "$QUARTO_BIN" render "${week_file}.qmd" --output "$output_file" -M embed-resources=true
 
     # Move to the assets/html directory
     if [ -f "$output_file" ]; then

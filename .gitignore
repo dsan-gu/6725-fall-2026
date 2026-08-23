@@ -188,3 +188,4 @@ docs/lectures/slides/*_files/
 
 # Working plan file (local only)
 /PLAN.md
+.DS_Store

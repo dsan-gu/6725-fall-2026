@@ -1,4 +1,4 @@
-# Week 2: Inference
+# Week 2: LLM Internals and Inference
 
 <p class="deck-actions"><a href="../assets/html/week2.html" target="_blank">Open slides full screen &rarr;</a></p>
 
