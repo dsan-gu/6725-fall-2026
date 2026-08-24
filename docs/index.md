@@ -19,7 +19,7 @@
         <p>Prof. Amit Arora<br>
         Office Hours: TBD</p>
         <h3>👨‍🏫 TA</h3>
-        <p>Sazan Khalid (sk2153@georgetown.edu)<br>
+        <p>TBD<br>
         Office hours: TBD</p>
     </div>
     <div class="info-card">

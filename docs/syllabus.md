@@ -18,8 +18,8 @@ Professor's Office hours are by appointment only. Please use the following links
 
 ## Teaching Assistants (TA)
 
-**Name**: Sazan Khalid
-**Email**: sk2153@georgetown.edu
+**Name**: TBD
+**Email**: TBD
 **Office Hours**: TBD
 
 ## Textbooks
