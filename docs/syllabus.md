@@ -86,7 +86,7 @@ The course will use Canvas, https://canvas.georgetown.edu/. Announcements, homew
 
 **In addition**: GitHub Classroom will be used for all assignment and lab submissions.
 
-**Communication**: The primary mode of communication is Slack. Please join the class Slack channel [here](https://join.slack.com/t/dsan6725appli-imy3613/shared_invite/zt-3mh6xismt-sKHNzqXmFrJV5ztgueAPbA).
+**Communication**: The primary mode of communication is Slack. Let's work together in the **DSAN6725-Fall-2026** workspace -- please join using [this invite link](https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ).
 
 ## Cloud Resources
 

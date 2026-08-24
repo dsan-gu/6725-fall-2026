@@ -1104,7 +1104,7 @@ Amit Arora
 <p>Source: <a href="https://asahilinux.org/docs/project/policies/slop/">asahilinux.org/docs/project/policies/slop</a> <em>(the highlight is ours, not part of the original documentation)</em></p>
 <p><strong>To be clear: this is certainly not the policy of this class</strong> – but it is worth pointing out that opinions on AI span a full spectrum, from “expressly forbidden” to “AI-first.”</p>
 </section>
-<section id="course-structure" class="slide level2">
+<section id="course-structure" class="slide level2 smaller">
 <h2>Course Structure</h2>
 <h3 id="key-components">Key Components</h3>
 <ul>
@@ -1124,6 +1124,7 @@ Amit Arora
 <ul>
 <li><a href="https://github.com/dsan-gu/6725-fall-2026">Course Repository</a></li>
 <li><a href="https://github.com/gu-dsan6725/bookmarks">Bookmarks Repo</a> - Curated GenAI links and resources</li>
+<li><a href="https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ">Class Slack: DSAN6725-Fall-2026</a> - primary communication channel, join today</li>
 </ul>
 </section>
 <section id="capstone-project-overview" class="slide level2">
@@ -1768,6 +1769,8 @@ Amit Arora
 <li><strong>Claude Code</strong>: Agentic CLI tool from Anthropic (often used alongside IDEs).</li>
 <li><strong>Aider</strong>: A CLI tool for pair programming; edits files directly via git.</li>
 <li><strong>Roo Code</strong>: VS Code extension enabling autonomous task execution.</li>
+<li><strong>Pi / oh-my-pi</strong>: Minimal, hackable coding harness and its batteries-included fork.</li>
+<li><strong>OpenCode</strong>: Open-source terminal agent that works with any model.</li>
 </ul></li>
 </ul>
 </section>
@@ -1832,8 +1835,42 @@ Amit Arora
 <td>Best for terminal users, git-aware.</td>
 <td><a href="https://aider.chat">aider.chat</a></td>
 </tr>
+<tr class="odd">
+<td><strong>Pi / oh-my-pi</strong></td>
+<td>CLI Tool</td>
+<td>Minimal hackable harness; omp adds batteries.</td>
+<td><a href="https://github.com/badlogic/pi-mono">github.com/badlogic/pi-mono</a></td>
+</tr>
+<tr class="even">
+<td><strong>OpenCode</strong></td>
+<td>CLI / TUI</td>
+<td>Open-source, provider-agnostic, LSP-aware.</td>
+<td><a href="https://opencode.ai">opencode.ai</a></td>
+</tr>
 </tbody>
 </table>
+</section>
+<section id="spotlight-pi-and-oh-my-pi" class="slide level2 smaller">
+<h2>Spotlight: Pi and oh-my-pi</h2>
+<ul>
+<li><strong>Pi</strong> (Mario Zechner): a <em>minimal</em> terminal coding harness – deliberately small core with no built-in MCP, sub-agents, or plan mode</li>
+<li><strong>Everything is an extension</strong>: TypeScript extensions, skills (compatible with Claude Code and Codex skills), prompt templates, themes</li>
+<li>Part of the <code>pi-mono</code> AI agent toolkit: unified LLM API, agent loop, TUI and web UI libraries</li>
+<li><strong>Why it matters pedagogically</strong>: the harness is small enough to actually read – the best way to understand what tools like Claude Code do under the hood</li>
+<li><strong>oh-my-pi (<code>omp</code>)</strong>: a batteries-included fork – on first run it inherits the rules, skills, and MCP servers already on disk (<code>.claude</code>, <code>.cursor</code>, <code>.windsurf</code>, <code>.codex</code>, …) and wires in IDE/LSP integration</li>
+<li>Links: <a href="https://github.com/badlogic/pi-mono">github.com/badlogic/pi-mono</a> | <a href="https://github.com/can1357/oh-my-pi">github.com/can1357/oh-my-pi</a></li>
+</ul>
+</section>
+<section id="spotlight-opencode" class="slide level2 smaller">
+<h2>Spotlight: OpenCode</h2>
+<ul>
+<li>Fully <strong>open-source (MIT)</strong> terminal-native coding agent from the SST team – TUI first, with a desktop app and IDE extension</li>
+<li><strong>Provider-agnostic</strong>: connect 75+ models from any provider (Claude, GPT, Gemini, open-weight models locally via Ollama), or use the curated OpenCode Zen list</li>
+<li>Full agent harness: tool loop, <strong>LSP integration</strong>, plan mode (read-only) vs. build mode, MCP support, git-backed undo/redo</li>
+<li><strong>Runs locally</strong>, sessions stored in SQLite – your code goes only to the model provider you choose</li>
+<li>The most widely used open-source coding harness: <strong>165k+ GitHub stars</strong></li>
+<li><a href="https://opencode.ai">opencode.ai</a></li>
+</ul>
 </section>
 <section id="how-coding-assistants-work" class="slide level2">
 <h2>How Coding Assistants Work</h2>
@@ -2087,21 +2124,17 @@ Amit Arora
 </ol></li>
 </ul>
 </section>
-<section id="lab-agentic-coding-with-ai-assistants" class="slide level2">
+<section id="lab-agentic-coding-with-ai-assistants" class="slide level2 smaller">
 <h2>Lab: Agentic Coding with AI Assistants</h2>
-<h3 id="hands-on-exercise">Hands-on Exercise</h3>
+<h3 id="build-a-polars-data-pipeline-over-nyc-taxi-data-by-directing-agents-not-by-hand">Build a polars data pipeline over NYC taxi data – by directing agents, not by hand</h3>
 <ul>
-<li>Set up an AI coding assistant: Claude Code (CLI), Cursor, or GitHub Copilot agent mode</li>
-<li>Write an <code>AGENTS.md</code> for a starter project – setup, build, test, and PR instructions</li>
-<li>Add a <code>CLAUDE.md</code> that imports it, plus any Claude-specific rules</li>
-<li>Drive an agentic workflow end-to-end:
-<ol type="1">
-<li>Describe a small feature in natural language</li>
-<li>Let the agent plan, edit multiple files, and run tests</li>
-<li>Review the diff and iterate</li>
-</ol></li>
-<li>Compare: autocomplete vs. chat vs. fully agentic mode</li>
-<li>Deliverable: working feature + short reflection on where the agent helped or failed</li>
+<li>Set up <strong>two assistants</strong>: one proprietary (Claude Code or Codex CLI) and one open-source (OpenCode or Pi) – you get experience with both ecosystems</li>
+<li>Real data: NYC Yellow Taxi trips – 3.5M rows/month, about 3.5 GB for the full year</li>
+<li><strong>The experiment</strong>: give the agent the same task before and after writing <code>AGENTS.md</code>, and diff its behavior (watch it reach for pandas, then comply)</li>
+<li>Build the missing pipeline stages with the failing tests as your specification – cleaning rules and aggregations, one module per tool</li>
+<li><strong>Rules of engagement</strong>: you prompt, review diffs, and iterate; you do not hand-write the implementation</li>
+<li>Scale run on real data with lazy streaming; commit the timing report</li>
+<li>Deliverables: green CI, <code>AGENTS.md</code> + <code>CLAUDE.md</code>, agent-written modules, <code>results.md</code>, reflection comparing the two tools</li>
 </ul>
 </section>
 <section id="next-week-preview" class="slide level2">

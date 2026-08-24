@@ -1,6 +1,6 @@
 # Labs Overview
 
-Labs are hands-on exercises that accompany each week's lecture. Labs are distributed and submitted through GitHub Classroom (invite links are posted on Canvas/Slack). Each lab has a deliverable due before the next lecture.
+Labs are hands-on exercises that accompany each week's lecture. Labs are distributed and submitted through GitHub Classroom (invite links are posted on Canvas and in the [class Slack](https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ)). Each lab has a deliverable due before the next lecture.
 
 ## Fall 2026 Lab Plan
 
