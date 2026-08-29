@@ -8,7 +8,7 @@ All template repository links below were verified valid as of August 2026 (priva
 
 | Lab # | Week | Topic | Template Repository | Notes |
 |-------|------|-------|---------------------|-------|
-| Lab 01 | 1 | AI coding assistants / agentic coding | https://github.com/gu-dsan6725/vibe-coding | Was lab09 in Spring 2026 |
+| Lab 01 | 1 | AI coding assistants / agentic coding |  https://github.com/gu-dsan6725/lab01-agentic-coding | New Fall 2026 repo (replaces vibe-coding) |
 | Lab 02 | 2 | Foundation model inference | https://github.com/gu-dsan6725/fm-inference | |
 | Lab 03 | 3 | Basic RAG | https://github.com/gu-dsan6725/basic-rag | |
 | Lab 04 | 4 | Agentic RAG + MCP servers | https://github.com/gu-dsan6725/aws-cost-explorer-mcp-server | Extend with agentic RAG exercise |
@@ -77,13 +77,16 @@ All template repository links below were verified valid as of August 2026 (priva
 
 ## GitHub Classroom Assignment Structure
 
-GitHub Classroom creates student repositories with the following naming pattern:
+GitHub Classroom retired in August 2026. Student repositories are now created
+with [assignment-setup](https://github.com/dsan-gu/assignment-setup)
+(`create_repos.py` / `collect_repos.py`), which makes a private single-commit
+copy of the assignment repo per student, withholding the top-level `solution/`
+folder. Naming pattern:
 ```
-fall-2026-{ASSIGNMENT_ID}-{STUDENT_USERNAME}
+{assignment}-{github_username}-{semester}
 ```
 
 For example:
-- Lab 01: `fall-2026-lab01-vibe-coding-{username}`
-- Assignment 02: `fall-2026-a02-prompt-engineering-{username}`
+- Lab 01: `lab01-agentic-coding-{username}-fall-2026`
 
-The "GitHub Classroom Assignment ID" column above shows the `{ASSIGNMENT_ID}` portion used when creating these assignments in GitHub Classroom.
+The Assignment ID column above is historical (Spring 2026 GitHub Classroom).

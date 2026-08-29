@@ -1,12 +1,12 @@
 # Labs Overview
 
-Labs are hands-on exercises that accompany each week's lecture. Labs are distributed and submitted through GitHub Classroom (invite links are posted on Canvas and in the [class Slack](https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ)). Each lab has a deliverable due before the next lecture.
+Labs are hands-on exercises that accompany each week's lecture. Each student receives a private copy of the lab repository in the course GitHub org (watch for the repo invitation, announced on Canvas and in the [class Slack](https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ)). Each lab has a deliverable due before the next lecture.
 
 ## Fall 2026 Lab Plan
 
 | Lab | Week | Topic | Template Repository |
 |-----|------|-------|---------------------|
-| Lab 01 | 1 | AI coding assistants and agentic coding | [vibe-coding](https://github.com/gu-dsan6725/vibe-coding) |
+| Lab 01 | 1 | AI coding assistants and agentic coding | [lab01-agentic-coding](https://github.com/gu-dsan6725/lab01-agentic-coding) |
 | Lab 02 | 2 | Foundation model inference | [fm-inference](https://github.com/gu-dsan6725/fm-inference) |
 | Lab 03 | 3 | Basic RAG | [basic-rag](https://github.com/gu-dsan6725/basic-rag) |
 | Lab 04 | 4 | Agentic RAG + MCP servers | [aws-cost-explorer-mcp-server](https://github.com/gu-dsan6725/aws-cost-explorer-mcp-server) |
