@@ -84,7 +84,7 @@ Review all Announcements and Modules.
 
 The course will use Canvas, https://canvas.georgetown.edu/. Announcements, homework assignments and solutions, course material such as documentation, links, data sets and code will all be posted there. You can look up your grades, and online surveys will also be conducted here. Students in this course are required to visit this page once a day. Announcements will usually only appear on the webpage. You will also have to access data sets on the Internet and need to be comfortable with this.
 
-**In addition**: GitHub Classroom will be used for all assignment and lab submissions.
+**In addition**: All assignment and lab work happens in private per-student GitHub repositories in the course organization. You will receive a repository invitation for each lab and assignment; you submit by pushing to your repository.
 
 **Communication**: The primary mode of communication is Slack. Let's work together in the **DSAN6725-Fall-2026** workspace -- please join using [this invite link](https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ).
 
