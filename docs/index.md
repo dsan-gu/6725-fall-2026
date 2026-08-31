@@ -18,8 +18,9 @@
         <h3>👨‍🏫 Instructor</h3>
         <p>Prof. Amit Arora<br>
         Office Hours: TBD</p>
-        <h3>👨‍🏫 TA</h3>
-        <p>TBD<br>
+        <h3>👨‍🏫 TAs</h3>
+        <p>Andrew Kim (akk103@georgetown.edu)<br>
+        Victor Lin (hy585@georgetown.edu)<br>
         Office hours: TBD</p>
     </div>
     <div class="info-card">

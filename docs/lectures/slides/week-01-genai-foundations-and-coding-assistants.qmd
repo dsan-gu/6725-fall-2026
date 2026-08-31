@@ -69,6 +69,24 @@ Source: [asahilinux.org/docs/project/policies/slop](https://asahilinux.org/docs/
 - [Bookmarks Repo](https://github.com/gu-dsan6725/bookmarks) - Curated GenAI links and resources
 - [Class Slack: DSAN6725-Fall-2026](https://join.slack.com/t/dsan6725-fall-2026/shared_invite/zt-47nzs8glh-JWxpIWJkiSsEkhs~9ySAlQ) - primary communication channel, join today
 
+## A Note on Labs and Assignments
+
+### Labs: simple, guided
+
+- Generally straightforward -- we start them together in class
+- You have **one week** to finish each one
+
+### Assignments: hard, on purpose
+
+- Genuinely difficult -- you have **two weeks**, and our suggestion is to **start ASAP**
+- The theory behind the hard assignments: **AI has raised the floor**
+  - What used to be difficult, tedious, and time-consuming no longer is -- we are all that much more productive
+- The theme of this course is **not** "if AI does all the work I do, then what will I do?"
+
+::: {.idea-callout}
+Our theme: we get to the harder problems faster. Problems that were outside the scope of what capability and time allowed are now tractable. Hence the challenge.
+:::
+
 ## Capstone Project Overview
 
 ### Project Guidelines

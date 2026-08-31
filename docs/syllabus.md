@@ -16,10 +16,10 @@ Professor's Office hours are by appointment only. Please use the following links
 
 *This syllabus is subject to change at any time.*
 
-## Teaching Assistants (TA)
+## Teaching Assistants (TAs)
 
-**Name**: TBD
-**Email**: TBD
+**Andrew Kim**: akk103@georgetown.edu
+**Victor Lin**: hy585@georgetown.edu
 **Office Hours**: TBD
 
 ## Textbooks
