@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#374151"/></marker></defs>
+<text x="250" y="30" font-size="17" font-weight="bold" fill="#111827" text-anchor="middle">Encoder</text>
+<text x="250" y="500" font-size="13" fill="#6b7280" text-anchor="middle">input tokens</text>
+<line x1="250" y1="484" x2="250" y2="468" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="145.0" y="434" width="210" height="32" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>
+<text x="250" y="455" font-size="14" fill="#111827" text-anchor="middle">embedding + position</text>
+<line x1="250" y1="466" x2="250" y2="458" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="250" y1="436" x2="250" y2="426" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="145.0" y="392" width="210" height="32" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="250" y="413" font-size="14" fill="#111827" text-anchor="middle">multi-head self-attention</text>
+<line x1="250" y1="394" x2="250" y2="384" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="145.0" y="350" width="210" height="32" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="250" y="371" font-size="14" fill="#111827" text-anchor="middle">add &#38; norm</text>
+<line x1="250" y1="352" x2="250" y2="342" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="145.0" y="308" width="210" height="32" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>
+<text x="250" y="329" font-size="14" fill="#111827" text-anchor="middle">feed-forward</text>
+<line x1="250" y1="310" x2="250" y2="300" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="145.0" y="266" width="210" height="32" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="250" y="287" font-size="14" fill="#111827" text-anchor="middle">add &#38; norm</text>
+<path d="M 133.0 424 L 123.0 424 L 123.0 234 L 133.0 234" fill="none" stroke="#6b7280" stroke-width="1.5"/>
+<text x="111.0" y="333.0" font-size="15" fill="#6b7280" text-anchor="middle">N&#215;</text>
+<text x="640" y="30" font-size="17" font-weight="bold" fill="#111827" text-anchor="middle">Decoder</text>
+<text x="640" y="500" font-size="13" fill="#6b7280" text-anchor="middle">output so far (shifted right)</text>
+<line x1="640" y1="484" x2="640" y2="468" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="434" width="210" height="32" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>
+<text x="640" y="455" font-size="14" fill="#111827" text-anchor="middle">embedding + position</text>
+<line x1="640" y1="436" x2="640" y2="426" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="392" width="210" height="32" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="640" y="413" font-size="14" fill="#111827" text-anchor="middle">masked self-attention</text>
+<line x1="640" y1="394" x2="640" y2="384" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="350" width="210" height="32" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="640" y="371" font-size="14" fill="#111827" text-anchor="middle">add &#38; norm</text>
+<line x1="640" y1="352" x2="640" y2="342" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="308" width="210" height="32" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="640" y="329" font-size="14" fill="#111827" text-anchor="middle">cross-attention</text>
+<line x1="640" y1="310" x2="640" y2="300" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="266" width="210" height="32" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="640" y="287" font-size="14" fill="#111827" text-anchor="middle">add &#38; norm</text>
+<line x1="640" y1="268" x2="640" y2="258" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="224" width="210" height="32" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>
+<text x="640" y="245" font-size="14" fill="#111827" text-anchor="middle">feed-forward</text>
+<line x1="640" y1="226" x2="640" y2="216" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="535.0" y="182" width="210" height="32" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="640" y="203" font-size="14" fill="#111827" text-anchor="middle">add &#38; norm</text>
+<path d="M 757.0 424 L 767.0 424 L 767.0 150 L 757.0 150" fill="none" stroke="#6b7280" stroke-width="1.5"/>
+<text x="781.0" y="291.0" font-size="15" fill="#6b7280" text-anchor="middle">N&#215;</text>
+<line x1="640" y1="180" x2="640" y2="146" stroke="#374151" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="560.0" y="110" width="160" height="32" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>
+<text x="640" y="131" font-size="14" fill="#111827" text-anchor="middle">linear + softmax</text>
+<text x="640" y="94" font-size="13" fill="#6b7280" text-anchor="middle">next-token probabilities</text>
+<path d="M 250 234 L 250 218 L 505.0 218 L 505.0 324.0 L 533.0 324.0" fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#a)"/>
+<text x="415.0" y="210" font-size="13" fill="#b45309" text-anchor="middle">encoder output: keys and values (decoder brings the queries)</text>
+</svg>

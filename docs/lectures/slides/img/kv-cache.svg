@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="290" viewBox="0 0 920 290" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker></defs>
+<text x="30" y="30" font-size="15" font-weight="bold" fill="#111827">Generating token 6: "cache"</text>
+<text x="30" y="70" font-size="13" fill="#6b7280">KV cache (computed once, reused every step)</text>
+<rect x="30" y="82" width="90" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="75" y="101" font-size="13" fill="#111827" text-anchor="middle">"The"</text>
+<rect x="126" y="82" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="161" y="101" font-size="13" fill="#374151" text-anchor="middle">k1</text>
+<rect x="202" y="82" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="237" y="101" font-size="13" fill="#374151" text-anchor="middle">v1</text>
+<rect x="30" y="116" width="90" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="75" y="135" font-size="13" fill="#111827" text-anchor="middle">"KV"</text>
+<rect x="126" y="116" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="161" y="135" font-size="13" fill="#374151" text-anchor="middle">k2</text>
+<rect x="202" y="116" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="237" y="135" font-size="13" fill="#374151" text-anchor="middle">v2</text>
+<rect x="30" y="150" width="90" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="75" y="169" font-size="13" fill="#111827" text-anchor="middle">"cache"</text>
+<rect x="126" y="150" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="161" y="169" font-size="13" fill="#374151" text-anchor="middle">k3</text>
+<rect x="202" y="150" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="237" y="169" font-size="13" fill="#374151" text-anchor="middle">v3</text>
+<rect x="30" y="184" width="90" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="75" y="203" font-size="13" fill="#111827" text-anchor="middle">"stores"</text>
+<rect x="126" y="184" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="161" y="203" font-size="13" fill="#374151" text-anchor="middle">k4</text>
+<rect x="202" y="184" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="237" y="203" font-size="13" fill="#374151" text-anchor="middle">v4</text>
+<rect x="30" y="218" width="90" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="75" y="237" font-size="13" fill="#111827" text-anchor="middle">"keys"</text>
+<rect x="126" y="218" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="161" y="237" font-size="13" fill="#374151" text-anchor="middle">k5</text>
+<rect x="202" y="218" width="70" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="237" y="237" font-size="13" fill="#374151" text-anchor="middle">v5</text>
+<rect x="30" y="252" width="90" height="28" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="75" y="271" font-size="13" fill="#b45309" text-anchor="middle">"cache"</text>
+<rect x="126" y="252" width="70" height="28" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="161" y="271" font-size="13" fill="#b45309" text-anchor="middle">k6</text>
+<rect x="202" y="252" width="70" height="28" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="237" y="271" font-size="13" fill="#b45309" text-anchor="middle">v6</text>
+<text x="284" y="271" font-size="12" fill="#b45309">appended this step</text>
+<rect x="470" y="120" width="150" height="34" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="545" y="142" font-size="14" fill="#b45309" text-anchor="middle">new query q6</text>
+<path d="M 468 137 L 286 137" stroke="#b45309" stroke-width="2" marker-end="url(#k)" fill="none"/>
+<text x="377" y="128" font-size="12" fill="#b45309" text-anchor="middle">attends over all cached K, V</text>
+<text x="660" y="90" font-size="14" fill="#374151">Without the cache: recompute</text>
+<text x="660" y="110" font-size="14" fill="#374151">k and v for every past token,</text>
+<text x="660" y="130" font-size="14" fill="#374151">on every step.</text>
+<text x="660" y="166" font-size="14" fill="#374151">With the cache: compute only</text>
+<text x="660" y="186" font-size="14" fill="#374151">q6, k6, v6 and read the rest.</text>
+<text x="660" y="222" font-size="14" font-weight="bold" fill="#111827">Cost: one K and one V per token,</text>
+<text x="660" y="242" font-size="14" font-weight="bold" fill="#111827">per layer, per head -- it adds up.</text>
+</svg>

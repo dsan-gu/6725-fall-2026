@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="240" viewBox="0 0 920 240" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <!-- sentence tokens -->
+  <g font-size="18" fill="#111827" text-anchor="middle">
+    <text x="60" y="150">The</text>
+    <text x="130" y="150" font-weight="bold">cat</text>
+    <text x="210" y="150">drank</text>
+    <text x="285" y="150">the</text>
+    <text x="350" y="150" font-weight="bold">milk</text>
+    <text x="440" y="150">because</text>
+    <text x="520" y="150" font-weight="bold" fill="#b45309">it</text>
+    <text x="585" y="150">was</text>
+    <text x="665" y="150">thirsty</text>
+  </g>
+
+  <!-- attention arcs from "it" -->
+  <path d="M 512 132 C 440 40, 200 40, 134 132" fill="none" stroke="#b45309" stroke-width="5" marker-end="url(#arrA)" opacity="0.9"/>
+  <path d="M 515 130 C 470 75, 400 75, 354 130" fill="none" stroke="#9ca3af" stroke-width="1.8" marker-end="url(#arrG)"/>
+
+  <!-- weight labels -->
+  <text x="315" y="52" font-size="15" fill="#b45309" font-weight="bold" text-anchor="middle">weight 0.71</text>
+  <text x="437" y="108" font-size="14" fill="#6b7280" text-anchor="middle">weight 0.08</text>
+
+  <!-- caption -->
+  <text x="60" y="196" font-size="15" fill="#374151">To resolve "it", the model attends hard to "cat" and only a little to "milk".</text>
+  <text x="60" y="218" font-size="15" fill="#374151">Line thickness = attention weight. Every token does this over every other token, in every layer.</text>
+
+  <!-- mini pipeline -->
+  <g font-size="14" text-anchor="middle">
+    <rect x="730" y="50" width="160" height="30" rx="6" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="810" y="70" fill="#111827">scores = Q &#183; K&#x1D40;</text>
+    <line x1="810" y1="80" x2="810" y2="98" stroke="#374151" stroke-width="1.5" marker-end="url(#arrG)"/>
+    <rect x="730" y="100" width="160" height="30" rx="6" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="810" y="120" fill="#111827">softmax &#8594; weights</text>
+    <line x1="810" y1="130" x2="810" y2="148" stroke="#374151" stroke-width="1.5" marker-end="url(#arrG)"/>
+    <rect x="730" y="150" width="160" height="30" rx="6" fill="#fffbeb" stroke="#b45309"/>
+    <text x="810" y="170" fill="#b45309">weighted sum of V</text>
+  </g>
+</svg>

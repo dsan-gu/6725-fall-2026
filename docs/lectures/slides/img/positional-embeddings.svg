@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="250" viewBox="0 0 920 250" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <!-- column: token "man" -->
+  <g text-anchor="middle">
+    <text x="150" y="28" font-size="17" font-weight="bold" fill="#111827">"man"</text>
+    <rect x="85" y="42" width="130" height="34" rx="6" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="150" y="64" font-size="14" fill="#111827">token vector</text>
+    <text x="150" y="97" font-size="20" fill="#374151">+</text>
+    <rect x="85" y="108" width="130" height="34" rx="6" fill="#fffbeb" stroke="#b45309"/>
+    <text x="150" y="130" font-size="14" fill="#b45309">position 0</text>
+    <line x1="150" y1="150" x2="150" y2="176" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="85" y="180" width="130" height="34" rx="6" fill="#ffffff" stroke="#111827" stroke-width="1.5"/>
+    <text x="150" y="202" font-size="14" fill="#111827">input to layer 1</text>
+  </g>
+
+  <!-- column: token "bites" -->
+  <g text-anchor="middle">
+    <text x="330" y="28" font-size="17" font-weight="bold" fill="#111827">"bites"</text>
+    <rect x="265" y="42" width="130" height="34" rx="6" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="330" y="64" font-size="14" fill="#111827">token vector</text>
+    <text x="330" y="97" font-size="20" fill="#374151">+</text>
+    <rect x="265" y="108" width="130" height="34" rx="6" fill="#fffbeb" stroke="#b45309"/>
+    <text x="330" y="130" font-size="14" fill="#b45309">position 1</text>
+    <line x1="330" y1="150" x2="330" y2="176" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="265" y="180" width="130" height="34" rx="6" fill="#ffffff" stroke="#111827" stroke-width="1.5"/>
+    <text x="330" y="202" font-size="14" fill="#111827">input to layer 1</text>
+  </g>
+
+  <!-- column: token "dog" -->
+  <g text-anchor="middle">
+    <text x="510" y="28" font-size="17" font-weight="bold" fill="#111827">"dog"</text>
+    <rect x="445" y="42" width="130" height="34" rx="6" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="510" y="64" font-size="14" fill="#111827">token vector</text>
+    <text x="510" y="97" font-size="20" fill="#374151">+</text>
+    <rect x="445" y="108" width="130" height="34" rx="6" fill="#fffbeb" stroke="#b45309"/>
+    <text x="510" y="130" font-size="14" fill="#b45309">position 2</text>
+    <line x1="510" y1="150" x2="510" y2="176" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="445" y="180" width="130" height="34" rx="6" fill="#ffffff" stroke="#111827" stroke-width="1.5"/>
+    <text x="510" y="202" font-size="14" fill="#111827">input to layer 1</text>
+  </g>
+
+  <!-- annotation -->
+  <g>
+    <text x="640" y="90" font-size="15" fill="#374151">Same three tokens in "dog bites man"</text>
+    <text x="640" y="112" font-size="15" fill="#374151">get different position vectors,</text>
+    <text x="640" y="134" font-size="15" fill="#374151">so the two sentences produce</text>
+    <text x="640" y="156" font-size="15" fill="#374151">different inputs to the model.</text>
+  </g>
+</svg>
