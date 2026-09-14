@@ -855,6 +855,40 @@ model = AutoModelForCausalLM.from_pretrained(
 
 ---
 
+## How an LLM Is Actually Built: Six Papers, in Build Order {.smaller}
+
+:::: {.columns}
+
+::: {.column width="45%"}
+For anyone who wants to understand how an LLM is made rather than used:
+
+1. [Attention Is All You Need](https://arxiv.org/abs/1706.03762): the architecture, obviously
+2. [Chinchilla](https://arxiv.org/abs/2203.15556): how many tokens for how many parameters -- changed every training run after it
+3. [FlashAttention](https://arxiv.org/abs/2205.14135): why attention stopped being the bottleneck
+4. [ZeRO](https://arxiv.org/abs/1910.02054): where your training time actually goes -- almost nobody reads this one
+5. [Switch Transformer](https://arxiv.org/abs/2101.03961): the sparse MoE idea every frontier model now runs
+6. [PagedAttention](https://arxiv.org/abs/2309.06180): how the thing gets served without wasting most of your KV cache
+
+Read in that order: each one answers a question the previous one creates.
+:::
+
+::: {.column width="55%"}
+![](img/six-papers-whiteboard.png){width=100%}
+:::
+
+::::
+
+## Turn the Six Papers into a Podcast {.smaller}
+
+- One way to consume this content at the 100 level -- and I do recommend it -- is to drop all six links into [NotebookLM](https://notebooklm.google.com/) and ask it to generate a **long-form podcast** from them
+- The hosts will walk the build order, argue about the ideas, and give you the shape of the field in about an hour of listening
+
+::: {.idea-callout}
+**Who is volunteering? Bonus assignment, 25 points.** Feed the six papers to NotebookLM and produce your own podcast episode. Get creative with the prompts you give it: pick an audience, a tone, a question to chase -- steer the hosts. Share your episode and your prompts on Slack.
+:::
+
+- The fun part: several of you will do this with the same six papers, and every podcast will come out different. Listening across them -- and seeing which prompts produced which shows -- is itself a lesson in steering LLMs
+
 ## Hands-on Lab
 
 ### Serving an Open-Weight Model
@@ -868,6 +902,19 @@ model = AutoModelForCausalLM.from_pretrained(
 5. **Experiment**: Toggle quantization and max batch size; observe the trade-offs
 
 ---
+
+## Stuff We Could Not Get To {.smaller}
+
+Super interesting things that did not fit -- our class is 2.5 hours, not 25.
+
+| Resource | One line |
+|----------|----------|
+| [OpenViking](https://github.com/volcengine/OpenViking) | Self-evolving context database for AI agents -- unifies agent memory, knowledge RAG, and skills (ByteDance/Volcengine) |
+| [kimi-k3-in-c](https://github.com/FareedKhan-dev/kimi-k3-in-c) | A 2.78-trillion-parameter Kimi K3 running inference on a single CPU in 8.24 GB of RAM -- portable C99, no BLAS, no GPU |
+| [open-code-review](https://github.com/alibaba/open-code-review) | Alibaba's battle-tested code review tool -- deterministic pipelines plus an LLM agent, precise line-level comments |
+| [10 repos to run AI locally](https://x.com/hasantoxr/status/2098422529677521196) | A thread of 10 GitHub repos for running AI models on your own machine |
+| [Transformer architecture visualizer](https://transformer-architecture.petergostev.chatgpt.site/) | Interactive side-by-side of the 2017 transformer and DeepSeek V4.1 Flash -- animate the structural differences |
+| [OpenUI](https://github.com/thesysdev/openui) | The open standard for generative UI -- interfaces that LLMs generate on the fly |
 
 ## References
 
