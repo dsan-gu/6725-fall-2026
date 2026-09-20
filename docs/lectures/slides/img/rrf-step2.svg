@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="230" viewBox="0 0 920 230" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="q" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker></defs>
+<text x="40" y="28" font-size="14" font-weight="bold" fill="#111827">1 rank &#8594; points</text>
+<text x="40" y="52" font-size="14" fill="#374151" font-family="Courier, monospace">rank 1 &#8594; 1/(60+1) = 1/61 = 0.0164</text>
+<text x="40" y="84" font-size="14" fill="#374151" font-family="Courier, monospace">rank 2 &#8594; 1/(60+2) = 1/62 = 0.0161</text>
+<text x="40" y="116" font-size="14" fill="#374151" font-family="Courier, monospace">rank 3 &#8594; 1/(60+3) = 1/63 = 0.0159</text>
+<text x="40" y="168" font-size="13" fill="#6b7280">60 is a smoothing constant from the RRF paper;</text>
+<text x="40" y="186" font-size="13" fill="#6b7280">it keeps rank 1 from towering over rank 3.</text>
+<line x1="420" y1="100" x2="468" y2="100" stroke="#6b7280" stroke-width="1.8" marker-end="url(#q)"/>
+<text x="480" y="28" font-size="14" font-weight="bold" fill="#111827">2 add each document's points from both lists</text>
+<text x="480" y="52" font-size="14" fill="#b45309" font-weight="bold" font-family="Courier, monospace">D2: 0.0161 + 0.0164 = 0.0325</text>
+<text x="480" y="84" font-size="14" fill="#374151" font-weight="normal" font-family="Courier, monospace">D7: 0.0164 + 0.0159 = 0.0323</text>
+<text x="480" y="116" font-size="14" fill="#374151" font-weight="normal" font-family="Courier, monospace">D5: 0.0161 = 0.0161</text>
+<text x="480" y="148" font-size="14" fill="#374151" font-weight="normal" font-family="Courier, monospace">D9: 0.0159 = 0.0159</text>
+<text x="480" y="180" font-size="14" fill="#111827">fused ranking: <tspan font-weight="bold">D2 &#62; D7 &#62; D5 &#62; D9</tspan></text>
+<text x="480" y="202" font-size="13" fill="#6b7280">D2 wins: high in both lists beats top in one.</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="330" viewBox="0 0 920 330" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker><marker id="ra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker></defs>
+<text x="30" y="34" font-size="15" font-weight="bold" fill="#111827">Ingestion -- runs once per document</text>
+<rect x="30" y="50" width="130" height="38" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="95.0" y="74.0" font-size="13" fill="#111827" text-anchor="middle">documents</text>
+<line x1="160" y1="69" x2="188" y2="69" stroke="#6b7280" stroke-width="1.8" marker-end="url(#r)"/>
+<rect x="190" y="50" width="110" height="38" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="245.0" y="74.0" font-size="13" fill="#111827" text-anchor="middle">chunk</text>
+<line x1="300" y1="69" x2="328" y2="69" stroke="#6b7280" stroke-width="1.8" marker-end="url(#r)"/>
+<rect x="330" y="50" width="170" height="38" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="415.0" y="66" font-size="13" fill="#111827" text-anchor="middle">embed</text>
+<text x="415.0" y="81" font-size="11" fill="#6b7280" text-anchor="middle">nomic-embed-text</text>
+<line x1="500" y1="69" x2="545" y2="69" stroke="#6b7280" stroke-width="1.8" marker-end="url(#r)"/>
+<rect x="548" y="46" width="150" height="150" rx="10" fill="#ffffff" stroke="#111827" stroke-width="2"/>
+<text x="623" y="76" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">vector DB</text>
+<text x="623" y="96" font-size="11" fill="#6b7280" text-anchor="middle">Chroma / FAISS /</text>
+<text x="623" y="110" font-size="11" fill="#6b7280" text-anchor="middle">pgvector</text>
+<text x="623" y="132" font-size="11" fill="#6b7280" text-anchor="middle">HNSW index +</text>
+<text x="623" y="146" font-size="11" fill="#6b7280" text-anchor="middle">chunks + metadata</text>
+<text x="30" y="180" font-size="15" font-weight="bold" fill="#b45309">Query -- runs per question</text>
+<rect x="30" y="196" width="130" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="95.0" y="220.0" font-size="13" fill="#b45309" text-anchor="middle">question</text>
+<line x1="160" y1="215" x2="188" y2="215" stroke="#b45309" stroke-width="1.8" marker-end="url(#ra)"/>
+<rect x="190" y="196" width="170" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="275.0" y="212" font-size="13" fill="#b45309" text-anchor="middle">embed</text>
+<text x="275.0" y="227" font-size="11" fill="#6b7280" text-anchor="middle">the SAME model</text>
+<line x1="360" y1="215" x2="546" y2="168" stroke="#b45309" stroke-width="1.8" marker-end="url(#ra)"/>
+<text x="455" y="185" font-size="11" fill="#b45309">top-k nearest</text>
+<line x1="698" y1="140" x2="740" y2="140" stroke="#b45309" stroke-width="1.8" marker-end="url(#ra)"/>
+<rect x="742" y="118" width="150" height="38" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="817.0" y="134" font-size="13" fill="#b45309" text-anchor="middle">LLM prompt:</text>
+<text x="817.0" y="149" font-size="11" fill="#6b7280" text-anchor="middle">question + chunks</text>
+<line x1="817" y1="156" x2="817" y2="195" stroke="#b45309" stroke-width="1.8" marker-end="url(#ra)"/>
+<rect x="742" y="198" width="150" height="38" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+<text x="817.0" y="222.0" font-size="13" fill="#b45309" text-anchor="middle">answer + citations</text>
+<text x="30" y="290" font-size="13" fill="#374151">The query must be embedded by the same model that embedded the chunks -- two different models produce</text>
+<text x="30" y="308" font-size="13" fill="#374151">two different geometries, and nearest-neighbor search across them is meaningless.</text>
+</svg>

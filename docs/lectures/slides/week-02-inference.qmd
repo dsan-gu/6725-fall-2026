@@ -887,7 +887,7 @@ Read in that order: each one answers a question the previous one creates.
 **Who is volunteering? Bonus assignment, 25 points.** Feed the six papers to NotebookLM and produce your own podcast episode. Get creative with the prompts you give it: pick an audience, a tone, a question to chase -- steer the hosts. Share your episode and your prompts on Slack.
 :::
 
-- The fun part: several of you will do this with the same six papers, and every podcast will come out different. Listening across them -- and seeing which prompts produced which shows -- is itself a lesson in steering LLMs
+- Several of you will do this with the same six papers, and every podcast will come out different. Listening across them, and seeing which prompts produced which shows, is itself a lesson in steering LLMs
 
 ## Hands-on Lab
 

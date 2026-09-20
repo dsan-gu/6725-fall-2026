@@ -1,5 +1,5 @@
 ---
-title: "Week 3: Retrieval Augmented Generation (RAG) and Intro to Agents"
+title: "Week 3: RAG and Agentic RAG"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
@@ -13,27 +13,61 @@ format:
     code-copy: true
 ---
 
+## Agenda {.smaller}
+
+- Why RAG: training cutoffs, private data, and hallucinations
+- RAG in one pipeline: embed, index, retrieve, generate
+- Embeddings and vector databases
+- Chunking: naive, contextual, late
+- Hybrid search, query rewriting, reranking
+- Advanced RAG: agentic search, CRAG, Self-RAG, RAG vs long context *(overflow, moves to Week 4)*
+- Evaluating RAG with RAGAS; managed RAG; Graph and SQL RAG *(overflow, moves to Week 4)*
+- Intro to agents: tool use, the agent loop, agentic RAG
+- Lab: build a RAG pipeline
+
+# The Problem: What an LLM Cannot Know
+
+## Frozen in Time {.smaller}
+
+An LLM's knowledge stops at its **training cutoff**. Everything it will ever "know" was fixed the day training ended.
+
+![](img/training-cutoff.svg){height=250 fig-align="center"}
+
+Two kinds of questions live outside that region: **your data** (laptop files, company wiki, sales database -- never in any training set) and **anything after the cutoff** (this morning's outage, yesterday's earnings call). Answering them from nothing is a **hallucination**.
+
+::: {.idea-callout}
+Models from two or three years ago really would answer these questions with confident fiction. Almost any LLM today tells you it does not have the information. Hallucination is not solved, though -- it moved to subtler places: plausible-but-wrong details, misattributed quotes, invented citations.
+:::
+
+## The Fix: Bring Your Own Context
+
+- The model cannot know your data, but it is excellent at **reading**
+- So at question time, we fetch the relevant information and put it **into the prompt** -- we call that added information **context**
+- The generic recipe:
+  1. **Retrieve** data relevant to the question
+  2. **Augment** the prompt with it
+  3. **Generate** the answer from it
+- That recipe is **Retrieval Augmented Generation (RAG)** -- and because the model now quotes sources instead of reciting memory, you get **attribution** for free
+
+## Context Comes in Three Shapes
+
+| Shape | Examples | Retrieved by |
+|-------|----------|--------------|
+| **Unstructured** | Documents, PDFs, wikis, tickets, email | Semantic search over embeddings (today) |
+| **Structured** | Tables, spreadsheets, databases | Text-to-SQL (Week 7) |
+| **Graph** | Entities and relationships | Graph traversal (Week 7) |
+
+Today is mostly the first row -- it is where RAG started and where most production systems live. But keep all three in mind: the best systems pick the right shape per question.
+
 ## What is RAG? {.center}
 
 RAG = Retrieval Augmented Generation
 A generative AI approach where the model combines external knowledge retrieval with text generation to provide more accurate and contextually rich responses.
 
-## Why RAG?
+## Simple RAG Architecture {.smaller}
 
-- **Augments LLM responses with relevant context**: Instead of relying solely on the LLM's training data, RAG retrieves and incorporates specific, up-to-date information into responses.
-
-- **Helps ground responses in factual information**: By providing relevant context from trusted sources, RAG ensures responses are based on actual facts rather than model-generated content.
-
-- **Reduces hallucinations**: With access to specific, retrieved information, the model is less likely to generate incorrect or fabricated responses.
-
-- **Enables use of private/proprietary data**: Organizations can leverage their internal documents, knowledge bases, and proprietary information that wasn't part of the LLM's training data.
-
-- **Provides source attribution**: RAG systems can track where information comes from, making responses more transparent and verifiable.
-
-## Simple RAG Architecture
-
-::: {.callout}
-![RAG simple](img/rag-simple.png)
+::: {style="text-align: center;"}
+![](img/rag-simple.png){height=360}
 :::
 
 Key Components:
@@ -42,6 +76,30 @@ Key Components:
   - **Vector Storage**: Stores document embeddings and enables similarity search.
   - **Query Processing**: Converts user questions into embeddings and finds relevant documents.
   - **Response Generation**: Combines retrieved context with LLM capabilities to generate accurate answers.
+
+## RAG: 100 to 300 {.smaller}
+
+:::: {.columns}
+
+::: {.column width="33%"}
+**100 level**
+
+Before the model answers, look up the relevant documents and paste them into the prompt. The model reads them and answers from what it read, citing sources.
+:::
+
+::: {.column width="33%" .fragment}
+**200 level**
+
+Embed every chunk of your corpus once; embed the query at ask time; nearest-neighbor search returns the top-k chunks; they go into the prompt as context. An approximate index (HNSW) keeps search fast at millions of chunks -- HNSW and friends are explained later in this deck, with vector databases.
+:::
+
+::: {.column width="33%" .fragment}
+**300 level**
+
+Production RAG layers on: hybrid lexical+semantic search, rerankers, query rewriting, contextual chunking, and metadata filters -- then measures itself with retrieval and generation metrics (RAGAS). Each layer exists because a failure mode demanded it; the rest of today walks them.
+:::
+
+::::
 
 # Embeddings: The Foundation of Semantic Retrieval
 
@@ -57,24 +115,65 @@ Key Components:
 - **Vector Space**: High-dimensional representations (typically 384-3072 dimensions)
 - **Distance Metrics**: Cosine similarity, Euclidean distance, dot product
 
-## Embeddings Deep Dive
+## Example: Retrieval By Hand {.smaller}
+
+Four tiny "documents," each embedded to just 2 numbers so we can compute everything ourselves. The query gets embedded by the same model.
+
+![](img/retrieval-by-hand.svg){height=300 fig-align="center"}
+
+The query lands next to the documents that share its meaning -- no keyword overlap required ("cab prices" matches "taxi fares").
+
+## Choosing an Embedding Model
 
 Key Considerations:
 
-  - **Model selection criteria**: Consider factors like accuracy, speed, cost, and dimension size when choosing an embedding model.
+  - **Model selection**: Weigh accuracy, speed, cost, and dimension count.
 
-  - **Dimensionality impact**: Higher dimensions can capture more information but increase storage costs and retrieval time.
+  - **Dimensions**: More dimensions capture more meaning and cost more to store and search.
 
-  - **Multi-lingual support**: Choose models like Cohere multilingual or Amazon Titan if your application needs to handle multiple languages.
+  - **Languages**: For multilingual corpora, pick a multilingual model (Cohere multilingual, Qwen3-Embedding).
 
-  - **Domain-specific needs**: Consider fine-tuning embedding models for specialized domains like medical or legal text. Fine-tuning using [Sentence Transformers](https://huggingface.co/blog/train-sentence-transformers).
+  - **Domains**: Medical and legal text often needs a fine-tuned model -- see [Sentence Transformers](https://huggingface.co/blog/train-sentence-transformers).
+
+## Getting Embeddings: Self-Host or Call an API {.smaller}
+
+Whatever model you pick, there are exactly two ways to consume it:
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Self-host
+
+You run the model; text never leaves your infrastructure.
+
+- **Ollama** -- what we did in the Week 2 lab: `ollama pull nomic-embed-text`, then POST to `/api/embed`
+- **vLLM** -- production-grade: `vllm serve BAAI/bge-large-en-v1.5 --task embed`
+- **SGLang** -- launch with `--is-embedding`
+- vLLM and SGLang both expose the OpenAI-compatible `/v1/embeddings` endpoint, so client code stays portable
+:::
+
+::: {.column width="50%"}
+### Call an API
+
+You send text, they send back vectors; you host nothing.
+
+- OpenAI (`text-embedding-3`), Cohere, Voyage AI, Gemini
+- Pay per token; zero ops
+- Your text goes to the provider -- a real consideration for sensitive corpora
+- Latency and rate limits are theirs, not yours
+:::
+
+::::
+
+The trade is the same one as LLM serving in Week 2: control and privacy vs. zero operations.
 
 ## Popular Embeddings Models
 
+  - **nomic-embed-text**: What you already ran in the Week 2 lab -- 768 dimensions, 260 MB, runs locally via Ollama. Our course workhorse.
   - **Hugging Face**: Huge collection of open embedding models (check the [MTEB leaderboard](https://huggingface.co/spaces/mteb/leaderboard)), e.g. [BGE-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5), Sentence Transformers (SBERT, MPNet)
   - **OpenAI embeddings**: text-embedding-3-small/large; excellent general-purpose performance but can be expensive for large-scale applications.
   - **Cohere embeddings**: Strong multilingual support and competitive performance.
-  - **Amazon Titan**: Integrated well with AWS ecosystem, good multilingual capabilities.
+  - **Qwen3-Embedding / Gemini embedding**: Current leaders on the MTEB leaderboard -- open-weight and hosted respectively.
   - **Voyage AI**: Recommended by Anthropic, state-of-the-art performance with domain-specific models for finance, healthcare, and code.
   - **ColBERTv2**: Late interaction model -- independently encodes queries and documents, then uses "MaxSim" for fine-grained token-level similarity. [Paper](https://arxiv.org/pdf/2112.01488), [HuggingFace](https://huggingface.co/colbert-ir/colbertv2.0), [LangChain example](https://python.langchain.com/docs/integrations/retrievers/ragatouille/).
 
@@ -89,19 +188,25 @@ Key Considerations:
 
 # Building RAG Pipelines
 
-## Building a Basic RAG App
+## Building a Basic RAG App {.smaller}
 
-1. **Prepare documents**: Clean and preprocess your source documents, removing irrelevant content and standardizing format.
+![](img/basic-rag-pipeline.svg){height=310 fig-align="center"}
 
-2. **Create embeddings**: Convert text chunks into numerical vectors using embedding models like [BGE-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5), Amazon Titan embeddings, OpenAI text-embedding-3, or Cohere embed-multilingual.
+Six steps, two pipelines: **prepare** and chunk documents, **embed** the chunks, **store** them in a vector database (ingestion, once) -- then **embed** the user's question with the same model, **retrieve** the nearest chunks, and **generate** the answer from them (query, every request).
 
-3. **Store in vector database**: Upload embeddings to a vector store like Pinecone, Weaviate, or FAISS for efficient similarity search.
+::: {.fragment}
+The pipeline works, end to end. **What is missing?**
+:::
 
-4. **Process user query**: Convert the user's question into an embedding using the same embedding model.
+## What Is Missing: Evaluation {.center}
 
-5. **Retrieve relevant context**: Perform similarity search to find the most relevant document chunks.
+### How do we know the answers are grounded in the context we provide?
 
-6. **Generate response**: Combine retrieved context with an LLM prompt to generate an accurate, contextual response.
+::: {.fragment}
+And one step earlier: how do we know retrieval found the right documents at all? A RAG pipeline without measurement is a demo, not a system.
+
+We measure both -- retrieval quality and generation quality. The metrics and tooling (RAGAS) open next week's lecture, and evaluation gets a full week of its own (Week 6).
+:::
 
 ## Chunking Strategies
 
@@ -119,7 +224,7 @@ Key Considerations:
 
 ## The Problem with Naive Chunking
 
-Traditional RAG chunks documents and embeds each chunk independently. This **loses context**:
+Traditional RAG splits documents and embeds each chunk on its own. Context gets lost:
 
 ```
 Original document:
@@ -154,63 +259,70 @@ their new AI product line launched in Q2."
 
 For knowledge bases under **200K tokens**, you may not need RAG at all -- just put the entire context in the prompt window.
 
+Every token you put in context costs money, on every request. So be smart about *what* goes in and *how* you extract it from the source. For a huge document, a model running in an agent harness can say "I need these three facts" and call tools that grep and extract just the relevant pieces -- pennies instead of dollars. That pattern is agentic RAG, coming later today.
+
 Source: [Anthropic Blog - Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)
 
-## Late Chunking
+## Why One Retriever Is Not Enough
 
-An alternative approach from Jina AI to preserve context during chunking.
+Two queries, two failure modes:
 
-**Traditional approach** (chunk-then-embed):
+:::: {.columns}
 
-```
-Document -> Split into chunks -> Embed each chunk independently
-```
+::: {.column width="50%"}
+### "error E4021 in billing"
 
-**Late chunking** (embed-then-chunk):
+Embeddings blur exact tokens -- E4021 and E4012 land nearly on top of each other in vector space. Keyword search finds the literal string every time.
 
-```
-Document -> Feed entire doc into long-context embedding model
-         -> Get token-level embeddings WITH full context
-         -> THEN split into chunks
-```
+**Exact words win**: product IDs, error codes, names, legal citations.
+:::
 
-### Why It Matters
+::: {.column width="50%"}
+### "car won't start"
 
-- Pronouns and references retain their meaning ("The company" knows it means "Acme Corp")
-- Each chunk embedding is aware of the full document context
-- No need for an extra LLM call (unlike contextual retrieval)
-- Trade-off: requires a long-context embedding model
+The manual says "vehicle ignition failure" -- zero words in common, same meaning. Keyword search returns nothing. Embeddings match it easily.
 
-Source: [Late Chunking Paper (arXiv:2409.04701)](https://arxiv.org/pdf/2409.04701), [Weaviate Blog](https://weaviate.io/blog/late-chunking)
+**Meaning wins**: synonyms, paraphrase, cross-language.
+:::
 
-## Hybrid Search: BM25 + Embeddings
+::::
 
-The production standard for enterprise RAG combines **lexical** and **semantic** search.
+::: {.fragment}
+Production RAG runs **both** and merges the results. That is hybrid search -- the next three slides.
+:::
 
-```
-                    User Query
-                    /        \
-                   /          \
-            BM25 Search    Vector Search
-           (keyword match)  (semantic match)
-                   \          /
-                    \        /
-              Reciprocal Rank Fusion (RRF)
-                       |
-                  Merged Results
-                       |
-                   Reranker
-                       |
-                  Final Results
-```
+## BM25: Keyword Search, Done Properly {.smaller}
 
-### Why Hybrid?
+**BM25 = "Best Matching 25"** -- a ranking algorithm, the 25th iteration of the scoring function from the Okapi retrieval system (Robertson et al., 1990s). It is the lexical scorer inside Elasticsearch, OpenSearch, and every Lucene descendant. For each query term in a document, it multiplies three signals:
 
-- **BM25 alone** misses semantic similarity ("car" vs "automobile")
-- **Embeddings alone** miss exact keyword matches (product IDs, error codes, names)
-- **Together**: best of both worlds
+- **Rarity (IDF)**: "E4021" appearing in 3 documents out of a million tells you a lot; "the" tells you nothing
+- **Term frequency, with saturation**: a document that mentions "taxi" five times beats one that mentions it once -- but the fiftieth mention adds almost nothing
+- **Length normalization**: a term hit in a 100-word memo counts for more than the same hit buried in a 100-page manual
 
-Recommended starting weight: **30% BM25 / 70% embedding** (tune for your domain).
+Sum over the query terms and you have the document's score. No training, no vectors, no GPU -- it has run the world's search boxes since the 1990s, and it is still the strongest baseline in retrieval benchmarks.
+
+::: {.def-callout}
+**IDF, inverse document frequency**: count how many of your $N$ documents contain a term ($df$), then invert it: $idf(t) \approx \log(N/df)$. A term in every document scores near zero; a term in 3 documents out of a million scores high. Computed once at index time, it is how a search engine knows "E4021" matters and "the" does not.
+:::
+
+## Reciprocal Rank Fusion: Merging Two Rankings {.smaller}
+
+Each retriever sorts **its own** results: rank 1 is its best match, rank 2 the next best, and so on. The scores behind those ranks (BM25 points, cosine similarity) live on different scales and cannot be compared -- but a rank is just a rank.
+
+![](img/rrf-step1.svg){height=140 fig-align="center"}
+
+::: {.fragment}
+RRF fuses the two rankings in two moves: convert every rank to points with $\frac{1}{60 + rank}$, then add up each document's points across both lists.
+
+![](img/rrf-step2.svg){height=220 fig-align="center"}
+:::
+
+## Hybrid Search: The Full Pipeline {.smaller}
+
+![](img/hybrid-search.svg){height=240 fig-align="center"}
+
+- The **reranker** is a cross-encoder: it reads query and document together, scoring relevance far better than either retriever -- too slow for millions of documents, perfect for a merged shortlist of 50
+- Starting weights when your stack supports weighting: 30% BM25 / 70% vector; tune on your own queries
 
 Source: [Superlinked - Optimizing RAG with Hybrid Search](https://superlinked.com/vectorhub/articles/optimizing-rag-with-hybrid-search-reranking)
 
@@ -226,61 +338,76 @@ Retrieval quality depends as much on the **query** as on the index.
 
 # Vector Databases
 
+## Why a Vector Database at All? {.smaller}
+
+- Retrieval means: given a query vector, find the closest vectors among **millions**
+- Brute force computes the similarity against every stored vector, per query -- fine at 10,000 chunks, hopeless at 50 million with users waiting
+- **Approximate Nearest Neighbor (ANN)** search is the escape: give up a tiny bit of recall (find *almost always* the true neighbors) for orders-of-magnitude speed
+- A vector database packages the pieces you would otherwise build yourself:
+  - An ANN index (HNSW is the workhorse -- next slide)
+  - Metadata filtering ("only documents from 2026", "only this tenant")
+  - The database parts: persistence, updates, replication, access control
+
+## HNSW: How ANN Search Actually Works {.smaller}
+
+**Hierarchical Navigable Small World** -- the index behind most vector databases (Pinecone, Qdrant, Weaviate, pgvector, OpenSearch).
+
+![](img/hnsw.svg){height=290 fig-align="center"}
+
+- **The idea**: a highway system for vectors. Sparse top layers make long hops toward the right region; each lower layer is denser and refines the position; layer 0 holds every vector
+- **300-level notes**: greedy best-first search per layer; build-time parameter M (links per node) and ef (search width) trade recall against speed and memory; alternatives include IVF (cluster-then-probe) and product quantization (compress vectors), often combined at billion scale
+
 ## Vector Databases
 
 Features to Consider:
 
-  - **Scalability**: Ability to handle millions or billions of vectors efficiently.
+  - **Scale**: Handles millions to billions of vectors.
 
-  - **Query performance**: Fast similarity search with support for approximate nearest neighbors (ANN) algorithms.
+  - **Query speed**: ANN search answers in milliseconds at scale.
 
-  - **Similarity search algorithms**: Support for different distance metrics (cosine, euclidean) and indexing methods.
+  - **Search options**: Distance metrics (cosine, euclidean, dot product) and index types.
 
-  - **Metadata filtering**: Ability to combine vector similarity search with metadata filters.
+  - **Metadata filtering**: Combines similarity search with filters (date, tenant, source).
 
-  - **Cost considerations**: Balance between hosting costs, query costs, and storage requirements.
+  - **Cost**: Hosting, per-query, and storage costs pull in different directions.
 
 ## Examples of Vector Databases
 
-- **Pinecone**:
-  - Scalable and high-performance vector database.
-  - Designed for real-time search with high availability and easy integration.
-  - Offers fully managed services with automatic scaling and monitoring.
+- **Pinecone**: Managed service; you never run a server. Strong choice when you want zero ops.
 
-- **Weaviate**:
-  - Open-source vector search engine with support for hybrid search (text + vector).
-  - Schema-free or schema-driven, flexible for various data types.
-  - Built-in ML model hosting and extensible through modules like transformers.
+- **turbopuffer**: Serverless search on object storage -- vectors and full-text in one engine, priced by what you store and query. Powers search in Cursor and Notion.
 
-- **Milvus**:
-  - Cloud-native vector database optimized for high-throughput and low-latency vector retrieval.
-  - Open-source with strong community support and enterprise-grade features.
-  - Supports massive-scale data management for AI and analytics applications.
+- **Weaviate**: Open source, hybrid search (text + vector) built in, optional managed cloud.
+
+- **Milvus**: Open source, built for billion-vector deployments; the heavyweight of the group.
 
 ## Examples of Vector Databases (contd.)
 
-- **Qdrant**:
-  - Feature-rich, open-source vector database with support for filtering and hybrid search.
-  - Integrates easily with other tools like LangChain and Python.
-  - Designed for both small-scale and production-grade deployments.
+- **Qdrant**: Open source, rich filtering and hybrid search; runs from laptop to production.
 
-- **OpenSearch**:
-  - Open-source search and analytics platform with vector search support using k-NN.
-  - Enables hybrid search across text, vector embeddings, and metadata.
+- **OpenSearch**: Full-text search platform with k-NN vectors added; one engine for text, vectors, and metadata.
 
-- **FAISS (by Meta AI)**:
-  - A library rather than a traditional database, optimized for similarity search and clustering.
-  - Limited to in-memory computation but extremely efficient.
+- **FAISS (Meta)**: A library, not a database -- in-memory, fast, no persistence or filtering. Great for labs and prototypes.
 
-- **Chroma**:
-  - Lightweight and developer-friendly embedding store.
-  - Designed for rapid prototyping and easy integration with LLM applications.
+- **Chroma**: Small, embeddable store; two lines of Python to first query. Our lab default.
 
-- **PostgreSQL (with pgvector)**:
-  - Extends PostgreSQL to store and retrieve high-dimensional vector embeddings.
-  - Suitable for teams already using PostgreSQL for traditional relational data.
+- **PostgreSQL + pgvector**: Vectors inside the database you already run -- often the right answer for teams on Postgres.
 
-# Advanced RAG
+# Advanced RAG (Overflow: Moves to Week 4)
+
+## Week 3 Overflow {.smaller}
+
+We will not reach this section today. The slides stay here so you can read ahead, and **Week 4 opens with them**:
+
+- Agentic search vs. semantic search -- why Claude Code uses grep, not embeddings
+- Corrective RAG (CRAG) and Self-RAG
+- RAG vs. long context, and when to use which
+- **RAG evaluation with RAGAS** -- the answer to today's "what is missing?"
+- Managed RAG services
+- **Graph RAG and SQL RAG** -- retrieval beyond vector similarity, for structured and connected data
+
+If today's lab raises retrieval-quality questions, save them; they belong exactly here.
+
 
 ## Beyond Embeddings: Agentic Search {.center}
 
@@ -329,9 +456,9 @@ CRAG adds a **retrieval evaluator** that assesses document quality before genera
 
 ### Why It Matters
 
-- **Plug-and-play**: Works with any existing RAG pipeline
-- **Self-correcting**: Does not blindly trust retrieved documents
-- **Web search fallback**: Handles cases where local knowledge base is insufficient
+- Works with any existing RAG pipeline, no retraining
+- Does not trust retrieved documents on faith
+- Falls back to web search when the local knowledge base comes up short
 
 Source: [CRAG Paper (arXiv:2401.15884)](https://arxiv.org/abs/2401.15884), [LangGraph CRAG Tutorial](https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_crag/)
 
@@ -430,34 +557,50 @@ We go deep on evals and observability in Week 6.
 
 Source: [RAGAS Paper (arXiv:2309.15217)](https://arxiv.org/abs/2309.15217), [RAGAS Documentation](https://docs.ragas.io/en/stable/)
 
-## Amazon Bedrock Knowledge Bases
+## Managed RAG: Buy Instead of Build {.smaller}
 
-A fully managed service that handles the entire RAG pipeline -- from document ingestion to retrieval-augmented generation.
+Every major provider now sells the pipeline we just built as a managed service -- ingestion, chunking, embedding, retrieval, and citations behind one API:
 
-### Key Features
+| Service | Notes |
+|---------|-------|
+| OpenAI file search | Vector stores + retrieval built into the Responses API |
+| Anthropic Files / RAG via tools | Bring retrieval as a tool; contextual retrieval technique |
+| Amazon Bedrock Knowledge Bases | Managed ingestion to vector store, RetrieveAndGenerate API |
+| Google Vertex AI RAG Engine | Managed corpora + retrieval on Vertex |
+| Pinecone Assistant, LlamaCloud | Vector-DB-native and framework-native managed RAG |
 
-- **Advanced chunking**: Semantic, hierarchical, and fixed-size chunking strategies
-- **Multiple vector stores**: Aurora PostgreSQL, OpenSearch Serverless, Neptune, MongoDB Atlas, Pinecone, Redis Enterprise
-- **Multimodal retrieval**: Supports images, audio, and video alongside text
-- **Contextual retrieval**: Integrates Anthropic's contextual retrieval technique
-
-### APIs
-
-- **RetrieveAndGenerate**: End-to-end RAG in a single API call
-- **Retrieve**: Get relevant chunks without generation (bring your own LLM)
-
-Source: [Amazon Bedrock Knowledge Bases](https://aws.amazon.com/bedrock/knowledge-bases/), [Documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
+- **When to buy**: standard document Q&A, small team, no retrieval expertise on staff
+- **When to build**: custom chunking/reranking, hybrid search tuning, data residency, cost control at scale -- everything this lecture taught you to reason about
 
 ## Beyond Vector Similarity: Graph RAG and SQL RAG
 
 - Vector similarity is not the only retrieval strategy:
   - **Graph RAG**: Represents knowledge as **entities and relationships**; retrieval via graph traversal (Neo4j, Memgraph, Amazon Neptune, Microsoft GraphRAG). Wins for multi-hop questions over highly connected data ("Who were Bohr's collaborators and what did they work on?").
   - **SQL RAG**: Natural language to SQL over relational databases; the only option for aggregate questions ("average trip distance on 2024-12-11") that neither vector nor graph retrieval can answer.
-- **Coming in Week 7**: Deep dive on Graph RAG, ontologies, and the semantic layer -- modeling your data so LLMs can reason over it.
+- **Coming in Week 7**: Graph RAG, ontologies, and the semantic layer in full -- modeling your data so LLMs can reason over it.
 
 Source: [Microsoft GraphRAG](https://www.microsoft.com/en-us/research/project/graphrag/), [Paper (arXiv:2404.16130)](https://arxiv.org/abs/2404.16130)
 
-# Intro to AI Agents
+# From One-Shot RAG to Agentic RAG
+
+## Why One Retrieval Is Not Enough
+
+Everything so far retrieves **once, up front** -- before the model has read a single word. That works for simple questions and breaks for real ones:
+
+- **You have to guess what to fetch before reading anything** -- the query's wording rarely matches the documents' wording
+- **Complex questions take multiple hops**: "How did our Q3 compare to Acme's?" needs our report, then theirs, then a comparison -- no single retrieval returns all of it
+- **The first document tells you what to read next** (it cites a contract, mentions a ticket) -- a fixed pipeline cannot follow that thread
+- **Retrieval fails silently**: if the top-k chunks are wrong, generation proceeds anyway, ungrounded
+
+::: {.fragment}
+The fix: context cannot be a one-time delivery. **Run the model in a loop and let it tell us what it needs.** We fetch that with tools, hand it back, and repeat until it has enough to answer.
+:::
+
+## One-Shot vs. Agentic RAG {.smaller}
+
+![](img/oneshot-vs-agentic.svg){height=300 fig-align="center"}
+
+This loop -- a model that decides, acts through tools, observes, and repeats -- is called an **agent**. Today: just enough agents to build agentic RAG. Next week onward: agents in full.
 
 ## What is an AI Agent?
 
@@ -478,28 +621,29 @@ Source: [Anthropic: Building Effective Agents](https://www.anthropic.com/enginee
 The foundation of every agent: the LLM decides **when** to call a function and **what arguments** to pass.
 
 ```python
+import anthropic
+
+client = anthropic.Anthropic()  # or OpenAI, Groq, ... -- every provider has this shape
+
 tools = [{
-    "toolSpec": {
-        "name": "get_stock_price",
-        "description": "Get current stock price for a ticker symbol",
-        "inputSchema": {
-            "json": {
-                "type": "object",
-                "properties": {
-                    "ticker": {"type": "string", "description": "Stock ticker symbol"}
-                },
-                "required": ["ticker"]
-            }
-        }
-    }
+    "name": "get_stock_price",
+    "description": "Get current stock price for a ticker symbol",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "ticker": {"type": "string", "description": "Stock ticker symbol"}
+        },
+        "required": ["ticker"],
+    },
 }]
 
-response = bedrock.converse(
-    modelId="anthropic.claude-sonnet-4-5-20250929-v1:0",
-    messages=[{"role": "user", "content": [{"text": "What's Apple's stock price?"}]}],
-    toolConfig={"tools": tools}
+response = client.messages.create(
+    model="claude-opus-5",
+    max_tokens=1024,
+    tools=tools,
+    messages=[{"role": "user", "content": "What is Apple's stock price?"}],
 )
-# LLM returns: tool_use with {"ticker": "AAPL"}
+# response.stop_reason == "tool_use"; the block's input is {"ticker": "AAPL"}
 ```
 
 - **You** execute the function and return results to the LLM
@@ -579,10 +723,10 @@ Source: [Agentic RAG Survey (arXiv:2501.09136)](https://arxiv.org/abs/2501.09136
 
 ## Lab: Build a RAG Pipeline
 
-### Hands-on Exercise
+### Hands-on Exercise -- same stack as the Week 2 lab
 
+- Models you already have running: **nomic-embed-text** for embeddings and **MiniCPM5-2B** for generation, both local via Ollama (cloud models via Groq/OpenAI/Anthropic as fallback)
 - Ingest a small document corpus: chunk, embed, and index it
-- Compare embedding models (an open BGE model vs. a hosted API model)
 - Store vectors in a local vector store (Chroma or FAISS; pgvector optional)
 - Implement retrieval + generation with source citations
 - Experiment: chunk size, overlap, top-k, hybrid (BM25 + vector) retrieval
@@ -595,8 +739,6 @@ Source: [Agentic RAG Survey (arXiv:2501.09136)](https://arxiv.org/abs/2501.09136
 1. [Anthropic Engineering: Claude Code Best Practices (Agentic Search)](https://www.anthropic.com/engineering/claude-code-best-practices)
 1. [Latent Space Podcast: Claude Code](https://www.latent.space/p/claude-code) -- Cat Wu and Boris Cherny on grep vs embeddings
 1. [Anthropic Blog: Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)
-1. [Late Chunking Paper (arXiv:2409.04701)](https://arxiv.org/pdf/2409.04701)
-1. [Weaviate: Late Chunking](https://weaviate.io/blog/late-chunking)
 1. [Superlinked: Optimizing RAG with Hybrid Search & Reranking](https://superlinked.com/vectorhub/articles/optimizing-rag-with-hybrid-search-reranking)
 1. [Chunking Techniques with LangChain and LlamaIndex](https://blog.lancedb.com/chunking-techniques-with-langchain-and-llamaindex/)
 

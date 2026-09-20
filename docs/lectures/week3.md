@@ -1,4 +1,4 @@
-# Week 3: Retrieval Augmented Generation (RAG) and Intro to Agents
+# Week 3: RAG and Agentic RAG
 
 <p class="deck-actions"><a href="../assets/html/week3.html" target="_blank">Open slides full screen &rarr;</a></p>
 

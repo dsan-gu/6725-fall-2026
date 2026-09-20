@@ -115,7 +115,7 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 |-------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | 1     | GenAI Theory Foundations and Coding Assistants       | How LLMs work (transformers, tokens, sampling), in-context learning and prompt engineering; lab: AI coding assistants and agentic coding workflows |
 | 2     | LLM Internals and Inference                          | Transformer fundamentals (attention, QKV, sampling, reasoning models), inference servers and engines, quantization, speculative decoding, batching, API-based vs self-hosted serving |
-| 3     | Retrieval Augmented Generation (RAG) and Intro to Agents | Embeddings, vector databases, chunking strategies, advanced RAG techniques; first look at AI agents and tool use |
+| 3     | RAG and Agentic RAG                                  | Why LLMs need context, embeddings, vector databases, chunking, hybrid search; agentic RAG as a first look at agents and tool use |
 | 4     | Agentic RAG and Model Context Protocol (MCP)         | Agent-driven retrieval and query planning; building MCP servers and clients for tool integration, authentication, and deployment |
 | 5     | Agent Architectures in Detail                        | Planning, memory, context management and engineering, single-agent vs multi-agent design patterns |
 | 6     | Evals, Observability, and Guardrails                 | Evaluation frameworks, monitoring GenAI apps in production, guardrails, and data security |

@@ -107,6 +107,15 @@ $code-color: $gray-950;
   font-size: 0.95em;
 }
 
+.reveal .def-callout {
+  color: #1e40af;
+  background: #eff6ff;
+  border-left: 3px solid #1e40af;
+  padding: 0.4em 0.7em;
+  margin-top: 0.6em;
+  font-size: 0.95em;
+}
+
 .reveal .slide-number {
   background-color: transparent;
   color: $gray-500;

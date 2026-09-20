@@ -6,7 +6,7 @@ Slides for each week are rendered from Quarto (`.qmd`) sources in `docs/lectures
 |------|-------|
 | [1](week1.md) | GenAI Theory Foundations and Coding Assistants |
 | [2](week2.md) | LLM Internals and Inference |
-| [3](week3.md) | Retrieval Augmented Generation (RAG) and Intro to Agents |
+| [3](week3.md) | RAG and Agentic RAG |
 | [4](week4.md) | Agentic RAG and Model Context Protocol (MCP) |
 | [5](week5.md) | Agent Architectures in Detail |
 | [6](week6.md) | Evals, Observability, and Guardrails |

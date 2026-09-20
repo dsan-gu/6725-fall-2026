@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="320" viewBox="0 0 920 320" font-family="Helvetica, Arial, sans-serif">
+<line x1="60" y1="280" x2="320" y2="280" stroke="#9ca3af" stroke-width="1.5"/>
+<line x1="60" y1="280" x2="60" y2="20" stroke="#9ca3af" stroke-width="1.5"/>
+<text x="300" y="298" font-size="12" fill="#6b7280" text-anchor="end">dimension 1</text>
+<text x="52" y="40" font-size="12" fill="#6b7280" text-anchor="end" transform="rotate(-90 52 40)"></text>
+<text x="46" y="50" font-size="12" fill="#6b7280" text-anchor="middle" writing-mode="tb">dim 2</text>
+<circle cx="276" cy="208" r="7" fill="#b45309"/>
+<text x="287" y="212" font-size="13" font-weight="bold" fill="#b45309">D1</text>
+<circle cx="84" cy="52" r="6" fill="#9ca3af"/>
+<text x="95" y="56" font-size="13" font-weight="normal" fill="#9ca3af">D2</text>
+<circle cx="264" cy="172" r="7" fill="#b45309"/>
+<text x="275" y="176" font-size="13" font-weight="bold" fill="#b45309">D3</text>
+<circle cx="132" cy="88" r="6" fill="#9ca3af"/>
+<text x="143" y="92" font-size="13" font-weight="normal" fill="#9ca3af">D4</text>
+<path d="M 279.0 220.0 L 288.0 211.0 L 297.0 220.0 L 288.0 229.0 Z" fill="#111827"/>
+<text x="218" y="248" font-size="13" font-weight="bold" fill="#111827">query q</text>
+<text x="430" y="40" font-size="14" font-weight="bold" fill="#111827">cosine similarity to q ("What happened to cab prices?")</text>
+<text x="430" y="72" font-size="13" fill="#b45309" font-weight="bold">D1: "Taxi fares rose 4% in January"</text>
+<rect x="430" y="78" width="180" height="10" rx="3" fill="#b45309" opacity="0.8"/>
+<text x="618" y="87" font-size="12" fill="#b45309" font-weight="bold">0.998</text>
+<text x="430" y="110" font-size="13" fill="#b45309" font-weight="bold">D3: "Congestion pricing cut traffic"</text>
+<rect x="430" y="116" width="175" height="10" rx="3" fill="#b45309" opacity="0.8"/>
+<text x="613" y="125" font-size="12" fill="#b45309" font-weight="bold">0.974</text>
+<text x="430" y="148" font-size="13" fill="#6b7280" font-weight="normal">D4: "Best pizza slices in Brooklyn"</text>
+<rect x="430" y="154" width="104" height="10" rx="3" fill="#6b7280" opacity="0.8"/>
+<text x="542" y="163" font-size="12" fill="#6b7280" font-weight="bold">0.578</text>
+<text x="430" y="186" font-size="13" fill="#6b7280" font-weight="normal">D2: "The Knicks won last night"</text>
+<rect x="430" y="192" width="64" height="10" rx="3" fill="#6b7280" opacity="0.8"/>
+<text x="502" y="201" font-size="12" fill="#6b7280" font-weight="bold">0.354</text>
+<text x="430" y="248" font-size="13" fill="#111827">top-2 by similarity (D1, D3) go into the prompt as context;</text>
+<text x="430" y="268" font-size="13" fill="#111827">the model answers from them and cites them.</text>
+<text x="430" y="298" font-size="12" fill="#6b7280">Real systems: 1024+ dimensions, millions of documents, ANN index.</text>
+</svg>

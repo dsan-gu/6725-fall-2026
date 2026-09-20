@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="150" viewBox="0 0 920 150" font-family="Helvetica, Arial, sans-serif">
+<text x="210" y="26" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">BM25's own ranking</text>
+<rect x="60" y="42" width="300" height="26" rx="5" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="72" y="60" font-size="13" fill="#111827">rank 1 (best match)</text>
+<text x="300" y="60" font-size="13" font-weight="bold" fill="#111827">D7</text>
+<rect x="60" y="76" width="300" height="26" rx="5" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="72" y="94" font-size="13" fill="#111827">rank 2</text>
+<text x="300" y="94" font-size="13" font-weight="bold" fill="#111827">D2</text>
+<rect x="60" y="110" width="300" height="26" rx="5" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="72" y="128" font-size="13" fill="#111827">rank 3</text>
+<text x="300" y="128" font-size="13" font-weight="bold" fill="#111827">D9</text>
+<text x="690" y="26" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">vector search's own ranking</text>
+<rect x="540" y="42" width="300" height="26" rx="5" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="552" y="60" font-size="13" fill="#111827">rank 1 (best match)</text>
+<text x="780" y="60" font-size="13" font-weight="bold" fill="#111827">D2</text>
+<rect x="540" y="76" width="300" height="26" rx="5" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="552" y="94" font-size="13" fill="#111827">rank 2</text>
+<text x="780" y="94" font-size="13" font-weight="bold" fill="#111827">D5</text>
+<rect x="540" y="110" width="300" height="26" rx="5" fill="#f3f4f6" stroke="#9ca3af"/>
+<text x="552" y="128" font-size="13" fill="#111827">rank 3</text>
+<text x="780" y="128" font-size="13" font-weight="bold" fill="#111827">D7</text>
+<text x="460" y="95" font-size="22" fill="#6b7280" text-anchor="middle">+</text>
+</svg>

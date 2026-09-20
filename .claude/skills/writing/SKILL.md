@@ -88,6 +88,9 @@ Read the sentence aloud. If no one would say it, rewrite it. Break any rule abov
 - Do not hedge twice. "may possibly" -> "may". Pick one level of certainty and own it.
 - Use present tense for how a thing works, past tense for what happened.
 - Never open with "In today's fast-paced world" or any variant.
+- No announcement openers. Do not label a sentence before saying it: "An honest update:", "A word of caution:", "A quick note:", "Fun fact:", "The fun part:", "The best part is", "Key insight:". No human talks like that. Delete the label and state the fact - the content is its own flag.
+  - Bad: A word of caution: this API changes often.
+  - Good: This API changes often; pin the version.
 
 ## Sentence-shape tells
 
@@ -121,12 +124,13 @@ Run this on every draft before you ship it:
 1. Read it aloud. Fix anything you stumble on.
 2. Search for is/are/was/were + participle. Flip each to active or justify it.
 3. Search for `ly ` and delete or replace each hit.
-4. Delete every phrase from the ban lists above.
-5. Cut the first sentence of each paragraph if the second one already says it.
-6. Scan for the sentence-shape tells above: antithesis, corrective negation, contrasting pairs, setup/payoff, parallel structure, stacked nouns. Rewrite each into a plain statement.
-7. Count words. Cut a third.
-8. Check every claim against something real - a source, a number, a date.
-9. Apply rule 6 last: read once more and undo anything that now sounds wrong.
+4. Search for colon-labeled openers (`An honest`, `A word of`, `A quick`, `Fun fact`, `The fun part`, `Key insight`) and delete the label.
+5. Delete every phrase from the ban lists above.
+6. Cut the first sentence of each paragraph if the second one already says it.
+7. Scan for the sentence-shape tells above: antithesis, corrective negation, contrasting pairs, setup/payoff, parallel structure, stacked nouns. Rewrite each into a plain statement.
+8. Count words. Cut a third.
+9. Check every claim against something real - a source, a number, a date.
+10. Apply rule 6 last: read once more and undo anything that now sounds wrong.
 
 ## Example
 
