@@ -13,8 +13,8 @@
 <line x1="500" y1="69" x2="545" y2="69" stroke="#6b7280" stroke-width="1.8" marker-end="url(#r)"/>
 <rect x="548" y="46" width="150" height="150" rx="10" fill="#ffffff" stroke="#111827" stroke-width="2"/>
 <text x="623" y="76" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">vector DB</text>
-<text x="623" y="96" font-size="11" fill="#6b7280" text-anchor="middle">Chroma / FAISS /</text>
-<text x="623" y="110" font-size="11" fill="#6b7280" text-anchor="middle">pgvector</text>
+<text x="623" y="96" font-size="11" fill="#6b7280" text-anchor="middle">Qdrant (embedded,</text>
+<text x="623" y="110" font-size="11" fill="#6b7280" text-anchor="middle">no server needed)</text>
 <text x="623" y="132" font-size="11" fill="#6b7280" text-anchor="middle">HNSW index +</text>
 <text x="623" y="146" font-size="11" fill="#6b7280" text-anchor="middle">chunks + metadata</text>
 <text x="30" y="180" font-size="15" font-weight="bold" fill="#b45309">Query -- runs per question</text>

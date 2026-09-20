@@ -383,13 +383,13 @@ Features to Consider:
 
 ## Examples of Vector Databases (contd.)
 
-- **Qdrant**: Open source, rich filtering and hybrid search; runs from laptop to production.
+- **Qdrant**: Open source, rich filtering and hybrid search; runs from laptop to production. **Our lab uses it embedded** -- a Python package writing to a local folder, no server.
 
 - **OpenSearch**: Full-text search platform with k-NN vectors added; one engine for text, vectors, and metadata.
 
 - **FAISS (Meta)**: A library, not a database -- in-memory, fast, no persistence or filtering. Great for labs and prototypes.
 
-- **Chroma**: Small, embeddable store; two lines of Python to first query. Our lab default.
+- **Chroma**: Small, embeddable store; two lines of Python to first query.
 
 - **PostgreSQL + pgvector**: Vectors inside the database you already run -- often the right answer for teams on Postgres.
 
@@ -723,14 +723,13 @@ Source: [Agentic RAG Survey (arXiv:2501.09136)](https://arxiv.org/abs/2501.09136
 
 ## Lab: Build a RAG Pipeline
 
-### Hands-on Exercise -- same stack as the Week 2 lab
+### Hands-on Exercise -- same models as the Week 2 lab, everything local
 
-- Models you already have running: **nomic-embed-text** for embeddings and **MiniCPM5-2B** for generation, both local via Ollama (cloud models via Groq/OpenAI/Anthropic as fallback)
-- Ingest a small document corpus: chunk, embed, and index it
-- Store vectors in a local vector store (Chroma or FAISS; pgvector optional)
-- Implement retrieval + generation with source citations
-- Experiment: chunk size, overlap, top-k, hybrid (BM25 + vector) retrieval
-- Stretch goal: add a tool-calling step so the LLM decides *whether* to retrieve -- your first taste of agentic RAG
+- **No API keys, no cloud calls**: **nomic-embed-text** for embeddings and **MiniCPM5-2B** for generation, both through Ollama -- the same two models you already pulled
+- Vectors live in **Qdrant**, a real vector database running as an embedded Python package: no server, no Docker, just a `qdrant_db/` folder next to your code
+- Build the full pipeline: load, chunk, embed, index, retrieve, answer -- about a corpus no model could know from training
+- Then **break it**: make the model hallucinate on purpose, watch it happen
+- Then **fix it**: metadata filtering and query rewriting -- today's techniques, applied
 
 ## References & Further Reading
 
