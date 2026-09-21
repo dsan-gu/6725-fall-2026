@@ -39,6 +39,27 @@ Two kinds of questions live outside that region: **your data** (laptop files, co
 Models from two or three years ago really would answer these questions with confident fiction. Almost any LLM today tells you it does not have the information. Hallucination is not solved, though -- it moved to subtler places: plausible-but-wrong details, misattributed quotes, invented citations.
 :::
 
+## How We Used to Fight Hallucinations {.smaller}
+
+In the earliest days of GenAI, the main defense was to beg, right in the prompt. Every production prompt carried a line like one of these:
+
+```text
+Answer ONLY from the context provided. If the answer is not in the
+context, say "I don't know."
+```
+
+```text
+If you are not sure, respond with "I do not have enough information
+to answer this question." Do NOT make up an answer.
+```
+
+```text
+Never guess. If the documents below do not contain the answer,
+reply exactly: I don't know.
+```
+
+That was the state of the art -- instructions were the only tool anyone had. Today's models are trained to decline when they lack grounding, so the begging does much less work. A line like this still helps at the margin, and it costs a dozen tokens -- but as you will see in the lab, it may no longer be mandatory.
+
 ## The Fix: Bring Your Own Context
 
 - The model cannot know your data, but it is excellent at **reading**

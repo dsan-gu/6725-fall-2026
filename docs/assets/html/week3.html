@@ -1100,6 +1100,17 @@ Amit Arora
 <p>Models from two or three years ago really would answer these questions with confident fiction. Almost any LLM today tells you it does not have the information. Hallucination is not solved, though – it moved to subtler places: plausible-but-wrong details, misattributed quotes, invented citations.</p>
 </div>
 </section>
+<section id="how-we-used-to-fight-hallucinations" class="slide level2 smaller">
+<h2>How We Used to Fight Hallucinations</h2>
+<p>In the earliest days of GenAI, the main defense was to beg, right in the prompt. Every production prompt carried a line like one of these:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href aria-label="1"></a>Answer ONLY from the context provided. If the answer is not in the</span>
+<span id="cb1-2"><a href aria-label="2"></a>context, say &quot;I don&#39;t know.&quot;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href aria-label="1"></a>If you are not sure, respond with &quot;I do not have enough information</span>
+<span id="cb2-2"><a href aria-label="2"></a>to answer this question.&quot; Do NOT make up an answer.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb3-1"><a href aria-label="1"></a>Never guess. If the documents below do not contain the answer,</span>
+<span id="cb3-2"><a href aria-label="2"></a>reply exactly: I don&#39;t know.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That was the state of the art – instructions were the only tool anyone had. Today’s models are trained to decline when they lack grounding, so the begging does much less work. A line like this still helps at the margin, and it costs a dozen tokens – but as you will see in the lab, it may no longer be mandatory.</p>
+</section>
 <section id="the-fix-bring-your-own-context" class="slide level2">
 <h2>The Fix: Bring Your Own Context</h2>
 <ul>
@@ -1809,29 +1820,29 @@ Should I retrieve? (reflection token)
 <section id="tool-use-function-calling" class="slide level2">
 <h2>Tool Use / Function Calling</h2>
 <p>The foundation of every agent: the LLM decides <strong>when</strong> to call a function and <strong>what arguments</strong> to pass.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href aria-label="1"></a><span class="im">import</span> anthropic</span>
-<span id="cb4-2"><a href aria-label="2"></a></span>
-<span id="cb4-3"><a href aria-label="3"></a>client <span class="op">=</span> anthropic.Anthropic()  <span class="co"># or OpenAI, Groq, ... -- every provider has this shape</span></span>
-<span id="cb4-4"><a href aria-label="4"></a></span>
-<span id="cb4-5"><a href aria-label="5"></a>tools <span class="op">=</span> [{</span>
-<span id="cb4-6"><a href aria-label="6"></a>    <span class="st">&quot;name&quot;</span>: <span class="st">&quot;get_stock_price&quot;</span>,</span>
-<span id="cb4-7"><a href aria-label="7"></a>    <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Get current stock price for a ticker symbol&quot;</span>,</span>
-<span id="cb4-8"><a href aria-label="8"></a>    <span class="st">&quot;input_schema&quot;</span>: {</span>
-<span id="cb4-9"><a href aria-label="9"></a>        <span class="st">&quot;type&quot;</span>: <span class="st">&quot;object&quot;</span>,</span>
-<span id="cb4-10"><a href aria-label="10"></a>        <span class="st">&quot;properties&quot;</span>: {</span>
-<span id="cb4-11"><a href aria-label="11"></a>            <span class="st">&quot;ticker&quot;</span>: {<span class="st">&quot;type&quot;</span>: <span class="st">&quot;string&quot;</span>, <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Stock ticker symbol&quot;</span>}</span>
-<span id="cb4-12"><a href aria-label="12"></a>        },</span>
-<span id="cb4-13"><a href aria-label="13"></a>        <span class="st">&quot;required&quot;</span>: [<span class="st">&quot;ticker&quot;</span>],</span>
-<span id="cb4-14"><a href aria-label="14"></a>    },</span>
-<span id="cb4-15"><a href aria-label="15"></a>}]</span>
-<span id="cb4-16"><a href aria-label="16"></a></span>
-<span id="cb4-17"><a href aria-label="17"></a>response <span class="op">=</span> client.messages.create(</span>
-<span id="cb4-18"><a href aria-label="18"></a>    model<span class="op">=</span><span class="st">&quot;claude-opus-5&quot;</span>,</span>
-<span id="cb4-19"><a href aria-label="19"></a>    max_tokens<span class="op">=</span><span class="dv">1024</span>,</span>
-<span id="cb4-20"><a href aria-label="20"></a>    tools<span class="op">=</span>tools,</span>
-<span id="cb4-21"><a href aria-label="21"></a>    messages<span class="op">=</span>[{<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;What is Apple&#39;s stock price?&quot;</span>}],</span>
-<span id="cb4-22"><a href aria-label="22"></a>)</span>
-<span id="cb4-23"><a href aria-label="23"></a><span class="co"># response.stop_reason == &quot;tool_use&quot;; the block&#39;s input is {&quot;ticker&quot;: &quot;AAPL&quot;}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href aria-label="1"></a><span class="im">import</span> anthropic</span>
+<span id="cb7-2"><a href aria-label="2"></a></span>
+<span id="cb7-3"><a href aria-label="3"></a>client <span class="op">=</span> anthropic.Anthropic()  <span class="co"># or OpenAI, Groq, ... -- every provider has this shape</span></span>
+<span id="cb7-4"><a href aria-label="4"></a></span>
+<span id="cb7-5"><a href aria-label="5"></a>tools <span class="op">=</span> [{</span>
+<span id="cb7-6"><a href aria-label="6"></a>    <span class="st">&quot;name&quot;</span>: <span class="st">&quot;get_stock_price&quot;</span>,</span>
+<span id="cb7-7"><a href aria-label="7"></a>    <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Get current stock price for a ticker symbol&quot;</span>,</span>
+<span id="cb7-8"><a href aria-label="8"></a>    <span class="st">&quot;input_schema&quot;</span>: {</span>
+<span id="cb7-9"><a href aria-label="9"></a>        <span class="st">&quot;type&quot;</span>: <span class="st">&quot;object&quot;</span>,</span>
+<span id="cb7-10"><a href aria-label="10"></a>        <span class="st">&quot;properties&quot;</span>: {</span>
+<span id="cb7-11"><a href aria-label="11"></a>            <span class="st">&quot;ticker&quot;</span>: {<span class="st">&quot;type&quot;</span>: <span class="st">&quot;string&quot;</span>, <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Stock ticker symbol&quot;</span>}</span>
+<span id="cb7-12"><a href aria-label="12"></a>        },</span>
+<span id="cb7-13"><a href aria-label="13"></a>        <span class="st">&quot;required&quot;</span>: [<span class="st">&quot;ticker&quot;</span>],</span>
+<span id="cb7-14"><a href aria-label="14"></a>    },</span>
+<span id="cb7-15"><a href aria-label="15"></a>}]</span>
+<span id="cb7-16"><a href aria-label="16"></a></span>
+<span id="cb7-17"><a href aria-label="17"></a>response <span class="op">=</span> client.messages.create(</span>
+<span id="cb7-18"><a href aria-label="18"></a>    model<span class="op">=</span><span class="st">&quot;claude-opus-5&quot;</span>,</span>
+<span id="cb7-19"><a href aria-label="19"></a>    max_tokens<span class="op">=</span><span class="dv">1024</span>,</span>
+<span id="cb7-20"><a href aria-label="20"></a>    tools<span class="op">=</span>tools,</span>
+<span id="cb7-21"><a href aria-label="21"></a>    messages<span class="op">=</span>[{<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;What is Apple&#39;s stock price?&quot;</span>}],</span>
+<span id="cb7-22"><a href aria-label="22"></a>)</span>
+<span id="cb7-23"><a href aria-label="23"></a><span class="co"># response.stop_reason == &quot;tool_use&quot;; the block&#39;s input is {&quot;ticker&quot;: &quot;AAPL&quot;}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><strong>You</strong> execute the function and return results to the LLM</li>
 <li>The LLM incorporates results into its response – or calls another tool</li>
