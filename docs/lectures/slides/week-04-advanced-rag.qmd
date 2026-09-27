@@ -194,8 +194,11 @@ What makes the model write *correct* SQL against *your* schema:
 - **Schema in context**: table definitions and a few sample rows -- the model never sees the data, only its shape
 - **The RAG part**: retrieve similar past question-to-SQL pairs and inject them as few-shot examples -- this is how [Vanna](https://github.com/vanna-ai/vanna) works, and accuracy rises with every verified pair you add
 - **Execution feedback**: run the query; if the database errors, hand the error back and let the model repair its own SQL -- one retry fixes most failures
-- **The vocabulary gap**: "revenue" might be `SUM(line_total) WHERE status='closed'` -- mapping business terms to columns is the semantic-layer problem, and Week 7 is devoted to it
 - **Guardrails, non-negotiable**: read-only credentials, allow-listed tables, statement validation before execution -- the model writes queries, it never gets write access
+
+::: {.hot-callout}
+**The vocabulary gap**: "revenue" might be `SUM(line_total) WHERE status='closed'` -- mapping business terms to data is the semantic-layer problem. This is one of the hottest things in AI in the fall of 2026, if not *the* hottest. The mapping is called an **ontology**, and it is what creates a **context layer** over your data. Week 7 is devoted to it.
+:::
 
 ## SQL RAG: Tools and Reading {.smaller}
 

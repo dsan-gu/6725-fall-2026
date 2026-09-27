@@ -116,6 +116,16 @@ $code-color: $gray-950;
   font-size: 0.95em;
 }
 
+.reveal .hot-callout {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+  padding: 0.5em 0.8em;
+  margin-top: 0.6em;
+  font-size: 0.95em;
+}
+
 .reveal .slide-number {
   background-color: transparent;
   color: $gray-500;
