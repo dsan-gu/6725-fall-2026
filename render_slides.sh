@@ -5,7 +5,8 @@ week_files=(
   "week-01-genai-foundations-and-coding-assistants"
   "week-02-inference"
   "week-03-rag-and-intro-to-agents"
-  "week-04-agentic-rag-and-mcp"
+  "week-04-advanced-rag"
+  "week-04-mcp"
   "week-05-agent-architectures"
   "week-06-evals-observability-guardrails"
   "week-07-ontology-semantic-layer"
@@ -48,6 +49,10 @@ for week_file in "${week_files[@]}"; do
     # Extract week number for output filename (remove leading zero for single digits)
     week_num=$(echo "$week_file" | sed -E 's/^week-0?([0-9]+).*/\1/')
     output_file="week${week_num}.html"
+    # Second deck for week 4 gets its own output name
+    if [ "$week_file" = "week-04-mcp" ]; then
+      output_file="week4-mcp.html"
+    fi
 
     echo "Rendering ${week_file}..."
     # Render to the slides directory first

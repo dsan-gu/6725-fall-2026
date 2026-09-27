@@ -11,7 +11,7 @@ All template repository links below were verified valid as of August 2026 (priva
 | Lab 01 | 1 | AI coding assistants / agentic coding |  https://github.com/gu-dsan6725/lab01-agentic-coding | New Fall 2026 repo (replaces vibe-coding) |
 | Lab 02 | 2 | Foundation model inference | https://github.com/gu-dsan6725/fm-inference | |
 | Lab 03 | 3 | Basic RAG | https://github.com/gu-dsan6725/basic-rag | |
-| Lab 04 | 4 | Agentic RAG + MCP servers | https://github.com/gu-dsan6725/aws-cost-explorer-mcp-server | Extend with agentic RAG exercise |
+| Lab 04 | 4 | Agentic RAG + MCP servers | https://github.com/gu-dsan6725/mcp-server | FastMCP streamable HTTP over World Bank data; `aws-cost-explorer-mcp-server` is the older extra-credit repo |
 | Lab 05 | 5 | Agent architectures | https://github.com/gu-dsan6725/agents and https://github.com/gu-dsan6725/agents-part-2 | Letta memory lab: https://github.com/gu-dsan6725/agents-letta-ai |
 | Lab 06 | 6 | Evals and observability | https://github.com/gu-dsan6725/evals-and-observability | Was lab12 in Spring 2026 |
 | Lab 07 | 7 | Graph RAG / semantic layer | https://github.com/gu-dsan6725/graph-rag | |

@@ -1,4 +1,4 @@
-# Week 4: Agentic RAG and Model Context Protocol (MCP)
+# Week 4: Advanced RAG
 
 <p class="deck-actions"><a href="../assets/html/week4.html" target="_blank">Open slides full screen &rarr;</a></p>
 

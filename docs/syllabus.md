@@ -116,7 +116,7 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | 1     | GenAI Theory Foundations and Coding Assistants       | How LLMs work (transformers, tokens, sampling), in-context learning and prompt engineering; lab: AI coding assistants and agentic coding workflows |
 | 2     | LLM Internals and Inference                          | Transformer fundamentals (attention, QKV, sampling, reasoning models), inference servers and engines, quantization, speculative decoding, batching, API-based vs self-hosted serving |
 | 3     | RAG and Agentic RAG                                  | Why LLMs need context, embeddings, vector databases, chunking, hybrid search; agentic RAG as a first look at agents and tool use |
-| 4     | Agentic RAG and Model Context Protocol (MCP)         | Agent-driven retrieval and query planning; building MCP servers and clients for tool integration, authentication, and deployment |
+| 4     | Advanced RAG and Model Context Protocol (MCP)        | RAG evaluation with RAGAS, SQL RAG, Graph RAG, agentic RAG; building and deploying MCP servers |
 | 5     | Agent Architectures in Detail                        | Planning, memory, context management and engineering, single-agent vs multi-agent design patterns |
 | 6     | Evals, Observability, and Guardrails                 | Evaluation frameworks, monitoring GenAI apps in production, guardrails, and data security |
 | 7     | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
@@ -217,9 +217,9 @@ If your submission meets or exceeds the requirements, is creative, is well thoug
 
 ## Submission Details
 
-### GitHub classroom
+### Per-student GitHub repositories
 
-We use GitHub Classroom for all class deliverables: assignments, labs, and the final project. Submitting your work is the process of committing your files and results to your local repository **and** then pushing it to GitHub.
+All class deliverables -- assignments, labs, and the final project -- live in private per-student repositories in the `gu-dsan6725` organization. You get your own copy of each one, named `<assignment>-<your-github-username>-fall-2026`. Submitting your work means committing your files and results to your local repository **and** then pushing it to GitHub.
 
 #### Use the `final-submission` commit message
 
