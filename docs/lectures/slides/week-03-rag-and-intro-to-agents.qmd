@@ -584,11 +584,11 @@ Every major provider now sells the pipeline we just built as a managed service -
 
 | Service | Notes |
 |---------|-------|
-| OpenAI file search | Vector stores + retrieval built into the Responses API |
-| Anthropic Files / RAG via tools | Bring retrieval as a tool; contextual retrieval technique |
-| Amazon Bedrock Knowledge Bases | Managed ingestion to vector store, RetrieveAndGenerate API |
-| Google Vertex AI RAG Engine | Managed corpora + retrieval on Vertex |
-| Pinecone Assistant, LlamaCloud | Vector-DB-native and framework-native managed RAG |
+| [OpenAI file search](https://platform.openai.com/docs/guides/tools-file-search) | Hosted [vector stores](https://platform.openai.com/docs/guides/retrieval) + retrieval built into the Responses API; OpenAI chunks, embeds, and runs hybrid search for you |
+| [Anthropic: retrieval as a tool](https://www.anthropic.com/news/contextual-retrieval) | No end-to-end service; the [Files API](https://docs.claude.com/en/docs/build-with-claude/files) plus retrieval tools, and the contextual retrieval technique |
+| [Amazon Bedrock Knowledge Bases](https://aws.amazon.com/bedrock/knowledge-bases/) | Managed ingestion to a vector store; RetrieveAndGenerate API |
+| [Google Vertex AI RAG Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview) | Managed corpora + retrieval on Vertex |
+| [Pinecone Assistant](https://www.pinecone.io/product/assistant/), [LlamaCloud](https://www.llamaindex.ai/llamacloud) | Vector-DB-native and framework-native managed RAG (LlamaCloud adds parsing for messy PDFs) |
 
 - **When to buy**: standard document Q&A, small team, no retrieval expertise on staff
 - **When to build**: custom chunking/reranking, hybrid search tuning, data residency, cost control at scale -- everything this lecture taught you to reason about

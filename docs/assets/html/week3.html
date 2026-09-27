@@ -1721,10 +1721,6 @@ Should I retrieve? (reflection token)
 <h2>Managed RAG: Buy Instead of Build</h2>
 <p>Every major provider now sells the pipeline we just built as a managed service – ingestion, chunking, embedding, retrieval, and citations behind one API:</p>
 <table class="caption-top">
-<colgroup>
-<col style="width: 56%">
-<col style="width: 43%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Service</th>
@@ -1733,24 +1729,24 @@ Should I retrieve? (reflection token)
 </thead>
 <tbody>
 <tr class="odd">
-<td>OpenAI file search</td>
-<td>Vector stores + retrieval built into the Responses API</td>
+<td><a href="https://platform.openai.com/docs/guides/tools-file-search">OpenAI file search</a></td>
+<td>Hosted <a href="https://platform.openai.com/docs/guides/retrieval">vector stores</a> + retrieval built into the Responses API; OpenAI chunks, embeds, and runs hybrid search for you</td>
 </tr>
 <tr class="even">
-<td>Anthropic Files / RAG via tools</td>
-<td>Bring retrieval as a tool; contextual retrieval technique</td>
+<td><a href="https://www.anthropic.com/news/contextual-retrieval">Anthropic: retrieval as a tool</a></td>
+<td>No end-to-end service; the <a href="https://docs.claude.com/en/docs/build-with-claude/files">Files API</a> plus retrieval tools, and the contextual retrieval technique</td>
 </tr>
 <tr class="odd">
-<td>Amazon Bedrock Knowledge Bases</td>
-<td>Managed ingestion to vector store, RetrieveAndGenerate API</td>
+<td><a href="https://aws.amazon.com/bedrock/knowledge-bases/">Amazon Bedrock Knowledge Bases</a></td>
+<td>Managed ingestion to a vector store; RetrieveAndGenerate API</td>
 </tr>
 <tr class="even">
-<td>Google Vertex AI RAG Engine</td>
+<td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview">Google Vertex AI RAG Engine</a></td>
 <td>Managed corpora + retrieval on Vertex</td>
 </tr>
 <tr class="odd">
-<td>Pinecone Assistant, LlamaCloud</td>
-<td>Vector-DB-native and framework-native managed RAG</td>
+<td><a href="https://www.pinecone.io/product/assistant/">Pinecone Assistant</a>, <a href="https://www.llamaindex.ai/llamacloud">LlamaCloud</a></td>
+<td>Vector-DB-native and framework-native managed RAG (LlamaCloud adds parsing for messy PDFs)</td>
 </tr>
 </tbody>
 </table>
