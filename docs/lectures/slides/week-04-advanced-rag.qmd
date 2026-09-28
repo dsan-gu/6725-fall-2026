@@ -247,6 +247,31 @@ Reading:
 - [Graph RAG in production: GraphRAG vs LightRAG vs Graphiti](https://www.paperclipped.de/en/blog/graph-rag-production/) -- cost and architecture compared
 - [awesome-graphrag](https://github.com/graphrag/awesome-graphrag) -- the curated list
 
+## Cypher: How the Industry Queries Graphs {.smaller}
+
+Once facts live in a graph, you need a query language. **Cypher** is the SQL of
+graphs: you draw the pattern you want, in the shape the data has.
+
+```cypher
+MATCH (p:Person)-[:COLLABORATED_WITH]->(q:Person)
+WHERE p.name = 'Niels Bohr'
+RETURN q.name
+```
+
+- Nodes in parentheses, relationships in arrows -- the query looks like the
+  diagram from earlier in this lecture
+- Multi-hop is just a longer arrow chain: `(a)-[:MENTORED]->(b)-[:BUILT]->(c)`
+- And the move you already know from SQL RAG applies here too: **an LLM can
+  write Cypher** from a question plus the graph schema -- text-to-Cypher is
+  SQL RAG's graph twin
+
+**Engines that speak it**: [Neo4j](https://neo4j.com/) and
+[Memgraph](https://memgraph.com/) (servers), Amazon Neptune (openCypher),
+[Kuzu](https://github.com/kuzudb/kuzu) -- the embedded "SQLite of graphs,"
+acquired by Apple in 2025 with the repo archived but still pip-installable --
+and [LadybugDB](https://github.com/ColinLeeo/kuzu), its community fork.
+Hands-on in Week 7, with ontologies and the semantic layer.
+
 # Agentic RAG
 
 ## Why One Retrieval Is Not Enough
