@@ -9,10 +9,10 @@ Labs are hands-on exercises that accompany each week's lecture. Each student rec
 | Lab 01 | 1 | AI coding assistants and agentic coding | [lab01-agentic-coding](https://github.com/gu-dsan6725/lab01-agentic-coding) |
 | Lab 02 | 2 | Foundation model inference | [fm-inference](https://github.com/gu-dsan6725/fm-inference) |
 | Lab 03 | 3 | Basic RAG | [basic-rag](https://github.com/gu-dsan6725/basic-rag) |
-| Lab 04 | 4 | Agentic RAG + MCP servers | [mcp-server](https://github.com/gu-dsan6725/mcp-server) |
+| Lab 04 | 4 | SQL RAG: an LLM writes SQL, your code runs it | [sql-rag](https://github.com/gu-dsan6725/sql-rag) |
 | Lab 05 | 5 | Agent architectures | [agents](https://github.com/gu-dsan6725/agents), [agents-part-2](https://github.com/gu-dsan6725/agents-part-2) |
 | Lab 06 | 6 | Evals and observability | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) |
-| Lab 07 | 7 | Graph RAG and the semantic layer | [graph-rag](https://github.com/gu-dsan6725/graph-rag) |
+| Lab 07 | 7 | Ontology and the semantic layer | TBD (new repo) |
 | Lab 08 | 8 | Tokenomics and LLM benchmarking | TBD (new repo) |
 | Lab 09 | 9 | Agentic platforms | [agentic-ai-apps](https://github.com/gu-dsan6725/agentic-ai-apps) |
 | Lab 10 | 10 | Agent-to-Agent (A2A) collaboration | [a2a-lab](https://github.com/gu-dsan6725/a2a-lab) |
@@ -21,3 +21,11 @@ Labs are hands-on exercises that accompany each week's lecture. Each student rec
 
 !!! note "Repository access"
     The template repositories in the `gu-dsan6725` organization are private. You work in your own private copy, created for you in the same organization and named `<lab>-<your-github-username>-fall-2026`. Watch Canvas and Slack for the repository invitation.
+
+## Assignments
+
+Assignments are harder than labs and run for two weeks. Start early.
+
+| Assignment | Released | Topic | Template Repository |
+|-----------|----------|-------|---------------------|
+| A01 | Week 4 | Graph RAG: an LLM builds the graph, your code queries it | [graph-rag](https://github.com/gu-dsan6725/graph-rag) (rework in progress) |

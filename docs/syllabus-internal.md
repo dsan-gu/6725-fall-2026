@@ -14,7 +14,7 @@ All template repository links below were verified valid as of August 2026 (priva
 | Lab 04 | 4 | Agentic RAG + MCP servers | https://github.com/gu-dsan6725/mcp-server | FastMCP streamable HTTP over World Bank data; `aws-cost-explorer-mcp-server` is the older extra-credit repo |
 | Lab 05 | 5 | Agent architectures | https://github.com/gu-dsan6725/agents and https://github.com/gu-dsan6725/agents-part-2 | Letta memory lab: https://github.com/gu-dsan6725/agents-letta-ai |
 | Lab 06 | 6 | Evals and observability | https://github.com/gu-dsan6725/evals-and-observability | Was lab12 in Spring 2026 |
-| Lab 07 | 7 | Graph RAG / semantic layer | https://github.com/gu-dsan6725/graph-rag | |
+| Lab 07 | 7 | Ontology / semantic layer | TBD | graph-rag repo became the A01 assignment |
 | Lab 08 | 8 | Tokenomics / benchmarking | TBD | New repo needed |
 | Lab 09 | 9 | Agentic platforms | https://github.com/gu-dsan6725/agentic-ai-apps | Was lab10 in Spring 2026 |
 | Lab 10 | 10 | Agent-to-Agent (A2A) | https://github.com/gu-dsan6725/a2a-lab | Was lab11 in Spring 2026 |
