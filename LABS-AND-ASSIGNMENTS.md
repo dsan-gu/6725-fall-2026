@@ -11,15 +11,15 @@ receive per-student copies named `<repo>-<username>-fall-2026` via
 | 1 | GenAI Foundations and Coding Assistants | [lab01-agentic-coding](https://github.com/gu-dsan6725/lab01-agentic-coding) -- 100 pts, reflection 50 | -- | Lab shipped, rebuilt for Fall 2026 |
 | 2 | LLM Internals and Inference | [fm-inference](https://github.com/gu-dsan6725/fm-inference) -- 170 pts + 30 bonus | Bonus: NotebookLM podcast from the six papers, 25 pts (announced in the Week 2 deck) | Lab shipped |
 | 3 | RAG and Agentic RAG | [basic-rag](https://github.com/gu-dsan6725/basic-rag) -- build, break, fix | -- | Lab shipped, rebuilt for Fall 2026 |
-| 4 | Advanced RAG; MCP | [sql-rag](https://github.com/gu-dsan6725/sql-rag) -- 100 pts + 50 bonus | [graph-rag](https://github.com/gu-dsan6725/graph-rag) -- 150 pts + 50 bonus, ANALYSIS.md carries 50 | Both shipped 2026-09-27; live Ollama smoke test pending |
-| 5 | Agent Architectures | [agents](https://github.com/gu-dsan6725/agents), [agents-part-2](https://github.com/gu-dsan6725/agents-part-2) | -- | Spring carryover, needs review |
-| 6 | Evals, Observability, Guardrails | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) | -- | Spring carryover, needs review |
-| 7 | Ontology and the Semantic Layer | TBD (new repo; Cypher and a real graph DB belong here) | -- | Not started |
-| 8 | Tokenomics | TBD (new repo) | -- | Not started |
-| 9 | Agentic Platforms | [agentic-ai-apps](https://github.com/gu-dsan6725/agentic-ai-apps) | -- | Spring carryover, needs review |
-| 10 | Agent-to-Agent (A2A) | [a2a-lab](https://github.com/gu-dsan6725/a2a-lab) | -- | Spring carryover, needs review |
-| 11 | Fine-tuning | [unsloth-finetune-ec2](https://github.com/gu-dsan6725/unsloth-finetune-ec2) | -- | Spring carryover, needs review |
-| 12 | Open-Weight vs Frontier | TBD (self-hosting lab) | -- | Not started |
+| 4 | Advanced RAG | [sql-rag](https://github.com/gu-dsan6725/sql-rag) -- 100 pts + 50 bonus | [graph-rag](https://github.com/gu-dsan6725/graph-rag) -- 150 pts + 50 bonus, ANALYSIS.md carries 50 | Both shipped 2026-09-27; live Ollama smoke test pending |
+| 5 | Introduction to Agents | [agents](https://github.com/gu-dsan6725/agents), [agents-part-2](https://github.com/gu-dsan6725/agents-part-2) | -- | Deck rebuilt for Fall 2026; labs are Spring carryover, need review |
+| 6 | Model Context Protocol (MCP) | TBD (build-an-MCP-server lab; deck has a FastMCP + Inspector exercise with no repo behind it) | -- | Deck exists (moved from week 4); lab not started |
+| 7 | Evals, Observability, Guardrails | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) | -- | Spring carryover, needs review |
+| 8 | Ontology and the Semantic Layer | TBD (new repo; Cypher and a real graph DB belong here) | -- | Not started |
+| 9 | Tokenomics and Model Selection | TBD (new repo) | -- | Not started; deck now also carries open-weight vs frontier |
+| 10 | Agentic Platforms | [agentic-ai-apps](https://github.com/gu-dsan6725/agentic-ai-apps) | -- | Spring carryover, needs review |
+| 11 | Agent-to-Agent (A2A) | [a2a-lab](https://github.com/gu-dsan6725/a2a-lab) | -- | Spring carryover, needs review |
+| 12 | Fine-tuning | [unsloth-finetune-ec2](https://github.com/gu-dsan6725/unsloth-finetune-ec2) | -- | Spring carryover, needs review |
 | 13 | AI Ethics | -- | -- | No lab planned |
 | 14 | Project Presentations | -- | Final project (max grade weight; abstract is a graded milestone) | Template: [final-project](https://github.com/gu-dsan6725/final-project) |
 

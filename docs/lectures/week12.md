@@ -1,4 +1,4 @@
-# Week 12: Open-Weight Models vs Frontier Labs
+# Week 12: Fine-tuning Generative AI Models
 
 <p class="deck-actions"><a href="../assets/html/week12.html" target="_blank">Open slides full screen &rarr;</a></p>
 

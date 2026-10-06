@@ -1,6 +1,6 @@
 ---
-title: "Applied Generative AI"
-subtitle: "Week 10: Agent-to-Agent (A2A) Protocol"
+title: "Week 11: Agent-to-Agent (A2A) Protocol"
+subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
   revealjs:

@@ -1,6 +1,6 @@
 ---
-title: "Applied Generative AI"
-subtitle: "Week 9: Agentic Platforms - Architecture, Components, and Implementation"
+title: "Week 10: Agentic Platforms"
+subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
   revealjs:
@@ -136,7 +136,7 @@ The layer that actually *hosts* agents:
 - **Unified API** across providers (Anthropic, OpenAI, Bedrock, self-hosted vLLM)
 - **Routing & fallback**: cheapest capable model; automatic failover
 - **Rate limiting & quotas**: per team, per application
-- **Spend tracking**: cost attribution per model, endpoint, and team (Week 8 tokenomics, operationalized)
+- **Spend tracking**: cost attribution per model, endpoint, and team (Week 9 tokenomics, operationalized)
 - Examples (name level): LiteLLM, OpenRouter, Bedrock as gateway
 :::
 
@@ -155,7 +155,7 @@ The layer that actually *hosts* agents:
 ::: {.incremental}
 - **PII Detection & Redaction**: Protecting sensitive information
 - **Prompt Injection Protection**: Defending against attacks
-- **Input/Output Filtering**: Content moderation and safety (central guardrails, Week 6)
+- **Input/Output Filtering**: Content moderation and safety (central guardrails, Week 7)
 - **Policy as code**: which teams may use which models, tools, and data
 - **Compliance Frameworks**: Industry-specific regulatory compliance
 - **Approval workflows**: human sign-off for high-risk agent actions

@@ -292,7 +292,7 @@ A real model runs this same arithmetic with thousands of dimensions, dozens of h
 - **Where they earn their keep**: hard code generation and debugging, multi-step problems, math and logic
 - **The inference bill**: thinking tokens are output tokens
   - More latency before the answer and a larger bill per request
-  - Effort controls (low/medium/high) trade quality against cost -- we price this out in Week 8 (Tokenomics)
+  - Effort controls (low/medium/high) trade quality against cost -- we price this out in Week 9 (Tokenomics)
 
 # Inference and Serving at Scale
 
@@ -300,7 +300,7 @@ A real model runs this same arithmetic with thousands of dimensions, dozens of h
 
 - This course covers **inference**. Model training is out of scope
 - Training a frontier model is the domain of a handful of labs, and maybe a few very large enterprises -- thousand-GPU clusters and nine-figure runs
-- Enterprises do **fine-tune** models (Week 11), but fine-tuning adapts a model that someone else already trained
+- Enterprises do **fine-tune** models (Week 12), but fine-tuning adapts a model that someone else already trained
 - The spending tells the story: a model trains **once**, then serves **forever**
   - Training cost plateaus per model; inference spend keeps compounding -- every user, every agent loop, every reasoning token adds to it
 - Inference concerns everyone who ships an AI feature: latency, throughput, and cost per token are now **your** problems -- that is the rest of today
@@ -739,7 +739,7 @@ def sliding_window_attention(
 - Prefix caching keeps the KV cache of a shared prefix alive and skips its prefill for the next request that starts the same way -- only the unshared tail pays
 - TTFT drops sharply for agents, RAG templates, and multi-turn chat
 - Implementations: vLLM automatic prefix caching; SGLang RadixAttention (a radix tree over prefixes); [LMCache](https://github.com/LMCache/LMCache) extends reuse across serving instances and to CPU/disk tiers
-- Hosted APIs sell the same idea as **prompt caching**: Anthropic and OpenAI price cached input tokens at a fraction of fresh ones (more in Week 8)
+- Hosted APIs sell the same idea as **prompt caching**: Anthropic and OpenAI price cached input tokens at a fraction of fresh ones (more in Week 9)
 
 ![](img/prefix-caching.svg){height=200 fig-align="center"}
 

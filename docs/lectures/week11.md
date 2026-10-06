@@ -1,4 +1,4 @@
-# Week 11: Fine-tuning Generative AI Models
+# Week 11: Agent-to-Agent (A2A) Collaboration
 
 <p class="deck-actions"><a href="../assets/html/week11.html" target="_blank">Open slides full screen &rarr;</a></p>
 

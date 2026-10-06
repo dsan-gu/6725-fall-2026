@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="340" viewBox="0 0 920 340" font-family="Helvetica, Arial, sans-serif">
+
+<text x="460" y="26" font-size="16" font-weight="bold" fill="#111827" text-anchor="middle">The same task, four calls: the prompt only ever grows</text>
+
+<text x="30" y="62" font-size="13" font-weight="bold" fill="#111827">call 1</text>
+<text x="30" y="78" font-size="11" fill="#6b7280">~1.9k in</text>
+<rect x="130" y="46" width="70" height="36" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<rect x="200" y="46" width="60" height="36" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+<rect x="260" y="46" width="60" height="36" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="320" y="46" width="45" height="36" fill="#ffffff" stroke="#9ca3af" stroke-width="1.2"/>
+<text x="380" y="69" font-size="12" fill="#6b7280">model asks for get_price("AAPL")</text>
+
+<text x="30" y="120" font-size="13" font-weight="bold" fill="#111827">call 2</text>
+<text x="30" y="136" font-size="11" fill="#6b7280">~2.3k in</text>
+<rect x="130" y="104" width="70" height="36" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<rect x="200" y="104" width="60" height="36" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+<rect x="260" y="104" width="60" height="36" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="320" y="104" width="45" height="36" fill="#ffffff" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="365" y="104" width="85" height="36" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<rect x="450" y="104" width="105" height="36" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+<text x="570" y="127" font-size="12" fill="#6b7280">model asks for get_price("MSFT")</text>
+
+<text x="30" y="178" font-size="13" font-weight="bold" fill="#111827">call 3</text>
+<text x="30" y="194" font-size="11" fill="#6b7280">~2.7k in</text>
+<rect x="130" y="162" width="70" height="36" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<rect x="200" y="162" width="60" height="36" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+<rect x="260" y="162" width="60" height="36" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="320" y="162" width="45" height="36" fill="#ffffff" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="365" y="162" width="85" height="36" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<rect x="450" y="162" width="105" height="36" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+<rect x="555" y="162" width="85" height="36" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<rect x="640" y="162" width="120" height="36" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+<text x="775" y="185" font-size="12" fill="#6b7280">model answers</text>
+
+<text x="30" y="236" font-size="13" font-weight="bold" fill="#111827">call 4</text>
+<text x="30" y="252" font-size="11" fill="#6b7280">~2.8k in</text>
+<rect x="130" y="220" width="70" height="36" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<rect x="200" y="220" width="60" height="36" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+<rect x="260" y="220" width="60" height="36" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="320" y="220" width="45" height="36" fill="#ffffff" stroke="#9ca3af" stroke-width="1.2"/>
+<rect x="365" y="220" width="85" height="36" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<rect x="450" y="220" width="105" height="36" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+<rect x="555" y="220" width="85" height="36" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<rect x="640" y="220" width="120" height="36" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+<rect x="760" y="220" width="80" height="36" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+
+<rect x="130" y="274" width="14" height="13" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<text x="150" y="285" font-size="11" fill="#374151">system</text>
+<rect x="206" y="274" width="14" height="13" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2"/>
+<text x="226" y="285" font-size="11" fill="#374151">tool schemas</text>
+<rect x="312" y="274" width="14" height="13" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.2"/>
+<text x="332" y="285" font-size="11" fill="#374151">context</text>
+<rect x="390" y="274" width="14" height="13" fill="#ffffff" stroke="#9ca3af" stroke-width="1.2"/>
+<text x="410" y="285" font-size="11" fill="#374151">instructions</text>
+<rect x="486" y="274" width="14" height="13" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<text x="506" y="285" font-size="11" fill="#374151">assistant turn</text>
+<rect x="596" y="274" width="14" height="13" fill="#fde68a" stroke="#b45309" stroke-width="1.2"/>
+<text x="616" y="285" font-size="11" fill="#374151">tool result</text>
+
+<rect x="130" y="300" width="710" height="32" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="485" y="321" font-size="13" font-weight="bold" fill="#b91c1c" text-anchor="middle">Four calls to finish one task: billed for ~9.7k input tokens to send ~2.8k of unique content.</text>
+</svg>

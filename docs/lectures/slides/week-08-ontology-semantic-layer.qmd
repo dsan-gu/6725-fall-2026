@@ -1,6 +1,6 @@
 ---
-title: "Applied Generative AI"
-subtitle: "Week 7: Ontologies, Knowledge Graphs, and the Semantic Layer"
+title: "Week 8: Ontologies, Knowledge Graphs, and the Semantic Layer"
+subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
   revealjs:

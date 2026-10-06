@@ -1,4 +1,4 @@
-# Week 7: Ontology and the Semantic Layer
+# Week 7: Evals, Observability, and Guardrails
 
 <p class="deck-actions"><a href="../assets/html/week7.html" target="_blank">Open slides full screen &rarr;</a></p>
 

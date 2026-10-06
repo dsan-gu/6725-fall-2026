@@ -1,4 +1,4 @@
-# Week 8: Tokenomics
+# Week 8: Ontology and the Semantic Layer
 
 <p class="deck-actions"><a href="../assets/html/week8.html" target="_blank">Open slides full screen &rarr;</a></p>
 

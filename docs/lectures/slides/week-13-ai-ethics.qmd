@@ -75,7 +75,7 @@ format:
 - **Inference-time**: prompts may contain PII — where do they go, how long are they retained?
 - **Inference attacks**: membership inference, data extraction
 - Regulatory hooks: GDPR, HIPAA, FERPA depending on domain
-- Controls: PII redaction (Week 6 guardrails), data-processing agreements, retention policies, on-prem open weights for sensitive workloads
+- Controls: PII redaction (Week 7 guardrails), data-processing agreements, retention policies, on-prem open weights for sensitive workloads
 
 ## Copyright and Training-Data Provenance
 
@@ -159,7 +159,7 @@ format:
 - A university deploys an LLM advising chatbot; it confidently misstates degree requirements and a student misses graduation
 - Questions:
   - Where did the failure chain start — model, retrieval, UX, governance?
-  - What would the Week 6 reliability stack have caught?
+  - What would the Week 7 reliability stack have caught?
   - Who is accountable, and what remedy does the student get?
 
 ## Case Discussion 2

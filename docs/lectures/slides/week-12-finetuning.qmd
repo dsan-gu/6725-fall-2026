@@ -1,5 +1,5 @@
 ---
-title: "Week 11: Fine-tuning"
+title: "Week 12: Fine-tuning Generative AI Models"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:

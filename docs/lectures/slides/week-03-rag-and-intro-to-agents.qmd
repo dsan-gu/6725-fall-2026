@@ -73,8 +73,8 @@ That was the state of the art -- instructions were the only tool anyone had. Tod
 | Shape | Examples | Retrieved by |
 |-------|----------|--------------|
 | **Unstructured** | Documents, PDFs, wikis, tickets, email | Semantic search over embeddings (today) |
-| **Structured** | Tables, spreadsheets, databases | Text-to-SQL (Week 7) |
-| **Graph** | Entities and relationships | Graph traversal (Week 7) |
+| **Structured** | Tables, spreadsheets, databases | Text-to-SQL (Week 8) |
+| **Graph** | Entities and relationships | Graph traversal (Week 8) |
 
 Today is mostly the first row -- it is where RAG started and where most production systems live. But keep all three in mind: the best systems pick the right shape per question.
 
@@ -224,7 +224,7 @@ The pipeline works, end to end. **What is missing?**
 ::: {.fragment}
 And one step earlier: how do we know retrieval found the right documents at all? A RAG pipeline without measurement is a demo, not a system.
 
-We measure both -- retrieval quality and generation quality. The metrics and tooling (RAGAS) open next week's lecture, and evaluation gets a full week of its own (Week 6).
+We measure both -- retrieval quality and generation quality. The metrics and tooling (RAGAS) open next week's lecture, and evaluation gets a full week of its own (Week 7).
 :::
 
 ## Chunking Strategies

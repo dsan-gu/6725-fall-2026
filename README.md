@@ -19,15 +19,15 @@ The actual lecture content lives in the Quarto reveal.js source decks — one `.
 docs/lectures/slides/week-01-genai-foundations-and-coding-assistants.qmd
 docs/lectures/slides/week-02-inference.qmd
 docs/lectures/slides/week-03-rag-and-intro-to-agents.qmd
-docs/lectures/slides/week-04-agentic-rag-and-mcp.qmd
-docs/lectures/slides/week-05-agent-architectures.qmd
-docs/lectures/slides/week-06-evals-observability-guardrails.qmd
-docs/lectures/slides/week-07-ontology-semantic-layer.qmd
-docs/lectures/slides/week-08-tokenomics.qmd
-docs/lectures/slides/week-09-agentic-platforms.qmd
-docs/lectures/slides/week-10-a2a.qmd
-docs/lectures/slides/week-11-finetuning.qmd
-docs/lectures/slides/week-12-open-weight-vs-frontier.qmd
+docs/lectures/slides/week-04-advanced-rag.qmd
+docs/lectures/slides/week-05-introduction-to-agents.qmd
+docs/lectures/slides/week-06-mcp.qmd
+docs/lectures/slides/week-07-evals-observability-guardrails.qmd
+docs/lectures/slides/week-08-ontology-semantic-layer.qmd
+docs/lectures/slides/week-09-tokenomics.qmd
+docs/lectures/slides/week-10-agentic-platforms.qmd
+docs/lectures/slides/week-11-a2a.qmd
+docs/lectures/slides/week-12-finetuning.qmd
 docs/lectures/slides/week-13-ai-ethics.qmd
 ```
 

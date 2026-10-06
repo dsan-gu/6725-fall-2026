@@ -1,4 +1,4 @@
-# Week 10: Agent-to-Agent (A2A) Collaboration
+# Week 10: Agentic Platforms
 
 <p class="deck-actions"><a href="../assets/html/week10.html" target="_blank">Open slides full screen &rarr;</a></p>
 

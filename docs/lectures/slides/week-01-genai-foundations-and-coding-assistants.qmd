@@ -476,7 +476,7 @@ Six moves account for most of the gain:
 4. **Refine** -- change one thing at a time so you know what moved the number
 
 - Anthropic's [metaprompt notebook](https://colab.research.google.com/github/anthropics/claude-cookbooks/blob/main/misc/metaprompt.ipynb) gives you a first draft to critique
-- Systematic evaluation is a whole topic -- **Week 6: Evals, Observability, and Guardrails**
+- Systematic evaluation is a whole topic -- **Week 7: Evals, Observability, and Guardrails**
 
 ### Rule of thumb
 
@@ -513,7 +513,7 @@ Clone one of these tonight and run a notebook. Reading about prompting is not pr
 > "Context engineering is the delicate art and science of filling the context window with just the right information for each step."
 
 - **Not just prompts** -- managing everything the model sees at runtime: retrieved documents (RAG), memory, tool definitions, prior outputs, user preferences
-- We revisit context engineering throughout the course (RAG in Week 3, agents in Weeks 4-5)
+- We revisit context engineering throughout the course (RAG in Week 3, agents in Weeks 4-6)
 
 # AI Coding Assistants
 

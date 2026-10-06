@@ -1,5 +1,5 @@
 ---
-title: "Week 6: Evals, Observability, and Guardrails"
+title: "Week 7: Evals, Observability, and Guardrails"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:

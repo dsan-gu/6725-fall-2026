@@ -116,15 +116,15 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | 1     | GenAI Theory Foundations and Coding Assistants       | How LLMs work (transformers, tokens, sampling), in-context learning and prompt engineering; lab: AI coding assistants and agentic coding workflows |
 | 2     | LLM Internals and Inference                          | Transformer fundamentals (attention, QKV, sampling, reasoning models), inference servers and engines, quantization, speculative decoding, batching, API-based vs self-hosted serving |
 | 3     | RAG and Agentic RAG                                  | Why LLMs need context, embeddings, vector databases, chunking, hybrid search; agentic RAG as a first look at agents and tool use |
-| 4     | Advanced RAG and Model Context Protocol (MCP)        | RAG evaluation with RAGAS, SQL RAG, Graph RAG, agentic RAG; building and deploying MCP servers |
-| 5     | Agent Architectures in Detail                        | Planning, memory, context management and engineering, single-agent vs multi-agent design patterns |
-| 6     | Evals, Observability, and Guardrails                 | Evaluation frameworks, monitoring GenAI apps in production, guardrails, and data security |
-| 7     | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
-| 8     | Tokenomics                                           | Token economics, cost engineering, prompt caching, price/performance/accuracy benchmarking of LLMs |
-| 9     | Agentic Platforms                                    | Designing platforms and not just apps: agent runtimes, deployment patterns, governance |
-| 10    | Agent-to-Agent (A2A) Collaboration                   | The A2A protocol, multi-agent collaboration, agent discovery and interoperability |
-| 11    | Fine-tuning Generative AI Models                     | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques; when to fine-tune vs RAG vs prompt |
-| 12    | Open-Weight Models vs Frontier Labs                  | The model landscape: open-weight models vs proprietary frontier-lab models, licensing, model selection, self-hosting vs third-party APIs |
+| 4     | Advanced RAG                                         | RAG evaluation with RAGAS, SQL RAG, Graph RAG, agentic RAG |
+| 5     | Introduction to Agents                               | The agent loop and the harness that runs it, prompt anatomy and prefix caching, tools (local, remote, MCP), context engineering, planning, memory, multi-agent patterns |
+| 6     | Model Context Protocol (MCP)                         | MCP architecture and primitives, building and deploying MCP servers, gateways and registries, security |
+| 7     | Evals, Observability, and Guardrails                 | Evaluation frameworks, monitoring GenAI apps in production, guardrails, and data security |
+| 8     | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
+| 9     | Tokenomics and Model Selection                       | Token economics, cost engineering, prompt caching, benchmarking; open-weight vs frontier models, licensing, and self-hosting vs third-party APIs |
+| 10    | Agentic Platforms                                    | Designing platforms and not just apps: agent runtimes, deployment patterns, governance |
+| 11    | Agent-to-Agent (A2A) Collaboration                   | The A2A protocol, multi-agent collaboration, agent discovery and interoperability |
+| 12    | Fine-tuning Generative AI Models                     | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques; when to fine-tune vs RAG vs prompt |
 | 13    | AI Ethics and Responsible AI                         | Bias mitigation, safety, societal impact, regulation, and responsible deployment of GenAI systems |
 | 14    | Project Presentations, Open Discussion               | Final project presentations and open discussion on course topics |
 

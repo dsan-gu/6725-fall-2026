@@ -6,15 +6,14 @@ week_files=(
   "week-02-inference"
   "week-03-rag-and-intro-to-agents"
   "week-04-advanced-rag"
-  "week-04-mcp"
-  "week-05-agent-architectures"
-  "week-06-evals-observability-guardrails"
-  "week-07-ontology-semantic-layer"
-  "week-08-tokenomics"
-  "week-09-agentic-platforms"
-  "week-10-a2a"
-  "week-11-finetuning"
-  "week-12-open-weight-vs-frontier"
+  "week-05-introduction-to-agents"
+  "week-06-mcp"
+  "week-07-evals-observability-guardrails"
+  "week-08-ontology-semantic-layer"
+  "week-09-tokenomics"
+  "week-10-agentic-platforms"
+  "week-11-a2a"
+  "week-12-finetuning"
   "week-13-ai-ethics"
 )
 
@@ -49,10 +48,6 @@ for week_file in "${week_files[@]}"; do
     # Extract week number for output filename (remove leading zero for single digits)
     week_num=$(echo "$week_file" | sed -E 's/^week-0?([0-9]+).*/\1/')
     output_file="week${week_num}.html"
-    # Second deck for week 4 gets its own output name
-    if [ "$week_file" = "week-04-mcp" ]; then
-      output_file="week4-mcp.html"
-    fi
 
     echo "Rendering ${week_file}..."
     # Render to the slides directory first

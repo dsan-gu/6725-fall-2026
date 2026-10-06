@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="310" viewBox="0 0 920 310" font-family="Helvetica, Arial, sans-serif">
+<defs>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker>
+<marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker>
+</defs>
+
+<text x="150" y="26" font-size="15" font-weight="bold" fill="#b45309" text-anchor="middle">Supervisor</text>
+<rect x="85" y="48" width="130" height="32" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="150" y="69" font-size="13" fill="#b45309" text-anchor="middle">lead agent</text>
+<line x1="130" y1="80" x2="60" y2="146" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+<line x1="150" y1="80" x2="150" y2="146" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+<line x1="170" y1="80" x2="240" y2="146" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+<rect x="21" y="148" width="78" height="30" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="60" y="168" font-size="12" fill="#111827" text-anchor="middle">worker</text>
+<rect x="111" y="148" width="78" height="30" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="150" y="168" font-size="12" fill="#111827" text-anchor="middle">worker</text>
+<rect x="201" y="148" width="78" height="30" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="240" y="168" font-size="12" fill="#111827" text-anchor="middle">worker</text>
+<text x="150" y="212" font-size="12" fill="#6b7280" text-anchor="middle">One agent plans and delegates.</text>
+<text x="150" y="230" font-size="12" fill="#6b7280" text-anchor="middle">Workers never talk to each other.</text>
+<text x="150" y="258" font-size="12" font-weight="bold" fill="#111827" text-anchor="middle">Start here.</text>
+<text x="150" y="276" font-size="12" fill="#6b7280" text-anchor="middle">Easy to trace and to cost.</text>
+
+<line x1="305" y1="18" x2="305" y2="292" stroke="#e5e7eb" stroke-width="1"/>
+
+<text x="460" y="26" font-size="15" font-weight="bold" fill="#374151" text-anchor="middle">Network</text>
+<rect x="420" y="48" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="460" y="67" font-size="12" fill="#111827" text-anchor="middle">agent A</text>
+<rect x="340" y="112" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="380" y="131" font-size="12" fill="#111827" text-anchor="middle">agent B</text>
+<rect x="500" y="112" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="540" y="131" font-size="12" fill="#111827" text-anchor="middle">agent C</text>
+<rect x="420" y="176" width="80" height="28" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="460" y="195" font-size="12" fill="#111827" text-anchor="middle">agent D</text>
+<line x1="436" y1="76" x2="398" y2="112" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)" marker-start="url(#g)"/>
+<line x1="484" y1="76" x2="522" y2="112" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)" marker-start="url(#g)"/>
+<line x1="420" y1="126" x2="500" y2="126" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)" marker-start="url(#g)"/>
+<line x1="398" y1="140" x2="436" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)" marker-start="url(#g)"/>
+<line x1="522" y1="140" x2="484" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)" marker-start="url(#g)"/>
+<text x="460" y="230" font-size="12" fill="#6b7280" text-anchor="middle">Any agent can hand off to any other.</text>
+<text x="460" y="248" font-size="12" fill="#6b7280" text-anchor="middle">No one owns the plan, so a handoff</text>
+<text x="460" y="266" font-size="12" fill="#6b7280" text-anchor="middle">loop is easy to create and hard to see.</text>
+
+<line x1="615" y1="18" x2="615" y2="292" stroke="#e5e7eb" stroke-width="1"/>
+
+<text x="765" y="26" font-size="15" font-weight="bold" fill="#374151" text-anchor="middle">Hierarchical teams</text>
+<rect x="710" y="48" width="110" height="28" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="765" y="67" font-size="12" fill="#111827" text-anchor="middle">lead</text>
+<line x1="745" y1="76" x2="700" y2="114" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)"/>
+<line x1="785" y1="76" x2="830" y2="114" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)"/>
+<rect x="655" y="116" width="90" height="26" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="700" y="134" font-size="11" fill="#111827" text-anchor="middle">team lead</text>
+<rect x="785" y="116" width="90" height="26" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="830" y="134" font-size="11" fill="#111827" text-anchor="middle">team lead</text>
+<line x1="682" y1="142" x2="672" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)"/>
+<line x1="718" y1="142" x2="728" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)"/>
+<line x1="812" y1="142" x2="802" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)"/>
+<line x1="848" y1="142" x2="858" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#g)"/>
+<rect x="645" y="178" width="54" height="24" rx="5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+<text x="672" y="195" font-size="11" fill="#111827" text-anchor="middle">worker</text>
+<rect x="701" y="178" width="54" height="24" rx="5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+<text x="728" y="195" font-size="11" fill="#111827" text-anchor="middle">worker</text>
+<rect x="775" y="178" width="54" height="24" rx="5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+<text x="802" y="195" font-size="11" fill="#111827" text-anchor="middle">worker</text>
+<rect x="831" y="178" width="54" height="24" rx="5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+<text x="858" y="195" font-size="11" fill="#111827" text-anchor="middle">worker</text>
+<text x="765" y="230" font-size="12" fill="#6b7280" text-anchor="middle">Supervisors all the way down. Each</text>
+<text x="765" y="248" font-size="12" fill="#6b7280" text-anchor="middle">level summarizes for the one above,</text>
+<text x="765" y="266" font-size="12" fill="#6b7280" text-anchor="middle">so detail is lost at every hop.</text>
+</svg>

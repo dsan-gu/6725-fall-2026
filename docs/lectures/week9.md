@@ -1,4 +1,4 @@
-# Week 9: Agentic Platforms
+# Week 9: Tokenomics and Model Selection
 
 <p class="deck-actions"><a href="../assets/html/week9.html" target="_blank">Open slides full screen &rarr;</a></p>
 

@@ -49,7 +49,7 @@ RAG evaluation requires measuring **two separate things**:
 1. **Retrieval quality**: Did we find the right documents? (Context Precision + Recall)
 2. **Generation quality**: Did we produce a good answer from those documents? (Faithfulness + Relevancy)
 
-We go deep on evals and observability in Week 6.
+We go deep on evals and observability in Week 7.
 
 Source: [RAGAS Paper (arXiv:2309.15217)](https://arxiv.org/abs/2309.15217), [RAGAS Documentation](https://docs.ragas.io/en/stable/)
 
@@ -197,7 +197,7 @@ What makes the model write *correct* SQL against *your* schema:
 - **Guardrails, non-negotiable**: read-only credentials, allow-listed tables, statement validation before execution -- the model writes queries, it never gets write access
 
 ::: {.hot-callout}
-**The vocabulary gap**: "revenue" might be `SUM(line_total) WHERE status='closed'` -- mapping business terms to data is the semantic-layer problem. This is one of the hottest things in AI in the fall of 2026, if not *the* hottest. The mapping is called an **ontology**, and it is what creates a **context layer** over your data. Week 7 is devoted to it.
+**The vocabulary gap**: "revenue" might be `SUM(line_total) WHERE status='closed'` -- mapping business terms to data is the semantic-layer problem. This is one of the hottest things in AI in the fall of 2026, if not *the* hottest. The mapping is called an **ontology**, and it is what creates a **context layer** over your data. Week 8 is devoted to it.
 :::
 
 ## SQL RAG: Tools and Reading {.smaller}
@@ -219,7 +219,7 @@ Reading:
 
 ![](img/graph-rag.svg){height=290 fig-align="center"}
 
-Built by extracting entities and relations from documents into a graph (Neo4j, Amazon Neptune, [Microsoft GraphRAG](https://www.microsoft.com/en-us/research/project/graphrag/)). Wins on **multi-hop** questions over connected data; costs an extraction pipeline you must build and maintain. Week 7 covers this in full, with ontologies and the semantic layer.
+Built by extracting entities and relations from documents into a graph (Neo4j, Amazon Neptune, [Microsoft GraphRAG](https://www.microsoft.com/en-us/research/project/graphrag/)). Wins on **multi-hop** questions over connected data; costs an extraction pipeline you must build and maintain. Week 8 covers this in full, with ontologies and the semantic layer.
 
 
 ## Graph RAG in Practice {.smaller}
@@ -270,7 +270,7 @@ RETURN q.name
 [Kuzu](https://github.com/kuzudb/kuzu) -- the embedded "SQLite of graphs,"
 acquired by Apple in 2025 with the repo archived but still pip-installable --
 and [LadybugDB](https://github.com/ColinLeeo/kuzu), its community fork.
-Hands-on in Week 7, with ontologies and the semantic layer.
+Hands-on in Week 8, with ontologies and the semantic layer.
 
 # Agentic RAG
 
@@ -453,9 +453,10 @@ That last point is the bridge to Part 2: agents need a **standard way to reach t
 
 ## Preview: The Agents Arc
 
-- **Week 4 -- Agentic RAG and MCP**: Build retrieval agents; expose your data and tools via Model Context Protocol servers
-- **Week 5 -- Agent Architectures**: Planning, memory, multi-agent patterns (orchestrator/workers, evaluator/optimizer), frameworks
-- **Week 10 -- A2A**: Agent-to-agent protocols and cross-agent interoperability
+- **Week 4 -- Agentic RAG** (today): retrieval driven by a model in a loop
+- **Week 5 -- Introduction to Agents**: the loop and the harness that runs it, tool use, context engineering, planning, memory, multi-agent patterns
+- **Week 6 -- MCP**: expose your data and tools through Model Context Protocol servers
+- **Week 11 -- A2A**: agent-to-agent protocols and cross-agent interoperability
 - Everything builds on today's foundations: retrieval + tool use + the agent loop
 
 ## References {.smaller}

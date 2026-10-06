@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="350" viewBox="0 0 920 350" font-family="Helvetica, Arial, sans-serif">
+<defs>
+<marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1e40af"/></marker>
+</defs>
+
+<text x="215" y="26" font-size="16" font-weight="bold" fill="#b45309" text-anchor="middle">ReAct: decide one step at a time</text>
+
+<rect x="135" y="42" width="160" height="30" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="215" y="62" font-size="13" fill="#111827" text-anchor="middle">"Did we beat Acme in Q3?"</text>
+<line x1="215" y1="72" x2="215" y2="88" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+
+<rect x="105" y="90" width="220" height="30" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="215" y="110" font-size="13" fill="#b45309" text-anchor="middle">Thought: need Acme's Q3 revenue</text>
+<line x1="215" y1="120" x2="215" y2="134" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+
+<rect x="105" y="136" width="220" height="30" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+<text x="215" y="156" font-size="13" fill="#111827" text-anchor="middle">Action: search("Acme Q3 revenue")</text>
+<line x1="215" y1="166" x2="215" y2="180" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+
+<rect x="105" y="182" width="220" height="30" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="215" y="202" font-size="13" fill="#111827" text-anchor="middle">Observation: $4.2B (from 10-Q)</text>
+
+<path d="M 105 197 C 58 197, 58 105, 105 105" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#o)"/>
+<text x="52" y="155" font-size="12" fill="#b45309" text-anchor="middle" transform="rotate(-90 52 155)">next thought</text>
+
+<line x1="215" y1="212" x2="215" y2="232" stroke="#b45309" stroke-width="1.5" marker-end="url(#o)"/>
+<rect x="135" y="234" width="160" height="30" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="215" y="254" font-size="13" fill="#b45309" text-anchor="middle">answer</text>
+
+<text x="215" y="292" font-size="13" fill="#6b7280" text-anchor="middle">The plan is never written down. It</text>
+<text x="215" y="310" font-size="13" fill="#6b7280" text-anchor="middle">emerges one thought at a time, so the</text>
+<text x="215" y="328" font-size="13" fill="#6b7280" text-anchor="middle">agent adapts but can also wander.</text>
+
+<line x1="460" y1="20" x2="460" y2="330" stroke="#e5e7eb" stroke-width="1"/>
+
+<text x="700" y="26" font-size="16" font-weight="bold" fill="#1e40af" text-anchor="middle">Plan-and-Execute: plan first, then run</text>
+
+<rect x="620" y="42" width="160" height="30" rx="7" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="700" y="62" font-size="13" fill="#111827" text-anchor="middle">"Did we beat Acme in Q3?"</text>
+<line x1="700" y1="72" x2="700" y2="88" stroke="#1e40af" stroke-width="1.5" marker-end="url(#b)"/>
+
+<rect x="620" y="90" width="160" height="28" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+<text x="700" y="109" font-size="13" fill="#1e40af" text-anchor="middle">Planner</text>
+<line x1="700" y1="118" x2="700" y2="132" stroke="#1e40af" stroke-width="1.5" marker-end="url(#b)"/>
+
+<rect x="580" y="134" width="240" height="78" rx="7" fill="#ffffff" stroke="#1e40af" stroke-width="1.5"/>
+<text x="596" y="154" font-size="13" fill="#111827">1. get our Q3 revenue</text>
+<text x="596" y="174" font-size="13" fill="#111827">2. get Acme's Q3 revenue</text>
+<text x="596" y="194" font-size="13" fill="#111827">3. compare and explain the gap</text>
+
+<line x1="700" y1="212" x2="700" y2="232" stroke="#1e40af" stroke-width="1.5" marker-end="url(#b)"/>
+<rect x="580" y="234" width="240" height="30" rx="7" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+<text x="700" y="254" font-size="13" fill="#1e40af" text-anchor="middle">Executor runs step 1, then 2, then 3</text>
+
+<path d="M 820 249 C 866 249, 866 104, 790 104" fill="none" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<text x="872" y="176" font-size="12" fill="#1e40af" text-anchor="middle" transform="rotate(-90 872 176)">replan on failure</text>
+
+<text x="700" y="292" font-size="13" fill="#6b7280" text-anchor="middle">The plan is explicit, so you can read it,</text>
+<text x="700" y="310" font-size="13" fill="#6b7280" text-anchor="middle">cost it, and cache it. It goes stale when</text>
+<text x="700" y="328" font-size="13" fill="#6b7280" text-anchor="middle">step 1 changes what step 3 should be.</text>
+</svg>

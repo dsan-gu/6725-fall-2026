@@ -73,7 +73,7 @@ All template repository links below were verified valid as of August 2026 (priva
 - All repositories are hosted under the `gu-dsan6725` GitHub organization
 - Student submission repositories (containing "spring-2026" or similar patterns) are excluded from this listing
 - Extra Credit (EC) labs are optional assignments
-- New repos are needed for the Fall 2026 tokenomics/benchmarking lab (Week 8) and the open-weight self-hosting lab (Week 12)
+- New repos are needed for the Fall 2026 MCP server lab (Week 6) and the tokenomics/benchmarking lab (Week 9, which now also carries open-weight vs frontier)
 
 ## GitHub Classroom Assignment Structure
 
