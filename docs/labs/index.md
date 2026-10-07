@@ -10,7 +10,7 @@ Labs are hands-on exercises that accompany each week's lecture. Each student rec
 | Lab 02 | 2 | Foundation model inference | [fm-inference](https://github.com/gu-dsan6725/fm-inference) |
 | Lab 03 | 3 | Basic RAG | [basic-rag](https://github.com/gu-dsan6725/basic-rag) |
 | Lab 04 | 4 | SQL RAG: an LLM writes SQL, your code runs it | [sql-rag](https://github.com/gu-dsan6725/sql-rag) |
-| Lab 05 | 5 | Agent architectures | [agents](https://github.com/gu-dsan6725/agents), [agents-part-2](https://github.com/gu-dsan6725/agents-part-2) |
+| Lab 05 | 5 | Write an agent loop from scratch, then on Strands and LangGraph | [basic-agents](https://github.com/gu-dsan6725/basic-agents) |
 | Lab 06 | 6 | Evals and observability | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) |
 | Lab 07 | 7 | Ontology and the semantic layer | TBD (new repo) |
 | Lab 08 | 8 | Tokenomics and LLM benchmarking | TBD (new repo) |

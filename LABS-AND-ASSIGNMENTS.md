@@ -12,7 +12,7 @@ receive per-student copies named `<repo>-<username>-fall-2026` via
 | 2 | LLM Internals and Inference | [fm-inference](https://github.com/gu-dsan6725/fm-inference) -- 170 pts + 30 bonus | Bonus: NotebookLM podcast from the six papers, 25 pts (announced in the Week 2 deck) | Lab shipped |
 | 3 | RAG and Agentic RAG | [basic-rag](https://github.com/gu-dsan6725/basic-rag) -- build, break, fix | -- | Lab shipped, rebuilt for Fall 2026 |
 | 4 | Advanced RAG | [sql-rag](https://github.com/gu-dsan6725/sql-rag) -- 100 pts + 50 bonus | [graph-rag](https://github.com/gu-dsan6725/graph-rag) -- 150 pts + 50 bonus, ANALYSIS.md carries 50 | Both shipped 2026-09-27; live Ollama smoke test pending |
-| 5 | Introduction to Agents | [agents](https://github.com/gu-dsan6725/agents), [agents-part-2](https://github.com/gu-dsan6725/agents-part-2) | -- | Deck rebuilt for Fall 2026; labs are Spring carryover, need review |
+| 5 | Introduction to Agents | [basic-agents](https://github.com/gu-dsan6725/basic-agents) -- 100 pts | -- | Shipped 2026-10-07, built for Fall 2026. Supersedes `agents` and `agents-part-2` (Spring carryover, now unused) |
 | 6 | Model Context Protocol (MCP) | TBD (build-an-MCP-server lab; deck has a FastMCP + Inspector exercise with no repo behind it) | -- | Deck exists (moved from week 4); lab not started |
 | 7 | Evals, Observability, Guardrails | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) | -- | Spring carryover, needs review |
 | 8 | Ontology and the Semantic Layer | TBD (new repo; Cypher and a real graph DB belong here) | -- | Not started |
@@ -29,6 +29,9 @@ receive per-student copies named `<repo>-<username>-fall-2026` via
   withheld from student copies by `create_repos.py`.
 - Local models through Ollama (MiniCPM5-2B, nomic-embed-text) wherever they
   suffice; no API keys unless the work demands a frontier model. No Bedrock.
+  **Exception, week 5**: `basic-agents` serves the same MiniCPM5-2B through
+  `llama-server --jinja` instead of Ollama, because Ollama's template for that
+  GGUF has no tool support and rejects any request carrying tools.
 - Embedded engines over servers: DuckDB, Qdrant in-memory, networkx.
 - `AGENTS.md` in every repo; prose follows the writing skill.
 - A `check_submission.py` self-check where deliverables allow it; written

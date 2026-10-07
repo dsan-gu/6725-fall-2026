@@ -2402,21 +2402,55 @@ Action:  sql(&quot;select revenue from results where quarter=&#39;Q3&#39;&quot;)
 </section>
 <section id="hands-on-lab" class="slide level2 smaller">
 <h2>Hands-on Lab</h2>
-<h3 id="part-1-agents">Part 1 – <a href="https://github.com/gu-dsan6725/agents">agents</a></h3>
-<p>Build tool-using agents in two frameworks and compare them.</p>
+<h3 id="basic-agents-100-points"><a href="https://github.com/gu-dsan6725/basic-agents">basic-agents</a> – 100 points</h3>
+<p>You write the loop. One tool, <code>get_weather</code>, with hardcoded data for London, Paris and New York, so the only thing that can break is your harness.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 38%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Pts</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>45</td>
+<td>The loop, answering three questions that need <strong>1, 2 and 3 tool calls</strong></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>15</td>
+<td>Instrument it: tokens and passes per call</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>15</td>
+<td>The same agent on <strong>Strands</strong>, with the schema derived from your docstring</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>15</td>
+<td>A <strong>LangGraph</strong> graph, given working, for you to read and extend</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>10</td>
+<td><code>ANALYSIS.md</code>, in your own words</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>Custom tools with the <strong>AWS Strands Agents SDK</strong></li>
-<li>A <strong>LangGraph</strong> agent wired to an MCP server (Context7) for library documentation Q&amp;A</li>
-<li>Runs on a free <strong>Groq</strong> API key; no AWS account needed</li>
+<li>Runs on the <strong>same MiniCPM5-2B</strong> you have used since week 2, served by <code>llama-server --jinja</code>. No API keys, no cloud, no cost</li>
+<li>Ollama cannot do this lab: its template for that GGUF rejects any request carrying tools. The README explains why</li>
 </ul>
-<h3 id="part-2-agents-part-2">Part 2 – <a href="https://github.com/gu-dsan6725/agents-part-2">agents-part-2</a></h3>
-<p>Memory, session state, and multi-agent collaboration.</p>
-<ul>
-<li>Requires a <a href="https://tavily.com/">Tavily</a> key for search and a Slack bot token</li>
-<li>Deliverables: <code>problem1_task1.txt</code>, <code>problem1_task2.txt</code>, <code>generated_code.py</code>, and the generated <code>titanic.*</code> files</li>
-</ul>
-<div class="hot-callout">
-<p>Before you open either notebook: write the 30-line loop from this deck yourself, with one tool of your own. Everything in the labs is that loop with more scaffolding.</p>
+<div class="idea-callout">
+<p>You should not change one line of your loop between question 1 and question 3. That is the lab.</p>
 </div>
 </section>
 <section id="references" class="slide level2 smaller scrollable">

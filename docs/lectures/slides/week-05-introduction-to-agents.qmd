@@ -987,23 +987,26 @@ Frameworks are worth it when they absorb engineering you would otherwise write. 
 
 ## Hands-on Lab {.smaller}
 
-### Part 1 -- [agents](https://github.com/gu-dsan6725/agents)
+### [basic-agents](https://github.com/gu-dsan6725/basic-agents) -- 100 points
 
-Build tool-using agents in two frameworks and compare them.
+You write the loop. One tool, `get_weather`, with hardcoded data for London,
+Paris and New York, so the only thing that can break is your harness.
 
-- Custom tools with the **AWS Strands Agents SDK**
-- A **LangGraph** agent wired to an MCP server (Context7) for library documentation Q&A
-- Runs on a free **Groq** API key; no AWS account needed
+| Task | Pts | |
+|------|-----|--|
+| 1 | 45 | The loop, answering three questions that need **1, 2 and 3 tool calls** |
+| 2 | 15 | Instrument it: tokens and passes per call |
+| 3 | 15 | The same agent on **Strands**, with the schema derived from your docstring |
+| 4 | 15 | A **LangGraph** graph, given working, for you to read and extend |
+| 5 | 10 | `ANALYSIS.md`, in your own words |
 
-### Part 2 -- [agents-part-2](https://github.com/gu-dsan6725/agents-part-2)
+- Runs on the **same MiniCPM5-2B** you have used since week 2, served by
+  `llama-server --jinja`. No API keys, no cloud, no cost
+- Ollama cannot do this lab: its template for that GGUF rejects any request
+  carrying tools. The README explains why
 
-Memory, session state, and multi-agent collaboration.
-
-- Requires a [Tavily](https://tavily.com/) key for search and a Slack bot token
-- Deliverables: `problem1_task1.txt`, `problem1_task2.txt`, `generated_code.py`, and the generated `titanic.*` files
-
-::: {.hot-callout}
-Before you open either notebook: write the 30-line loop from this deck yourself, with one tool of your own. Everything in the labs is that loop with more scaffolding.
+::: {.idea-callout}
+You should not change one line of your loop between question 1 and question 3. That is the lab.
 :::
 
 ## References {.smaller .scrollable}
