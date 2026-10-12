@@ -742,6 +742,10 @@ An open-source project from the [agentic-community](https://github.com/agentic-c
 - **Dynamic discovery**: agents find new tools without redeployment -- the registry is itself exposed over MCP
 - Transforms "scattered MCP server chaos into governed, auditable tool access" -- their words, and an accurate summary of this lecture's second half
 
+::: {.idea-callout}
+If you find it useful, [star the repo](https://github.com/agentic-community/mcp-gateway-registry) 🙂 -- stars are how more people find it, benefit from it, and contribute back to the work.
+:::
+
 ## AAIF: A Neutral Home for the Agentic Stack {.smaller}
 
 The [Agentic AI Foundation](https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation) launched under the Linux Foundation on **December 9, 2025**, with founding contributions from Anthropic, Block, and OpenAI.
