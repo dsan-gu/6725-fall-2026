@@ -123,65 +123,94 @@ The classic lifecycle every deployed server speaks (spec 2025-06-18 and earlier)
 2. **`tools/list`** -- discovery: the server returns its tools with names, descriptions, and JSON Schema inputs -- this is what replaces reading the docs
 3. **`tools/call`** -- invocation: name plus arguments in, typed result (or error) out
 
-```json
-{"jsonrpc": "2.0", "id": 2, "method": "tools/call",
- "params": {"name": "get_weather", "arguments": {"city": "Washington"}}}
-```
-
-The same pattern repeats for the other primitives: `resources/list` / `resources/read`, `prompts/list` / `prompts/get`, plus one-way `notifications/*` (progress, list-changed).
+The same pattern repeats for the other primitives: `resources/list` / `resources/read`, `prompts/list` / `prompts/get`, plus one-way `notifications/*` (progress, list-changed). The next slide shows what two of these look like on the wire.
 
 ::: {.idea-callout}
 The 2026-07-28 revision retires `initialize` entirely: each request becomes self-describing via headers, so a fleet of stateless servers can answer without session affinity. Same three jobs -- handshake, discover, invoke -- new wire shape.
 :::
 
-## What is MCP?
+## On the Wire: `tools/list` and `tools/call` {.smaller}
 
-- **Model Context Protocol (MCP)**: An open protocol that standardizes how AI applications connect to external data sources and tools
+Excerpts, trimmed to the fields that matter:
 
-- **Created by Anthropic**: Released in November 2024, now an open source project hosted by The Linux Foundation
+:::: {.columns}
+::: {.column width="48%"}
+**`tools/list` response** -- the server describes itself:
 
-- **Broad industry adoption**: Supported across the ecosystem -- Anthropic (Claude), OpenAI, Google, Microsoft, AWS, and major IDEs/agent frameworks ship MCP client support
-
-- **Universal Standard**: Like USB-C for AI -- one protocol to connect any AI to any tool
-
-- **Key Benefit**: Build once, use everywhere -- no more custom integrations for each AI application
-
----
-
-## MCP Architecture Overview {.smaller}
-
-::: {.callout}
-![MCP Components: Resources, Tools, and Prompts](img/mcp1.png){height=380}
+```json
+{
+  "tools": [{
+    "name": "get_weather",
+    "description": "Current weather
+                    for a city",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city": {"type": "string"}
+      },
+      "required": ["city"]
+    }
+  }]
+}
+```
 :::
-
-MCP exposes three core primitives to AI agents:
-
-- **Resources**: Data sources (databases, files, enterprise search, user data)
-- **Tools**: Executable functions (APIs for orders, pricing, shipping, products)
-- **Prompts**: Pre-defined templates (email building, code explanation, task decomposition)
-
----
-
-## MCP Protocol Architecture {.smaller}
-
-::: {.callout}
-![MCP Client-Server Communication Model](img/mcp4.png){height=380}
+::: {.column width="4%"}
 :::
+::: {.column width="48%"}
+**`tools/call` request, then result**:
 
-- **MCP Host**: The AI application (Claude Desktop, IDEs, custom tools)
-- **MCP Servers**: Lightweight programs exposing specific capabilities
-- **Transport**: Communication via stdio (local) or Streamable HTTP (remote)
-- **Resources**: Local files, databases, or remote APIs via web
+```json
+{
+  "method": "tools/call",
+  "params": {
+    "name": "get_weather",
+    "arguments": {"city": "Washington"}
+  }
+}
+```
 
----
+```json
+{
+  "result": {
+    "content": [{
+      "type": "text",
+      "text": "Sunny, 72F" }],
+    "isError": false
+  }
+}
+```
+:::
+::::
 
-## MCP Core Primitives {.center}
+The `inputSchema` is the contract: it is what the LLM reads instead of your docs page.
 
-The building blocks that servers expose to AI clients
+## What is MCP, Formally? {.smaller}
+
+With the history behind us, the one-paragraph definition: the **Model Context
+Protocol** is an open standard for connecting AI applications to external
+tools and data. Anthropic released it in November 2024; the Linux Foundation
+stewards it today.
+
+- The analogy the ecosystem settled on: **USB-C for AI** -- one connector,
+  any device on either end
+- Claude, OpenAI, Google, Microsoft, AWS, and every major IDE and agent
+  framework ship MCP client support
+- What that buys you as a builder: **write a server once** and it works
+  unchanged in Claude Desktop, your IDE, and your production agent
+
+## The Architecture: Hosts, Clients, Servers {.smaller}
+
+![](img/mcp-architecture.svg){height=360 fig-align="center"}
+
+- The **host** is the AI application; it runs one **MCP client** per server connection
+- A **server** is a lightweight program exposing one system's capabilities -- local servers speak **stdio**, remote ones **Streamable HTTP**
+- The LLM never touches a server directly: the client carries JSON-RPC both ways
 
 ---
 
 ## Server Primitives: Tools, Resources, Prompts {.smaller}
+
+A server can expose three kinds of capability. Tools get all the attention; the other two come almost free:
 
 ### Tools (Server → Client)
 - **Executable functions** the AI can invoke to perform actions
@@ -189,15 +218,11 @@ The building blocks that servers expose to AI clients
 - Example: `create_issue(title, body)`, `send_email(to, subject, message)`
 
 ### Resources (Server → Client)
-- **Read-only data sources** accessible to the AI (like GET endpoints)
-- Provide context without side effects
-- URI-based addressing: `file:///path`, `db://table/id`, `api://endpoint`
-- Example: `config://settings`, `data://users/{id}`
+- **Read-only data sources** accessible to the AI (like GET endpoints) -- context without side effects
+- URI-based addressing: `file:///path`, `db://table/id`, `config://settings`
 
 ### Prompts (Server → Client)
-- **Pre-defined templates** for common interaction patterns
-- Standardize how the AI approaches specific tasks
-- Include placeholders for dynamic content
+- **Pre-defined templates** for common interaction patterns, with placeholders for dynamic content
 - Example: `code_review`, `summarize_document`, `generate_tests`
 
 ---
@@ -232,7 +257,7 @@ The building blocks that servers expose to AI clients
 | **Elicitation** | Client ← Server | Request user input | No |
 | **Notifications** | Server → Client | Send updates/logs | No |
 
-**Key insight**: MCP is bidirectional -- servers can request things from clients too!
+Read the direction column: two of the six flow the other way. MCP is bidirectional -- servers can ask things of clients too.
 
 ---
 
@@ -250,6 +275,8 @@ The agent's router/planner simply **selects among MCP tools** -- no custom integ
 ---
 
 ## MCP Server Types
+
+Where a server runs decides its transport:
 
 ### Local MCP Servers
 
@@ -269,14 +296,9 @@ The agent's router/planner simply **selects among MCP tools** -- no custom integ
 
 ## Building MCP Servers
 
-### Key Concepts
-
-- **Tools**: Functions that the AI can call (with input schema and execution logic)
-- **Resources**: Data sources the AI can read (files, database records, API responses)
-- **Prompts**: Pre-defined prompt templates for common tasks
-- **Transport**: How client and server communicate (stdio, Streamable HTTP)
-
-### Python SDK Example (FastMCP)
+The Python SDK's **FastMCP** turns a typed function into a server. The
+decorator builds the JSON Schema from your type hints and the description
+from your docstring:
 
 ```python
 from mcp.server.fastmcp import FastMCP
@@ -292,6 +314,9 @@ if __name__ == "__main__":
     mcp.run()
 ```
 
+Eleven lines is a complete, working server. Everything from the wire slide --
+`tools/list`, the `inputSchema`, `tools/call` dispatch -- is generated for you.
+
 ---
 
 ## Where the Servers Live
@@ -302,27 +327,21 @@ if __name__ == "__main__":
 
 ## MCP Server Examples
 
-### Common Use Cases
+What people actually wrap behind a server:
 
-- **API Wrappers**: Expose REST APIs as MCP tools (Slack, GitHub, Jira)
-- **Database Connections**: Query databases via natural language
-- **File System Access**: Safe, sandboxed file operations
-- **Development Tools**: Git operations, build systems, deployment
-- **Custom Business Logic**: Domain-specific tools for your organization
+- **SaaS APIs**: Slack, GitHub, Jira -- the REST API you already have, re-described for agents
+- **Databases**: PostgreSQL, SQLite, DuckDB -- the agent writes the query, the server runs it
+- **The local machine**: sandboxed filesystem access, git operations, build systems
+- **The web**: search (Brave, Exa) and browser automation (Playwright, Puppeteer)
+- **Your business logic**: the domain tools nobody else can write for you
 
-### Popular MCP Servers
-
-- **Filesystem**: Read/write local files
-- **PostgreSQL/SQLite**: Database queries
-- **GitHub**: Repository operations
-- **Brave Search**: Web search capabilities
-- **Puppeteer**: Browser automation
+All but the last row exist off the shelf. Check the registries on the previous slide before writing your own.
 
 ---
 
 ## MCP in Claude Code
 
-Claude Code uses MCP extensively:
+You have been using MCP since Week 1: every MCP server in Claude Code is this protocol, usually over stdio:
 
 ```json
 {
@@ -348,24 +367,19 @@ Configure in `~/.claude.json` (user scope) or project-level `.mcp.json` (project
 
 ## Deployment Patterns
 
-### Local Development
+The lifecycle most teams follow -- start local, promote to remote, end up hybrid:
 
-- MCP servers run as subprocesses
-- Configuration in local settings files
-- Fast iteration and debugging
+### Local development
 
-### Production Deployment
+- Servers run as subprocesses over stdio; config lives in local settings files; iteration is instant
 
-- Remote MCP servers as microservices
-- Centralized registry for discovery
-- Authentication and rate limiting
-- Monitoring and observability
+### Production
 
-### Hybrid Approaches
+- Remote servers as microservices behind Streamable HTTP, with a registry for discovery, real auth, rate limits, and monitoring
 
-- Local servers for sensitive operations
-- Remote servers for shared resources
-- Gateway for routing and access control
+### Hybrid
+
+- Sensitive operations stay local, shared resources go remote, and a **gateway** routes and controls access -- the pattern this lecture closes with
 
 ---
 
@@ -380,6 +394,8 @@ We will not cover OAuth in detail -- but if you build your own MCP server, two q
 - The question behind both: when an agent calls your tool, **whose permissions apply** -- the user's, the agent's, or the server's? If you cannot answer, the answer is "the server's," and that is usually wrong
 
 ## Security Considerations {.smaller}
+
+The checklist before any server faces traffic:
 
 ### Authentication
 
@@ -450,25 +466,21 @@ Three words that sound interchangeable and are not:
 
 # Part 2: Agent-to-Agent (A2A)
 
-## The Problem: Agent Silos
+## The Problem: Agent Silos {.smaller}
 
-::: {.incremental}
-- Enterprises are deploying agents built on **different frameworks**: LangGraph, CrewAI, Strands Agents, Google ADK, Semantic Kernel
-- Each framework has its own internal message format, memory model, and tool interface
-- Agents from **different vendors cannot talk to each other**
-- Result: the same integration problem we had with tools before MCP, now at the agent level
-:::
+Enterprises are deploying agents on different frameworks -- LangGraph, CrewAI,
+Strands Agents, Google ADK, Semantic Kernel -- and each has its own message
+format, memory model, and tool interface. Two agents from two vendors cannot
+talk to each other.
 
----
+This is the tool-integration problem again, one level up. What interoperability has to deliver:
 
-## Why Agent Interoperability Matters
-
-::: {.incremental}
 - **Cross-vendor workflows**: a procurement agent from vendor A delegates to a logistics agent from vendor B
-- **Opaque collaboration**: agents cooperate **without sharing internal memory, proprietary logic, or tool implementations**
-- **Organizational boundaries**: agents in different departments (or companies) interoperate over standard HTTP
-- **Avoid lock-in**: swap an agent implementation without rewriting every peer that calls it
-:::
+- **Organizational boundaries**: agents in different departments, or different companies, cooperate over plain HTTP
+- **Opaque collaboration**: they work together **without sharing internal memory, proprietary logic, or tool implementations**
+- **No lock-in**: swap an agent implementation without rewriting every peer that calls it
+
+Same N x M arithmetic that motivated MCP -- so the fix looks familiar.
 
 ---
 
@@ -490,23 +502,25 @@ Three words that sound interchangeable and are not:
   - **Server-Sent Events (SSE)** for streaming updates
 - SDKs available in Python, Go, JavaScript, Java, and .NET
 
-> Source: [A2A Protocol](https://a2a-protocol.org/)
+Source: [A2A Protocol](https://a2a-protocol.org/)
 
 ---
 
 ## A2A Design Principles
 
-::: {.incremental}
-- **Embrace agentic capabilities**: agents collaborate in natural, unstructured modalities — not just rigid function calls
-- **Build on existing standards**: HTTP, SSE, JSON-RPC — easy to adopt in existing stacks
+Five commitments from the spec's own design notes:
+
+- **Embrace agentic capabilities**: agents collaborate in natural, unstructured conversation, not only rigid function calls
+- **Build on existing standards**: HTTP, SSE, JSON-RPC -- easy to adopt in existing stacks
 - **Secure by default**: enterprise-grade auth, aligned with OpenAPI security schemes
 - **Support long-running tasks**: from instant answers to multi-day workflows with humans in the loop
 - **Modality agnostic**: text, files, forms, structured data, media
-:::
 
 ---
 
 ## Core Actors
+
+Three roles, deliberately few:
 
 | Actor | Role |
 |-------|------|
@@ -518,42 +532,56 @@ Three words that sound interchangeable and are not:
 
 ---
 
-## Agent Cards: Advertising Capabilities
+## Agent Cards: Advertising Capabilities {.smaller}
 
-- Each A2A server publishes an **Agent Card** — a JSON document describing:
-  - Agent **identity**: name, description, provider
-  - **Skills**: what the agent can do, with examples
-  - **Endpoint URL** and supported transports
-  - **Authentication requirements** (API key, OAuth 2, etc.)
-  - Supported **input/output modalities**
-- Conventionally served at a well-known path: `/.well-known/agent-card.json`
+Each A2A server publishes an **agent card** -- a JSON document at a well-known
+path (`/.well-known/agent-card.json`) that answers "what can you do, and how
+do I talk to you?":
+
+```json
+{
+  "name": "Travel Booking Agent",
+  "url": "https://agents.example.com/a2a/v1",
+  "skills": [{
+    "id": "book-trip",
+    "description": "Books flights and hotels end to end",
+    "examples": ["Book a Tokyo trip, May 4-11"]
+  }],
+  "securitySchemes": {"oauth2": {"type": "oauth2"}},
+  "defaultInputModes": ["text/plain"],
+  "capabilities": {"streaming": true}
+}
+```
+
+The card is the agent's entire public surface: identity, skills with examples, endpoint, auth, and modalities. Everything else stays private.
 
 ---
 
 ## Discovery Patterns
 
-::: {.incremental}
-- **Well-known URI**: fetch the Agent Card from a known domain
-- **Curated registries**: enterprise catalogs of approved agents (like an internal app store)
+Discovery answers one question: *which agent can do this, and how do I reach it?* Three patterns in practice:
+
+- **Well-known URI**: fetch the agent card from a known domain
+- **Curated registries**: enterprise catalogs of approved agents, like an internal app store
 - **Direct configuration**: hard-coded or config-driven peers for closed systems
-- Discovery answers: *"Which agent can do this, and how do I reach it?"*
-:::
 
 ---
 
-## Tasks: The Unit of Work
+## Tasks: The Unit of Work {.smaller}
 
-::: {.incremental}
-- A **task** is the fundamental unit of A2A collaboration
-- Created when a client sends a message; identified by a unique ID
-- Tasks have a **lifecycle**: `submitted` → `working` → `input-required` → `completed` / `failed` / `canceled`
+A **task** is the unit of A2A collaboration: created when a client sends a
+message, identified by a unique ID, and tracked through a lifecycle:
+
+![](img/a2a-task-lifecycle.svg){height=300 fig-align="center"}
+
 - Long-running tasks report progress via **streaming (SSE)** or **push notifications** (webhooks)
-- Output is delivered as **artifacts** — files, structured data, or text produced by the remote agent
-:::
+- Output is delivered as **artifacts** -- files, structured data, or text produced by the remote agent
 
 ---
 
 ## Messages and Parts
+
+Within a task, communication happens in turns:
 
 - A **message** is one turn of communication within a task
 - Each message contains one or more **parts**:
@@ -570,12 +598,53 @@ Three words that sound interchangeable and are not:
 
 ## A Typical A2A Interaction
 
-1. Client fetches the remote agent's **Agent Card**
-2. Client authenticates per the card's security scheme
-3. Client sends a **message** — a new task is created
-4. Remote agent works; streams **status updates** over SSE
-5. Remote agent may pause with `input-required` (human/agent feedback)
-6. Task completes; client receives **artifacts**
+![](img/a2a-interaction.svg){height=460 fig-align="center"}
+
+## On the Wire: an A2A `message/send` {.smaller}
+
+A2A is JSON-RPC too. The request carries a message; the response carries a task, not an answer:
+
+:::: {.columns}
+::: {.column width="52%"}
+**Request** -- the client sends one turn:
+
+```json
+{
+  "method": "message/send",
+  "params": {
+    "message": {
+      "role": "user",
+      "parts": [{
+        "kind": "text",
+        "text": "Book a Tokyo trip, May 4-11"
+      }],
+      "messageId": "9229e770"
+    }
+  }
+}
+```
+:::
+::: {.column width="4%"}
+:::
+::: {.column width="44%"}
+**Response** -- a task in state `submitted`:
+
+```json
+{
+  "result": {
+    "id": "363422be-b0f9",
+    "contextId": "c295ea44",
+    "status": {
+      "state": "submitted"
+    },
+    "kind": "task"
+  }
+}
+```
+
+The client now streams, polls, or waits for a push -- the answer arrives later as **artifacts**.
+:::
+::::
 
 ---
 
@@ -615,27 +684,27 @@ Trust is established out-of-band by identity providers and carried in-band as to
 
 ## Governance: Linux Foundation Stewardship
 
-::: {.incremental}
-- In June 2025, Google donated the A2A specification, SDKs, and tooling to the **Linux Foundation**
-- Vendor-neutral, open governance — contributions from Amazon, Microsoft, Cisco, Salesforce, SAP, ServiceNow, and many others
-- Why it matters:
-  - No single vendor controls the protocol's evolution
-  - Enterprises can adopt with confidence in longevity
-  - Same playbook that made Kubernetes an industry standard
-:::
+Google donated the A2A specification, SDKs, and tooling to the **Linux Foundation** in June 2025. Amazon, Microsoft, Cisco, Salesforce, SAP, and ServiceNow all contribute.
+
+- No single vendor controls the protocol's evolution, so an enterprise can adopt it without betting on a competitor's roadmap
+- The same playbook made Kubernetes the industry standard
 
 ---
 
 ## Multi-Agent Collaboration Patterns
 
+Once agents can talk, who talks to whom? Four shapes recur:
+
 - **Supervisor / orchestrator**: a lead agent decomposes work and delegates to specialists over A2A
-- **Peer-to-peer (horizontal)**: equal specialists hand off laterally — research agent → coding agent → review agent
+- **Peer-to-peer (horizontal)**: equal specialists hand off laterally -- research agent → coding agent → review agent
 - **Hierarchical (vertical)**: layers of managers and workers for complex, long-horizon workflows
 - **Marketplace**: clients discover and select remote agents dynamically from a registry
 
 ---
 
 ## Pattern Trade-offs
+
+No winner here -- pick per workflow:
 
 | Pattern | Strengths | Risks |
 |---------|-----------|-------|
@@ -648,14 +717,14 @@ Trust is established out-of-band by identity providers and carried in-band as to
 
 ## Security Considerations {.smaller}
 
-::: {.incremental}
-- **Authentication**: Agent Cards declare required schemes (OAuth 2, API keys, mTLS); never accept anonymous agents in production
-- **Authorization**: least privilege per skill — an agent that *can* book travel shouldn't also read HR data
-- **Identity & delegation**: who is the request *really* for? Propagate user identity, don't let agents act as super-users
-- **Prompt injection across agents**: a malicious remote agent's output becomes *your* agent's input — treat peer output as untrusted
+Everything from the MCP security slide applies, plus the problems that only appear when the peer is itself an agent:
+
+- **Authentication**: agent cards declare required schemes (OAuth 2, API keys, mTLS); never accept anonymous agents in production
+- **Authorization**: least privilege per skill -- an agent that *can* book travel should not also read HR data
+- **Identity and delegation**: who is the request *really* for? Propagate user identity; do not let agents act as super-users
+- **Prompt injection across agents**: a malicious remote agent's output becomes *your* agent's input -- treat peer output as untrusted
 - **Audit logging**: record every task, message, and artifact for compliance and forensics
-- **Supply chain**: registries need vetting, versioning, and revocation — an "agent store" has the same risks as a package registry
-:::
+- **Supply chain**: registries need vetting, versioning, and revocation -- an "agent store" has the same risks as a package registry
 
 ---
 
@@ -686,6 +755,8 @@ Trust is established out-of-band by identity providers and carried in-band as to
 
 ## Challenges with Using MCP at Scale
 
+One server on your laptop is easy. Fifty servers across an enterprise raises the questions APIs already taught us:
+
 **Discovery & Configuration**:
 
 - **Tool Discovery**: How do agents find available MCP servers?
@@ -705,20 +776,16 @@ Trust is established out-of-band by identity providers and carried in-band as to
 
 ---
 
-## MCP Gateway and Registry {.smaller}
+## The Fix: A Gateway and a Registry
 
-::: {.callout}
-![MCP Servers & A2A Agents Registry Dashboard](img/MCP-Gateway-Registry.gif){height=400}
-:::
+The answer to every problem on that slide is centralized management:
 
-**Solving scale challenges** with centralized management:
+- **Server registry**: discover and catalog available MCP servers
+- **Health monitoring**: track server status and reliability
+- **Access control**: manage who can use which servers
+- **Analytics**: usage statistics and performance metrics
 
-- **Server Registry**: Discover and catalog available MCP servers
-- **Health Monitoring**: Track server status and reliability
-- **Access Control**: Manage who can use which servers
-- **Analytics**: Usage statistics and performance metrics
-
-> Source: [MCP Gateway Registry](https://github.com/agentic-community/mcp-gateway-registry)
+Agents get one governed front door instead of fifty direct connections.
 
 ---
 
@@ -746,6 +813,10 @@ An open-source project from the [agentic-community](https://github.com/agentic-c
 If you find it useful, [star the repo](https://github.com/agentic-community/mcp-gateway-registry) 🙂 -- stars are how more people find it, benefit from it, and contribute back to the work.
 :::
 
+## What It Looks Like Running {.smaller}
+
+![One dashboard for the fleet: MCP servers, A2A agents, health, and usage](img/MCP-Gateway-Registry.gif){height=420 fig-align="center"}
+
 ## AAIF: A Neutral Home for the Agentic Stack {.smaller}
 
 The [Agentic AI Foundation](https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation) launched under the Linux Foundation on **December 9, 2025**, with founding contributions from Anthropic, Block, and OpenAI.
@@ -755,26 +826,18 @@ The [Agentic AI Foundation](https://www.linuxfoundation.org/press/linux-foundati
 - **What it does**: neutral governance so no vendor controls the protocols; interoperability and security standards; the explicit goal is that the agent era runs on open standards instead of fragmenting into walled gardens
 - Why it matters to you: the skills from this course -- MCP servers, AGENTS.md files, agent protocols -- are standards with institutional backing, not one vendor's API
 
-## Key Takeaways
+## Key Takeaways {.smaller}
 
-::: {.incremental}
-1. A2A standardizes **agent-to-agent** communication the way MCP standardized **agent-to-tool** access
-2. Agent Cards enable **discovery**; tasks/messages/artifacts structure **collaboration**
-3. Agents stay **opaque** — they interoperate without exposing internals
-4. Linux Foundation governance makes A2A a credible, vendor-neutral standard
-5. Security must be designed in: authenticate peers, propagate identity, treat peer output as untrusted
-:::
+1. MCP exists because N models x M tools meant N x M hand-written connectors; a protocol turned that into M + N
+2. Under the hood it is JSON-RPC -- the power is that the **integration burden moved to the tool vendors**, who now have the stronger incentive
+3. MCP is bidirectional: tools, resources, and prompts flow one way; sampling and elicitation flow back
+4. A2A does for **agent-to-agent** what MCP did for agent-to-tool: cards for discovery, tasks for collaboration, and agents stay opaque
+5. Trust between agents is established out-of-band and carried as tokens -- twenty years of enterprise web security, reused
+6. At fleet scale you need what APIs needed a decade ago: a gateway, a registry, and an audit log
 
 ---
 
 ## References {.smaller}
-
-**Agentic RAG:**
-
-- [Anthropic -- Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)
-- [Corrective RAG (CRAG) paper](https://arxiv.org/abs/2401.15884)
-- [Self-RAG paper](https://arxiv.org/abs/2310.11511)
-- [LangGraph -- Agentic RAG tutorials](https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_agentic_rag/)
 
 **Official MCP Resources:**
 
