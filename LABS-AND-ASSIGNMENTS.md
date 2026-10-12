@@ -13,12 +13,12 @@ receive per-student copies named `<repo>-<username>-fall-2026` via
 | 3 | RAG and Agentic RAG | [basic-rag](https://github.com/gu-dsan6725/basic-rag) -- build, break, fix | -- | Lab shipped, rebuilt for Fall 2026 |
 | 4 | Advanced RAG | [sql-rag](https://github.com/gu-dsan6725/sql-rag) -- 100 pts + 50 bonus | [graph-rag](https://github.com/gu-dsan6725/graph-rag) -- 150 pts + 50 bonus, ANALYSIS.md carries 50 | Both shipped 2026-09-27; live Ollama smoke test pending |
 | 5 | Introduction to Agents | [basic-agents](https://github.com/gu-dsan6725/basic-agents) -- 100 pts | -- | Shipped 2026-10-07, built for Fall 2026. Supersedes `agents` and `agents-part-2` (Spring carryover, now unused) |
-| 6 | Model Context Protocol (MCP) | TBD (build-an-MCP-server lab; deck has a FastMCP + Inspector exercise with no repo behind it) | -- | Deck exists (moved from week 4); lab not started |
+| 6 | MCP and A2A | [mcp-server](https://github.com/gu-dsan6725/mcp-server) (confirm), [a2a-lab](https://github.com/gu-dsan6725/a2a-lab) | -- | Lecture rebuilt 2026-10-11; labs need review |
 | 7 | Evals, Observability, Guardrails | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) | -- | Spring carryover, needs review |
 | 8 | Ontology and the Semantic Layer | TBD (new repo; Cypher and a real graph DB belong here) | -- | Not started |
 | 9 | Tokenomics and Model Selection | TBD (new repo) | -- | Not started; deck now also carries open-weight vs frontier |
 | 10 | Agentic Platforms | [agentic-ai-apps](https://github.com/gu-dsan6725/agentic-ai-apps) | -- | Spring carryover, needs review |
-| 11 | Agent-to-Agent (A2A) | [a2a-lab](https://github.com/gu-dsan6725/a2a-lab) | -- | Spring carryover, needs review |
+| 11 | TBD (A2A moved to week 6) | TBD | -- | Open slot |
 | 12 | Fine-tuning | [unsloth-finetune-ec2](https://github.com/gu-dsan6725/unsloth-finetune-ec2) | -- | Spring carryover, needs review |
 | 13 | AI Ethics | -- | -- | No lab planned |
 | 14 | Project Presentations | -- | Final project (max grade weight; abstract is a graded milestone) | Template: [final-project](https://github.com/gu-dsan6725/final-project) |

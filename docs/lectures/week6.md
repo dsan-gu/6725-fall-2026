@@ -1,4 +1,4 @@
-# Week 6: Model Context Protocol (MCP)
+# Week 6: MCP and Agent-to-Agent (A2A)
 
 <p class="deck-actions"><a href="../assets/html/week6.html" target="_blank">Open slides full screen &rarr;</a></p>
 

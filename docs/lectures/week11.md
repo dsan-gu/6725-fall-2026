@@ -1,5 +1,3 @@
-# Week 11: Agent-to-Agent (A2A) Collaboration
+# Week 11: TBD
 
-<p class="deck-actions"><a href="../assets/html/week11.html" target="_blank">Open slides full screen &rarr;</a></p>
-
-<iframe class="deck" src="../assets/html/week11.html" title="Week 11 slides"></iframe>
+Topic to be announced. A2A moved into Week 6, alongside MCP.
