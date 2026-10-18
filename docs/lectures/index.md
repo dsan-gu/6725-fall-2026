@@ -10,7 +10,7 @@ Slides for each week are rendered from Quarto (`.qmd`) sources in `docs/lectures
 | [4](week4.md) | Advanced RAG: evaluation, SQL RAG, Graph RAG, agentic RAG |
 | [5](week5.md) | Introduction to Agents |
 | [6](week6.md) | MCP and Agent-to-Agent (A2A) |
-| [7](week7.md) | Evals, Observability, and Guardrails |
+| [7](week7.md) | Evals and Observability |
 | [8](week8.md) | Ontology and the Semantic Layer |
 | [9](week9.md) | Tokenomics and Model Selection |
 | [10](week10.md) | Agentic Platforms |

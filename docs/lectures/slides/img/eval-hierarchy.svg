@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420">
+<defs>
+<marker id="arrow-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="arrow-amber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="960" height="420" fill="white"/>
+<rect x="40" y="60" width="250" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="165" y="100" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#111827" text-anchor="middle">MODEL</text>
+<text x="165" y="124" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">Is the model any good?</text>
+<rect x="330" y="68" width="440" height="74" rx="8" fill="white" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="400" y="98" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">what:</text>
+<text x="410" y="98" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#111827" text-anchor="start">benchmarks, leaderboards, arenas</text>
+<text x="400" y="122" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">who:</text>
+<text x="410" y="122" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#111827" text-anchor="start">the lab that trained it -- you mostly read the results</text>
+<rect x="40" y="175" width="250" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="165" y="215" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#111827" text-anchor="middle">SYSTEM (RAG)</text>
+<text x="165" y="239" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">Is MY pipeline any good?</text>
+<rect x="330" y="183" width="440" height="74" rx="8" fill="white" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="400" y="213" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">what:</text>
+<text x="410" y="213" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#111827" text-anchor="start">retrieval and generation metrics, golden sets</text>
+<text x="400" y="237" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">who:</text>
+<text x="410" y="237" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#111827" text-anchor="start">you -- on your data, your chunks, your prompts</text>
+<rect x="40" y="290" width="250" height="90" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="165" y="330" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#b45309" text-anchor="middle">AGENT</text>
+<text x="165" y="354" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#b45309" text-anchor="middle">Did it do the RIGHT THINGS?</text>
+<rect x="330" y="298" width="440" height="74" rx="8" fill="white" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="400" y="328" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">what:</text>
+<text x="410" y="328" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#111827" text-anchor="start">outcome + trajectory + efficiency</text>
+<text x="400" y="352" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">who:</text>
+<text x="410" y="352" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#111827" text-anchor="start">you -- and it is the open problem</text>
+<line x1="820" y1="85" x2="820" y2="360" stroke="#b45309" stroke-width="2.2" marker-end="url(#arrow-amber)"/>
+<text x="840" y="160" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b45309" text-anchor="start">harder to</text>
+<text x="840" y="178" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b45309" text-anchor="start">evaluate</text>
+<text x="840" y="260" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b45309" text-anchor="start">more of</text>
+<text x="840" y="278" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b45309" text-anchor="start">YOUR time</text>
+<text x="440" y="35" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#111827" text-anchor="middle">Three different questions, three different evals</text>
+</svg>

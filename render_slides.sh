@@ -8,7 +8,7 @@ week_files=(
   "week-04-advanced-rag"
   "week-05-introduction-to-agents"
   "week-06-mcp-and-a2a"
-  "week-07-evals-observability-guardrails"
+  "week-07-evals-and-observability"
   "week-08-ontology-semantic-layer"
   "week-09-tokenomics"
   "week-10-agentic-platforms"

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 450" width="960" height="450">
+<defs>
+<marker id="arrow-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="arrow-amber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="960" height="450" fill="white"/>
+<line x1="90" y1="40" x2="90" y2="370" stroke="#111827" stroke-width="1.5"/>
+<line x1="90" y1="370" x2="850" y2="370" stroke="#111827" stroke-width="1.5"/>
+<line x1="85" y1="370.0" x2="90" y2="370.0" stroke="#111827"/>
+<text x="78" y="374.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="end">0.00</text>
+<line x1="85" y1="287.5" x2="90" y2="287.5" stroke="#111827"/>
+<text x="78" y="291.5" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="end">0.25</text>
+<line x1="90" y1="287.5" x2="850" y2="287.5" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="85" y1="205.0" x2="90" y2="205.0" stroke="#111827"/>
+<text x="78" y="209.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="end">0.50</text>
+<line x1="90" y1="205.0" x2="850" y2="205.0" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="85" y1="122.5" x2="90" y2="122.5" stroke="#111827"/>
+<text x="78" y="126.5" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="end">0.75</text>
+<line x1="90" y1="122.5" x2="850" y2="122.5" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="85" y1="40.0" x2="90" y2="40.0" stroke="#111827"/>
+<text x="78" y="44.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="end">1.00</text>
+<line x1="90" y1="40.0" x2="850" y2="40.0" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="90.0" y1="370" x2="90.0" y2="375" stroke="#111827"/>
+<text x="90.0" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">1</text>
+<line x1="174.44444444444446" y1="370" x2="174.44444444444446" y2="375" stroke="#111827"/>
+<text x="174.44444444444446" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">2</text>
+<line x1="258.8888888888889" y1="370" x2="258.8888888888889" y2="375" stroke="#111827"/>
+<text x="258.8888888888889" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">3</text>
+<line x1="343.3333333333333" y1="370" x2="343.3333333333333" y2="375" stroke="#111827"/>
+<text x="343.3333333333333" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">4</text>
+<line x1="427.77777777777777" y1="370" x2="427.77777777777777" y2="375" stroke="#111827"/>
+<text x="427.77777777777777" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">5</text>
+<line x1="512.2222222222222" y1="370" x2="512.2222222222222" y2="375" stroke="#111827"/>
+<text x="512.2222222222222" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">6</text>
+<line x1="596.6666666666666" y1="370" x2="596.6666666666666" y2="375" stroke="#111827"/>
+<text x="596.6666666666666" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">7</text>
+<line x1="681.1111111111111" y1="370" x2="681.1111111111111" y2="375" stroke="#111827"/>
+<text x="681.1111111111111" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">8</text>
+<line x1="765.5555555555555" y1="370" x2="765.5555555555555" y2="375" stroke="#111827"/>
+<text x="765.5555555555555" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">9</text>
+<line x1="850.0" y1="370" x2="850.0" y2="375" stroke="#111827"/>
+<text x="850.0" y="392" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#111827" text-anchor="middle">10</text>
+<text x="470.0" y="418" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="normal" fill="#111827" text-anchor="middle">k = number of consecutive runs that must ALL succeed</text>
+<text x="24" y="205.0" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="normal" fill="#111827" text-anchor="middle">pass^k</text>
+<polyline points="90.0,43.3 174.4,46.6 258.9,49.8 343.3,53.0 427.8,56.2 512.2,59.3 596.7,62.4 681.1,65.5 765.6,68.5 850.0,71.6" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+<text x="858" y="75.55391524709455" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#6b7280" text-anchor="start">p = 0.99</text>
+<polyline points="90.0,56.5 174.4,72.2 258.9,87.1 343.3,101.2 427.8,114.7 512.2,127.4 596.7,139.5 681.1,151.1 765.6,162.0 850.0,172.4" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+<text x="858" y="176.41681005133503" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#6b7280" text-anchor="start">p = 0.95</text>
+<polyline points="90.0,73.0 174.4,102.7 258.9,129.4 343.3,153.5 427.8,175.1 512.2,194.6 596.7,212.2 681.1,227.9 765.6,242.2 850.0,254.9" fill="none" stroke="#b45309" stroke-width="2.5"/>
+<text x="858" y="258.93611476699994" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b45309" text-anchor="start">p = 0.90</text>
+<circle cx="681.1111111111111" cy="227.94582069999996" r="6" fill="#fffbeb" stroke="#b45309" stroke-width="2.5"/>
+<text x="671.1111111111111" y="211.94582069999996" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="end">0.9^8 = 0.43</text>
+<text x="470.0" y="24" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">An agent that works 90% of the time fails somebody who runs it 8 times -- more often than not</text>
+</svg>

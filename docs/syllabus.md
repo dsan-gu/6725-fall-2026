@@ -119,7 +119,7 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | 4     | Advanced RAG                                         | RAG evaluation with RAGAS, SQL RAG, Graph RAG, agentic RAG |
 | 5     | Introduction to Agents                               | The agent loop and the harness that runs it, prompt anatomy and prefix caching, tools (local, remote, MCP), context engineering, planning, memory, multi-agent patterns |
 | 6     | MCP and Agent-to-Agent (A2A)                         | Why agents need protocols; MCP history, methods, auth, and servers; A2A agent cards, tasks, and the cross-organization trust boundary; gateways, registries, and AAIF |
-| 7     | Evals, Observability, and Guardrails                 | Evaluation frameworks, monitoring GenAI apps in production, guardrails, and data security |
+| 7     | Evals and Observability                              | Model, RAG, and agent evals; LLM-as-a-judge; tracing GenAI apps with the OTel GenAI conventions |
 | 8     | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
 | 9     | Tokenomics and Model Selection                       | Token economics, cost engineering, prompt caching, benchmarking; open-weight vs frontier models, licensing, and self-hosting vs third-party APIs |
 | 10    | Agentic Platforms                                    | Designing platforms and not just apps: agent runtimes, deployment patterns, governance |

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 490" width="1080" height="490">
+<defs>
+<marker id="arrow-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="arrow-amber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="490" fill="white"/>
+<rect x="40" y="40" width="560" height="48" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="320" y="69" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">user question</text>
+<rect x="40" y="110" width="560" height="48" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="320" y="139" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">model turn 1: calls slow_ping(message='patience', seconds=3)</text>
+<line x1="320" y1="88" x2="320" y2="106" stroke="#6b7280" stroke-width="1.3" marker-end="url(#arrow-gray)"/>
+<rect x="40" y="180" width="560" height="48" rx="8" fill="white" stroke="#6b7280" stroke-width="1.5"/>
+<text x="320" y="209" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">tool result: {"echo": "patience", "took_seconds": 3}</text>
+<line x1="320" y1="158" x2="320" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#arrow-gray)"/>
+<rect x="40" y="250" width="560" height="48" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="320" y="279" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">model turn 2: calls ping(message='done')</text>
+<line x1="320" y1="228" x2="320" y2="246" stroke="#6b7280" stroke-width="1.3" marker-end="url(#arrow-gray)"/>
+<rect x="40" y="320" width="560" height="48" rx="8" fill="white" stroke="#6b7280" stroke-width="1.5"/>
+<text x="320" y="349" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">tool result: {"echo": "done", "ping_count": 7}</text>
+<line x1="320" y1="298" x2="320" y2="316" stroke="#6b7280" stroke-width="1.3" marker-end="url(#arrow-gray)"/>
+<rect x="40" y="390" width="560" height="48" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="320" y="419" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">model turn 3: final answer, no tool call</text>
+<line x1="320" y1="368" x2="320" y2="386" stroke="#6b7280" stroke-width="1.3" marker-end="url(#arrow-gray)"/>
+<rect x="650" y="40" width="390" height="48" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="845" y="69" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">outcome: was the task completed?</text>
+<line x1="604" y1="64" x2="646" y2="64" stroke="#b45309" stroke-width="1.3" marker-end="url(#arrow-amber)"/>
+<rect x="650" y="110" width="390" height="48" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="845" y="139" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">tool CHOICE: right tool for the step?</text>
+<line x1="604" y1="134" x2="646" y2="134" stroke="#b45309" stroke-width="1.3" marker-end="url(#arrow-amber)"/>
+<rect x="650" y="180" width="390" height="48" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="845" y="209" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">tool ARGUMENTS: message and seconds correct?</text>
+<line x1="604" y1="204" x2="646" y2="204" stroke="#b45309" stroke-width="1.3" marker-end="url(#arrow-amber)"/>
+<rect x="650" y="250" width="390" height="48" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="845" y="279" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">result USE: does the next turn reflect it?</text>
+<line x1="604" y1="274" x2="646" y2="274" stroke="#b45309" stroke-width="1.3" marker-end="url(#arrow-amber)"/>
+<rect x="650" y="320" width="390" height="48" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="845" y="349" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">grounding: answer matches the results?</text>
+<line x1="604" y1="344" x2="646" y2="344" stroke="#b45309" stroke-width="1.3" marker-end="url(#arrow-amber)"/>
+<rect x="650" y="390" width="390" height="48" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="845" y="419" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">termination: stopped at the right time?</text>
+<line x1="604" y1="414" x2="646" y2="414" stroke="#b45309" stroke-width="1.3" marker-end="url(#arrow-amber)"/>
+<text x="540" y="470" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#6b7280" text-anchor="middle" font-style="italic">one trajectory, six different judgments -- an answer-only eval sees just the last box</text>
+</svg>
