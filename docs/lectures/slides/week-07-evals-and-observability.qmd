@@ -469,11 +469,29 @@ Public agent benchmarks, and what each actually measures:
   your agent on yours. Their lasting contribution is **method**: simulated
   users, state-based grading, and the next slide's metric
 
+## pass@1 vs. pass^k: Capability vs. Reliability {.smaller}
+
+Two metrics that sound alike and answer different questions:
+
+| | **pass@1** | **pass^k** |
+|---|-----------|------------|
+| The question | Can it do the task? | Does it do the task **every time**? |
+| How computed | fraction of single runs that succeed | probability that **all k** independent runs succeed: $p^k$ |
+| What it measures | capability | reliability |
+| Who cares | a demo, a leaderboard | anyone who runs the same task daily |
+
+A concrete pair from this week's lab-style run: an agent passed two
+questions 3-for-3 and a third question 2-of-3. pass@1 says 0.89, a fine
+agent. pass^3 says 0.67: one task in three cannot be trusted unattended.
+Same runs, different question.
+
+- Capability improves with better models; reliability also demands better
+  **systems**: tighter tools, guardrails on arguments, retries with care
+- Production is a repeated game. Report pass^k for anything users rerun
+
 ## Worked Example: pass^k {.smaller}
 
-τ²-bench's question: not "can the agent do it once?" but "does it do it
-**every time**?" pass^k = probability all k independent runs succeed =
-$p^k$.
+The math behind that gap: pass^k = $p^k$ decays fast in k.
 
 ![](img/pass-k-curve.svg){height=380 fig-align="center"}
 
