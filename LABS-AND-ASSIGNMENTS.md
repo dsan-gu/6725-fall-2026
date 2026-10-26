@@ -15,10 +15,10 @@ receive per-student copies named `<repo>-<username>-fall-2026` via
 | 5 | Introduction to Agents | [basic-agents](https://github.com/gu-dsan6725/basic-agents) -- 100 pts | -- | Shipped 2026-10-07, built for Fall 2026. Supersedes `agents` and `agents-part-2` (Spring carryover, now unused) |
 | 6 | MCP and A2A | [agents-w-mcp](https://github.com/gu-dsan6725/agents-w-mcp) -- 200 pts | A2A: separate lab, TBD | Built and fully live-tested 2026-10-12, including part 3 against real Context7/GitHub keys. Servers run as standalone HTTP services; wire tap is a logging proxy; agents are Strands over the standard OpenAI-compatible client; same llama.cpp setup as week 5. Renamed from `mcp-a2a`; supersedes the `mcp-server`/`a2a-lab` placeholders |
 | 7 | Evals and Observability | [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability) -- 200 pts | -- | Rebuilt from scratch and live-tested 2026-10-18 (OpenAI gpt-5-mini): part 1 traced agent on the keyless AWS Knowledge MCP server + Phoenix write-up; part 2 spec-only (no starter code) notes agent + phoenix-evals RAG/trajectory metrics, solutions implemented and verified. Students may use OpenAI, Anthropic, or local llama.cpp |
-| 8 | Ontology and the Semantic Layer | TBD (new repo; Cypher and a real graph DB belong here) | -- | Not started |
+| 8 | Agent Evals in Practice | Continues week 7's assignment | -- | Deck built 2026-10-25: Meru trace-driven improvement case study + agent-sandboxes guest placeholder. No new lab |
 | 9 | Tokenomics and Model Selection | TBD (new repo) | -- | Not started; deck now also carries open-weight vs frontier |
 | 10 | Agentic Platforms | [agentic-ai-apps](https://github.com/gu-dsan6725/agentic-ai-apps) | -- | Spring carryover, needs review |
-| 11 | TBD (A2A moved to week 6) | TBD | -- | Open slot |
+| 11 | Ontology and the Semantic Layer | TBD (new repo; Cypher and a real graph DB belong here) | -- | Moved from week 8; deck is Spring carryover, needs rebuild |
 | 12 | Fine-tuning | [unsloth-finetune-ec2](https://github.com/gu-dsan6725/unsloth-finetune-ec2) | -- | Spring carryover, needs review |
 | 13 | AI Ethics | -- | -- | No lab planned |
 | 14 | Project Presentations | -- | Final project (max grade weight; abstract is a graded milestone) | Template: [final-project](https://github.com/gu-dsan6725/final-project) |

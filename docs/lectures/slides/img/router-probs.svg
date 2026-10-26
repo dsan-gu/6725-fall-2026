@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" width="1000" height="480">
+<defs>
+<marker id="arrow-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="arrow-amber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1000" height="480" fill="white"/>
+<text x="470" y="30" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#111827" text-anchor="middle">"what was the last email I sent?" -- the four route probabilities, one real turn</text>
+<text x="226" y="99" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="end">A  direct</text>
+<rect x="240" y="70" width="27.44" height="46" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="279.44" y="99" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="start">0.049</text>
+<text x="226" y="169" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="end">B  search</text>
+<rect x="240" y="140" width="264.88" height="46" rx="4" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="516.88" y="169" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="start">0.473</text>
+<text x="226" y="239" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="end">C  tools</text>
+<rect x="240" y="210" width="145.6" height="46" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="397.6" y="239" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="start">0.260</text>
+<text x="226" y="309" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="end">D  search+tools</text>
+<rect x="240" y="280" width="122.08" height="46" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="374.08" y="309" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="start">0.218</text>
+<rect x="40" y="360" width="420" height="92" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="250" y="388" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">top rule: winner is B at 0.473</text>
+<text x="250" y="412" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">route = search. The turn gets no Gmail</text>
+<text x="250" y="432" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#111827" text-anchor="middle">tools, and the question needs them</text>
+<rect x="500" y="360" width="470" height="92" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="735" y="388" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">marginal rule: P(tools) = C + D = 0.478</text>
+<text x="735" y="412" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#b45309" text-anchor="middle">over the 0.25 bar, so the turn gets tools.</text>
+<text x="735" y="432" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#b45309" text-anchor="middle">The evidence was split, never absent</text>
+</svg>

@@ -1,0 +1,449 @@
+---
+title: "Week 8: Agent Evals in Practice"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: "c/t"
+    show-slide-number: all
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda {.smaller}
+
+- Where week 7 left us: the eval loop, on paper
+- A case study, end to end: a real agent, its real traces, a real failure,
+  and the eval pipeline that turned the failure into a shipped improvement
+- The artifacts up close: trace files, a labeled set with a held-out split,
+  a measurement harness, a calibrated classifier, a regression suite
+- What the whole thing cost, and why you can afford it
+- Guest lecture: agent sandboxes
+- Where the week 7 assignment picks this up
+
+## Where Week 7 Left Us {.smaller}
+
+![](img/eval-hierarchy.svg){height=330 fig-align="center"}
+
+Three eval layers, and agents as the open problem: outcomes, trajectories,
+efficiency, pass^k. You built the machinery in the lab -- golden questions,
+judges, metrics logged onto traces.
+
+## The Loop, on Paper {.smaller}
+
+Week 7 closed with a claim:
+
+> Production traces become datasets, datasets become regressions,
+> regressions block bad deploys, and production generates tomorrow's eval
+> cases. Teams that ship reliable agents are running this loop.
+
+Today is that claim with the receipts. One real agent, one real failure
+pulled from its logs, and every artifact of the loop that fixed it: the
+trace line, the labeled set, the harness, the calibration, the decision
+table, the regression suite, and the honest footnotes.
+
+- Everything shown today is in a public repo you can read:
+  [github.com/aarora79/meru](https://github.com/aarora79/meru)
+- And the model making the failing decision is an old friend: MiniCPM5-2B,
+  the same 2B model from weeks 2 through 7
+
+# Case Study: Improving a Real Agent from Its Traces
+
+## The Agent: Meru {.smaller}
+
+[Meru](https://github.com/aarora79/meru) is a personal AI assistant that
+runs entirely on one machine: local models through Ollama, the user's own
+notes, mail, repos, and tools, with no path to a cloud model.
+
+What matters for today is its shape, which is the shape you built in weeks
+5 and 6:
+
+- An **agent loop**: a model called in a loop by code that can search files
+  and call MCP tools
+- A **router** in front of it: every turn starts with a 2B model deciding
+  one of four routes -- `direct` (just answer), `search` (read the user's
+  files first), `tools` (call MCP tools), or `search+tools` (both)
+- **Everything is logged**: every turn and every tool call, to plain JSONL
+  files on disk
+
+The router is the case study. It is an LLM making a decision on every
+single turn, which means it fails like an LLM, and it needs evals like
+everything else you have built.
+
+## Where the Traces Live {.smaller}
+
+No Phoenix here: one JSONL file per conversation, under
+`~/.meru/sessions/YYYY/MM/`. Two real lines from one turn:
+
+```json
+{"ts": "2026-09-25T11:44:26Z", "type": "user",
+ "text": "What is the capital of Australia?",
+ "trace_id": "968049e88113be8209bc5553859b3227"}
+
+{"ts": "2026-09-25T11:44:28Z", "type": "assistant",
+ "text": "The capital of Australia is Canberra. ...",
+ "tokens_in": 899, "tokens_out": 159,
+ "route": "direct", "ms": 1526,
+ "trace_id": "968049e88113be8209bc5553859b3227"}
+```
+
+- The week 7 vocabulary maps straight on: the file is a session, the
+  `trace_id` ties a turn's records together, tool calls land as their own
+  lines with args, outcome, and duration
+- The four pillars survive the tooling change: a flat file the owner can
+  `grep` is a legitimate trace store. The standard matters less than the
+  habit of recording everything
+
+## Mining Traces Is Ten Lines {.smaller}
+
+The entire "observability stack" needed to study this agent's decisions:
+
+```python
+import json, glob, collections
+
+routes = collections.Counter()
+slow, failures = [], []
+for path in glob.glob("sessions/2026/*/*.jsonl"):
+    for line in open(path):
+        rec = json.loads(line)
+        if rec.get("type") == "assistant":
+            routes[rec.get("route")] += 1
+            if rec.get("ms", 0) > 20000:
+                slow.append((rec["ms"], rec["trace_id"]))
+print(routes, sorted(slow)[-5:])
+```
+
+- Route distribution, latency outliers, and (with one more branch) every
+  turn whose tool calls errored -- from files that were being written
+  anyway
+- Failure hunting starts here, with a loop over your own logs
+
+## A Real Failure, Verbatim {.smaller}
+
+From a real turn in the logs: *"what was the last email I sent?"* The
+router's four probabilities, and what each decision rule does with them:
+
+![](img/router-probs.svg){height=400 fig-align="center"}
+
+The answer evidence was split across two letters that both mean "use
+tools." The rule that only looks at the single winner threw that evidence
+away, and the turn went to search with no Gmail tools attached.
+
+## Classify Before You Fix {.smaller}
+
+Week 7's failure taxonomy, applied: this is a **wrong route** failure (the
+agent-level cousin of wrong tool), and one trace is an anecdote, so the
+first move is to ask whether it is a class.
+
+Grepping the transcripts for turns that mention mail, calendars, and
+messages found siblings: *"text alex that I'm on my way"* routed to search.
+Requests against connected servers were systematically starved of their
+tools when the model's probability mass split between `tools` and
+`search+tools`.
+
+- A class, not an anecdote -- so it earns an eval, not a patch
+- Note what did NOT happen: nobody edited the prompt and eyeballed two
+  answers. The failure got a name, and the name became a measurable claim:
+  *the top-pick rule wastes summed evidence*
+
+## The Design Constraint: a 2B Router {.smaller}
+
+Why a router this small fails this way is worth two minutes, because it is
+the week 5 and 6 lesson again.
+
+Asking a 2B model to answer with JSON (`{"route": "search"}`) has three
+failure modes: malformed JSON, an invented fifth route, and a confident
+wrong answer indistinguishable from a right one.
+
+Meru's router does not parse what the model writes. It asks for **one
+token** with log probabilities, options lettered A through D:
+
+- The model physically cannot invent a route: the answer is read from the
+  probabilities of four fixed letters, not from prose
+- One decoded token means the turn pays for prompt evaluation and nothing
+  else: the route costs milliseconds
+- And the probabilities are the point: the decision rule gets a
+  *distribution*, not a verdict -- which is exactly what the failing turn
+  needed
+
+## The Hypothesis {.smaller}
+
+The `top` rule takes the most likely letter and falls back when the winner
+is below a confidence floor. The failing turn suggests a different reading
+of the same four numbers:
+
+- B (`search`) and D (`search+tools`) both mean *search*, so
+  **P(search) = P(B) + P(D)**
+- C (`tools`) and D both mean *tools*, so **P(tools) = P(C) + P(D)**
+- Ask two yes/no questions against two thresholds; two yeses give
+  `search+tools`, one gives that half, none gives `direct`
+
+On the failing turn: P(tools) = 0.260 + 0.218 = **0.478**. The evidence was
+there all along; the rule just had to add it up.
+
+A hypothesis is not a fix. Before any code ships, the week 7 question: **how
+would you know it is better?**
+
+## Measure First: the Labeled Set {.smaller}
+
+`internal/router/testdata/routes.jsonl`: 162 questions written the way a
+user types them, 34 to 48 per route, each with its label and a reason.
+Real rows:
+
+```json
+{"q": "what's the capital of australia", "route": "direct",
+ "why": "general knowledge"}
+
+{"q": "can you give me a tiny example of the first one?",
+ "route": "direct",
+ "why": "follow-up about general knowledge already in the conversation",
+ "history": [{"q": "what's the difference between a mutex and a channel?",
+              "a": "A mutex guards shared memory ..."}]}
+```
+
+- Follow-ups carry their conversation history, because routers see
+  histories; 18 rows ask about connected servers (mail, calendar, a git
+  repo); 9 ask about images
+- This is week 7's golden-set discipline: small, real, labeled, and
+  deliberately including the hard tiers
+
+## Golden-Set Discipline: the Split {.smaller}
+
+The set is split once, by a fixed rule: of every ten rows with the same
+route, the 3rd, 6th and 9th go to a **held-out** set (48 rows); the rest
+form the **fit** set (114).
+
+- **New rows go at the end of the file**, so rows already in the set never
+  switch sides. The split survives growth -- this is "version your golden
+  set like code," enforced by a convention a reviewer can check
+- Thresholds and temperature are tuned on the fit set alone. **The held-out
+  numbers play no part in any pick.** They exist to answer one question:
+  did the tuning generalize, or did it memorize the fit set?
+- 48 held-out rows is small, and the doc says so where it matters: the
+  calibration metric is "too jumpy" to fit on them, so the temperature fit
+  uses all rows -- defensible only because temperature cannot change which
+  letter wins
+
+## The Harness {.smaller}
+
+`make router-eval` runs every question through the real router against the
+local Ollama and reports, per set:
+
+| What | Why it is there |
+|------|-----------------|
+| accuracy, and per-route precision and recall | the headline, and where it hides |
+| the confusion matrix | *which* routes eat which |
+| **missed rate** | turns whose route lacks a search or tool the question needs -- the failure that started all this, promoted to a first-class metric |
+| two **over-offer rates**, search and tools separately | extra tools cost more than extra search: every schema lengthens the prompt and worsens the pick |
+| mean confidence when right vs. wrong, and calibration error | can the confidence number be trusted? |
+| latency, p50 and p95 | the router runs on every turn |
+
+- No LLM judge anywhere: the labels exist, so every metric is **code** --
+  cheap, deterministic, rerunnable on every change
+- The harness keeps each raw model completion and replays the arithmetic
+  offline, so one pass over the model scores every temperature and
+  threshold
+
+## Calibration, for a Classifier {.smaller}
+
+Week 7 calibrated judges against humans. The router needs the same
+treatment: its confidence gates the fallback, so the confidence has to
+*mean something*.
+
+- The raw probabilities come out overconfident, so each logit is divided by
+  a **temperature** before normalizing -- fitted by sweeping 0.5 to 5 and
+  picking the lowest expected calibration error. The shipped value: 1.25
+- The fit uses all 162 rows, and the doc defends it in one line:
+  temperature never changes which letter wins, so fitting it everywhere
+  leaks nothing into the accuracy numbers
+- Below the floor (`min_confidence = 0.45`), the router takes the fallback:
+  `search+tools`, the only route that cannot fail for want of context. An
+  unsure router should spend tokens rather than guess
+
+The threshold sweep that follows is pure discipline: 49 pairs ranked on the
+fit set with written tie-break rules, so the choice is reproducible and
+nobody can nudge it after seeing held-out numbers.
+
+## The Results {.smaller}
+
+The real table, from the design doc (Ollama, MiniCPM5-2B Q4_K_M):
+
+| rule | set | accuracy | missed | extra search | extra tools |
+|------|-----|----------|--------|--------------|-------------|
+| `top`, floor 0.45 | fit | 0.850 | 0.103 | 0.084 | 0.019 |
+| `marginal` 0.30/0.25 | fit | 0.841 | **0.065** | 0.112 | 0.019 |
+| `top`, floor 0.45 | held-out | 0.761 | 0.196 | 0.130 | 0.000 |
+| `marginal` 0.30/0.25 | held-out | 0.739 | **0.152** | 0.174 | 0.022 |
+
+How to read it, because the headline misleads:
+
+- Accuracy went **down** (0.761 to 0.739 held-out). If accuracy were the
+  only metric, the change would be rejected
+- But the metric that encodes the actual failure -- **missed** -- dropped on
+  both sets, and the expensive over-offer (tools) stayed within 3 points
+- The eval is only as good as the metric that matches the harm. Defining
+  "missed" was the real work; the arithmetic after it is bookkeeping
+
+## Read the Rows, Not Just the Means {.smaller}
+
+The chosen thresholds route 14 of 153 questions differently from `top`.
+The doc reads every one:
+
+- **Seven improve**: *"text alex that I'm on my way"* finally gets tools;
+  *"look up reviews for the books on my reading list"* gets both halves it
+  needs
+- **Six get worse**: four gain a search they do not need; *"what documents
+  do you have indexed"* gains unneeded tools; one question loses its tools
+- **One is a wash**, failing differently under both rules
+
+Week 7 said a submission with honest middling numbers and sharp
+explanations wins. This is what that looks like in a design doc: the
+aggregate says "ship," and the row-level reading says exactly what the
+regression risk is, by name.
+
+## The Decision, and Its Honesty {.smaller}
+
+`marginal` shipped -- behind a config flag, with `top` still available. The
+deciding sentence structure is worth stealing for your EVALS.md:
+
+> `marginal` lowers the missed rate on both sets and keeps tool over-offer
+> within 3 points, so it ships. On 46 held-out rows the gain is 2 turns,
+> it costs one exact match -- **and the email question that prompted it
+> already gets Gmail tools from a rule after the router.**
+
+That last clause is the honest footnote: by ship time, the original
+motivating failure had also been fixed elsewhere. The eval still justified
+the change on the class of failures, not the anecdote.
+
+- The doc ends with its own next step: *"revisit with labelled turns from
+  real transcripts"* -- the loop pointing back at the traces
+- Decisions age. Write down what would reopen them
+
+## Guarding It: the Regression Suite {.smaller}
+
+`meru check` is the lab's replay slide, running in real life: golden
+questions in `~/.meru/checks.jsonl`, each with assertions the harness can
+grade with code:
+
+```json
+{"id": "direct-capital", "category": "direct",
+ "question": "What is the capital of Australia?",
+ "want": {"route": ["direct"], "no_tools": true,
+          "answer_any": ["Canberra"]}}
+```
+
+One dated results file per run. A real one, 2026-09-25: **36 of 38 passed**,
+and the two failures share a name (`web-go`, a web question that routed to
+`tools`), so the morning after a change starts with a specific question,
+not a feeling.
+
+- Route assertions, tool-use assertions (`no_tools`), substring answer
+  checks: all code, all local, run after every change
+- 38 questions across nine categories: direct, retrieval, files, web, MCP,
+  session memory, date math, commands, profile
+
+## What Cheap Checks Do Not Catch {.smaller}
+
+Look again at the passing check from the trace slide. The assertion wanted
+`"Canberra"` in the answer. The answer said:
+
+> "...Canberra was chosen as the capital **in 1980** to spread the
+> country's administrative institutions..."
+
+Canberra was selected in 1908 and became the seat of government in 1927.
+The check **passed** while the answer hallucinated a date.
+
+- Substring checks catch regressions: the route broke, the tool vanished,
+  the answer no longer names the right thing
+- They do not catch untruth. That is what week 7's judge layer and human
+  layer are for, and why a real eval stack keeps all three: code checks on
+  every change, judges on a schedule, humans to calibrate the judges
+- Know which layer each metric lives in, and never let a green suite stand
+  in for a layer it does not implement
+
+## The Pipeline, Generalized {.smaller}
+
+![](img/trace-improvement-loop.svg){height=360 fig-align="center"}
+
+Every box exists in the repo you can read: the sessions folder, the email
+turn, the grep, `routes.jsonl`, `make router-eval`, the `marginal` rule
+behind its flag, and `meru check`. This loop is the job.
+
+## What It Cost {.smaller}
+
+The whole pipeline, itemized:
+
+- **162 labeled questions**, written and tagged by one person -- the
+  single most valuable artifact, and the slowest to make
+- **One harness** (`make router-eval`) that reruns in minutes on a laptop
+  against a free local model
+- **38 regression questions** with code-checkable assertions
+- **Zero LLM-judge spend**: labels made every metric deterministic
+- **Zero infrastructure**: traces are files; the eval store is a JSONL per
+  day
+
+Evals are not a big-company luxury. The deciding factors were a failure
+worth naming, labels worth writing, and the discipline to tune on one set
+and report on another. Every one of those is available to a class project
+-- which is what your week 7 assignment asks for in miniature.
+
+# Guest Lecture: Agent Sandboxes
+
+## Agent Sandboxes (Guest Lecture) {.smaller}
+
+**Placeholder -- speaker and details to be announced.**
+
+The thread it continues: everything today assumed the agent's tools were
+safe to run while we studied it. Once agents write and execute code, that
+assumption needs engineering of its own.
+
+What to expect:
+
+- Why agents that execute code need isolation: the blast radius of a
+  hallucinated `rm`, a prompt-injected shell command, a package install
+- The isolation toolbox: processes, containers, microVMs, and what each
+  costs in startup time and fidelity
+- What sandboxes change for evals: reproducible environments make
+  trajectories replayable, and replayable trajectories are exactly what
+  this lecture's loop feeds on
+
+*Slides for this segment arrive with the guest.*
+
+## Key Takeaways {.smaller}
+
+1. The week 7 eval loop ran in full on one laptop: one person and a free
+   2B model covered all of it -- traces, labeled set, harness,
+   calibrated decision, regression suite
+2. One failing trace is an anecdote; grep makes it a class; a class earns
+   an eval before it earns a fix
+3. Define the metric that encodes the harm (here: **missed**), or accuracy
+   will vote against the right change
+4. Tune on the fit set, report on held-out, append-only golden sets, and
+   write the honest footnote -- including when the motivating bug got fixed
+   elsewhere
+5. Cheap code checks guard every change; they pass hallucinated dates. Keep
+   the judge and human layers, and know which layer each claim lives in
+6. Ship behind a flag, write down what would reopen the decision, and let
+   the traces keep accumulating evidence
+
+## References {.smaller}
+
+**The case study (all public):**
+
+- [Meru](https://github.com/aarora79/meru) -- the agent; traces, router,
+  checks all in-repo
+- [The fast router design note](https://github.com/aarora79/meru/blob/main/docs/fast-router.md)
+  -- the labeled set, harness, calibration, decision tables quoted today
+- [Meru architecture](https://github.com/aarora79/meru/blob/main/ARCHITECTURE.md)
+  -- the session store and audit log schemas
+
+**The week 7 foundations:**
+
+- [τ-bench (Yao et al. 2024)](https://arxiv.org/abs/2406.12045) -- pass^k
+- [Zheng et al. 2023](https://arxiv.org/abs/2306.05685) -- judges and their
+  calibration
+- Week 7 lab: [evals-and-observability](https://github.com/gu-dsan6725/evals-and-observability)
+  -- your own version of this loop, in miniature

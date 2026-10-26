@@ -120,10 +120,10 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | 5     | Introduction to Agents                               | The agent loop and the harness that runs it, prompt anatomy and prefix caching, tools (local, remote, MCP), context engineering, planning, memory, multi-agent patterns |
 | 6     | MCP and Agent-to-Agent (A2A)                         | Why agents need protocols; MCP history, methods, auth, and servers; A2A agent cards, tasks, and the cross-organization trust boundary; gateways, registries, and AAIF |
 | 7     | Evals and Observability                              | Model, RAG, and agent evals; LLM-as-a-judge; tracing GenAI apps with the OTel GenAI conventions |
-| 8     | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
+| 8     | Agent Evals in Practice                              | A real agent improved by studying its traces: failure to labeled set to harness to shipped change; guest lecture on agent sandboxes |
 | 9     | Tokenomics and Model Selection                       | Token economics, cost engineering, prompt caching, benchmarking; open-weight vs frontier models, licensing, and self-hosting vs third-party APIs |
 | 10    | Agentic Platforms                                    | Designing platforms and not just apps: agent runtimes, deployment patterns, governance |
-| 11    | TBD                                                  | Topic to be announced |
+| 11    | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
 | 12    | Fine-tuning Generative AI Models                     | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques; when to fine-tune vs RAG vs prompt |
 | 13    | AI Ethics and Responsible AI                         | Bias mitigation, safety, societal impact, regulation, and responsible deployment of GenAI systems |
 | 14    | Project Presentations, Open Discussion               | Final project presentations and open discussion on course topics |
