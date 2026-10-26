@@ -227,22 +227,30 @@ local Ollama and reports, per set:
 
 ## Calibration, for a Classifier {.smaller}
 
-Week 7 calibrated judges against humans. The router's confidence gates its
-fallback, so the confidence has to *mean something*:
+**Calibrated** means the confidence number is honest: of all the turns
+where the router says 0.9, about nine in ten should actually be right. An
+overconfident router says 0.9 and is right six times in ten.
 
-- Raw probabilities come out overconfident, so each logit is divided by a
-  **temperature**, fitted by sweeping for the lowest calibration error.
-  Shipped value: 1.25
-- Below `min_confidence = 0.45` the router takes the fallback,
-  `search+tools`: the one route that cannot fail for want of context. An
-  unsure router should spend tokens rather than guess
-- The threshold sweep is discipline in code: 49 pairs, ranked on the fit
-  set with written tie-break rules, so nobody can nudge the pick after
-  seeing held-out numbers
+Why it matters here: the confidence **gates the fallback**. If the number
+lies, the gate opens and closes at the wrong times.
+
+- The raw probabilities come out overconfident, a common trait of small
+  models. The fix is one number: divide every logit by a **temperature**
+  before normalizing, which softens the distribution without ever changing
+  which route is on top
+- The temperature is fitted by a sweep: try values from 0.5 to 5, measure
+  the gap between stated confidence and actual accuracy (calibration
+  error), keep the value with the smallest gap. Shipped: **1.25**
+- With confidence now meaningful, the floor works: below
+  `min_confidence = 0.45` the router stops guessing and takes
+  `search+tools`, the one route that cannot fail for want of context. It
+  costs more, deliberately: an unsure router should spend tokens, never
+  guess
 
 ## The Results {.smaller}
 
-The real table, from the design doc (Ollama, MiniCPM5-2B Q4_K_M):
+The real table from the design doc: old rule (`top`) against new rule
+(`marginal`), each scored on both halves of the labeled set:
 
 | rule | set | accuracy | missed | extra search | extra tools |
 |------|-----|----------|--------|--------------|-------------|
@@ -251,54 +259,72 @@ The real table, from the design doc (Ollama, MiniCPM5-2B Q4_K_M):
 | `top`, floor 0.45 | held-out | 0.761 | 0.196 | 0.130 | 0.000 |
 | `marginal` 0.30/0.25 | held-out | 0.739 | **0.152** | 0.174 | 0.022 |
 
-One sentence before the next slide reads it: the headline metric and the
-harm metric disagree.
+Column by column: **accuracy** is exact route matches against the labels.
+**missed** is the share of turns denied a search or tool they needed, the
+failure from the email turn. **extra search / extra tools** are the
+over-offers: the turn got something it did not need and paid for it.
+
+The headline metric and the harm metric disagree, and the next slide is
+about which one to believe.
 
 ## How to Read That Table {.smaller}
 
 - Accuracy went **down**, 0.761 to 0.739 held-out. On accuracy alone, the
   change is rejected
-- The metric that encodes the actual failure, **missed**, dropped on both
-  sets: 0.196 to 0.152 held-out
-- The expensive over-offer (tools) stayed within 3 points
+- **missed** dropped on both sets, 0.196 to 0.152 held-out. These are the
+  turns that got no chance: a missed turn lacks the tool or search it
+  needs, so it **cannot** succeed no matter how good the model is
+- The two failures are not symmetric, and that is the whole argument. An
+  over-offered turn still succeeds, at extra cost in tokens and latency. A
+  missed turn fails, period. `marginal` trades a few exact matches and some
+  cheap over-offers for fewer unwinnable turns
+- The guardrail on the trade: the expensive over-offer (**extra tools**)
+  stayed within 3 points, so the cost side stayed bounded
 
 The eval is only as good as the metric that matches the harm. Defining
 "missed" was the real work; the arithmetic after it is bookkeeping.
 
 ## Read the Rows, Not Just the Means {.smaller}
 
-The chosen thresholds route 14 of 153 questions differently from `top`.
-The doc reads every one:
+Aggregates summarize; rows explain. The new rule routes 14 of 153
+questions differently, and the doc reads every one of them:
 
-- **Seven improve**: *"text alex that I'm on my way"* finally gets tools;
-  *"look up reviews for the books on my reading list"* gets both halves it
-  needs
-- **Six get worse**: four gain a search they do not need; *"what documents
-  do you have indexed"* gains unneeded tools; one question loses its tools
-- **One is a wash**, failing differently under both rules
+| Question | `top` sent it to | `marginal` sends it to | Verdict |
+|----------|------------------|------------------------|---------|
+| "text alex that I'm on my way" | search (no tools) | search+tools | fixed |
+| "look up reviews for the books on my reading list" | search | search+tools | fixed |
+| "what documents do you have indexed" | its route | gains unneeded tools | worse |
+| "what's changed in upstream ollama since..." | fallback (had tools) | loses its tools | worse |
 
-Week 7 said a submission with honest middling numbers and sharp
-explanations wins. This is what that looks like in a design doc: the
-aggregate says "ship," and the row-level reading says exactly what the
-regression risk is, by name.
+Overall: **seven improve, six get worse, one fails differently**. The
+aggregate says ship; the row reading names the regression risk question by
+question, so the next failure report is already half-diagnosed.
+
+This is week 7's "honest middling numbers with sharp explanations," as
+practiced in a real design doc.
 
 ## The Decision, and Its Honesty {.smaller}
 
-`marginal` shipped, behind a config flag, with `top` still available. The
-shape of the deciding sentence is worth copying in your EVALS.md:
+How it shipped: as a **config choice**, `decision = "marginal"`, with the
+old rule one line away. A reversible ship means a wrong call costs an edit,
+and both rules stay measurable side by side forever.
+
+The deciding sentence, worth copying in your EVALS.md:
 
 > `marginal` lowers the missed rate on both sets and keeps tool over-offer
 > within 3 points, so it ships. On 46 held-out rows the gain is 2 turns,
 > it costs one exact match -- **and the email question that prompted it
 > already gets Gmail tools from a rule after the router.**
 
-That last clause is the honest footnote: by ship time, the original
-motivating failure had also been fixed elsewhere. The eval still justified
-the change on the class of failures rather than on the one anecdote.
+Read that last clause again. By ship time, a different change had already
+fixed the original motivating turn. A dishonest doc hides that; this one
+states it, because the eval justified the change on the **class** of
+failures, and the class is still real.
 
-- The doc ends with its own next step: *"revisit with labelled turns from
-  real transcripts"* -- the loop pointing back at the traces
-- Decisions age, so write down what would reopen them
+- Why the footnote matters: the next maintainer needs to know what evidence
+  the decision rests on, or they cannot tell when it has expired
+- The doc names its own expiry condition: *"revisit with labelled turns
+  from real transcripts."* Decisions age; write down what reopens them
 
 ## Guarding It: the Regression Suite {.smaller}
 
@@ -313,15 +339,21 @@ grade with code:
           "answer_any": ["Canberra"]}}
 ```
 
-One dated results file per run. A real one, 2026-09-25: **36 of 38 passed**,
-and the two failures share a name (`web-go`, a web question that routed to
-`tools`), so the morning after a change starts with a specific question,
-not a feeling.
+Each question carries assertions code can grade: the expected **route**,
+whether tools should fire (`no_tools`), and strings the answer must contain
+(`answer_any`). One dated results file per run. A real run, 2026-09-25:
+**36 of 38 passed**, and both failures share a name, `web-go`, so the
+morning after a change starts with a specific question instead of a
+feeling.
 
-- Route assertions, tool-use assertions (`no_tools`), substring answer
-  checks: all code, all local, run after every change
-- 38 questions across nine categories: direct, retrieval, files, web, MCP,
-  session memory, date math, commands, profile
+Two regression layers now guard the router, and they test different things:
+
+- **`routes.jsonl` + the harness** test the router *in isolation*: given
+  this question, is the route right? Fast, surgical, runs on router changes
+- **`meru check`** tests the *whole agent* end to end: route, tools, and
+  final answer together, 38 questions across nine categories. Runs after
+  any change, because a prompt edit or a model upgrade can break a turn
+  without touching the router
 
 ## What Cheap Checks Do Not Catch {.smaller}
 

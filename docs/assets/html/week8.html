@@ -1278,16 +1278,17 @@ Amit Arora
 </section>
 <section id="calibration-for-a-classifier" class="slide level2 smaller">
 <h2>Calibration, for a Classifier</h2>
-<p>Week 7 calibrated judges against humans. The router’s confidence gates its fallback, so the confidence has to <em>mean something</em>:</p>
+<p><strong>Calibrated</strong> means the confidence number is honest: of all the turns where the router says 0.9, about nine in ten should actually be right. An overconfident router says 0.9 and is right six times in ten.</p>
+<p>Why it matters here: the confidence <strong>gates the fallback</strong>. If the number lies, the gate opens and closes at the wrong times.</p>
 <ul>
-<li>Raw probabilities come out overconfident, so each logit is divided by a <strong>temperature</strong>, fitted by sweeping for the lowest calibration error. Shipped value: 1.25</li>
-<li>Below <code>min_confidence = 0.45</code> the router takes the fallback, <code>search+tools</code>: the one route that cannot fail for want of context. An unsure router should spend tokens rather than guess</li>
-<li>The threshold sweep is discipline in code: 49 pairs, ranked on the fit set with written tie-break rules, so nobody can nudge the pick after seeing held-out numbers</li>
+<li>The raw probabilities come out overconfident, a common trait of small models. The fix is one number: divide every logit by a <strong>temperature</strong> before normalizing, which softens the distribution without ever changing which route is on top</li>
+<li>The temperature is fitted by a sweep: try values from 0.5 to 5, measure the gap between stated confidence and actual accuracy (calibration error), keep the value with the smallest gap. Shipped: <strong>1.25</strong></li>
+<li>With confidence now meaningful, the floor works: below <code>min_confidence = 0.45</code> the router stops guessing and takes <code>search+tools</code>, the one route that cannot fail for want of context. It costs more, deliberately: an unsure router should spend tokens, never guess</li>
 </ul>
 </section>
 <section id="the-results" class="slide level2 smaller">
 <h2>The Results</h2>
-<p>The real table, from the design doc (Ollama, MiniCPM5-2B Q4_K_M):</p>
+<p>The real table from the design doc: old rule (<code>top</code>) against new rule (<code>marginal</code>), each scored on both halves of the labeled set:</p>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -1334,37 +1335,78 @@ Amit Arora
 </tr>
 </tbody>
 </table>
-<p>One sentence before the next slide reads it: the headline metric and the harm metric disagree.</p>
+<p>Column by column: <strong>accuracy</strong> is exact route matches against the labels. <strong>missed</strong> is the share of turns denied a search or tool they needed, the failure from the email turn. <strong>extra search / extra tools</strong> are the over-offers: the turn got something it did not need and paid for it.</p>
+<p>The headline metric and the harm metric disagree, and the next slide is about which one to believe.</p>
 </section>
 <section id="how-to-read-that-table" class="slide level2 smaller">
 <h2>How to Read That Table</h2>
 <ul>
 <li>Accuracy went <strong>down</strong>, 0.761 to 0.739 held-out. On accuracy alone, the change is rejected</li>
-<li>The metric that encodes the actual failure, <strong>missed</strong>, dropped on both sets: 0.196 to 0.152 held-out</li>
-<li>The expensive over-offer (tools) stayed within 3 points</li>
+<li><strong>missed</strong> dropped on both sets, 0.196 to 0.152 held-out. These are the turns that got no chance: a missed turn lacks the tool or search it needs, so it <strong>cannot</strong> succeed no matter how good the model is</li>
+<li>The two failures are not symmetric, and that is the whole argument. An over-offered turn still succeeds, at extra cost in tokens and latency. A missed turn fails, period. <code>marginal</code> trades a few exact matches and some cheap over-offers for fewer unwinnable turns</li>
+<li>The guardrail on the trade: the expensive over-offer (<strong>extra tools</strong>) stayed within 3 points, so the cost side stayed bounded</li>
 </ul>
 <p>The eval is only as good as the metric that matches the harm. Defining “missed” was the real work; the arithmetic after it is bookkeeping.</p>
 </section>
 <section id="read-the-rows-not-just-the-means" class="slide level2 smaller">
 <h2>Read the Rows, Not Just the Means</h2>
-<p>The chosen thresholds route 14 of 153 questions differently from <code>top</code>. The doc reads every one:</p>
-<ul>
-<li><strong>Seven improve</strong>: <em>“text alex that I’m on my way”</em> finally gets tools; <em>“look up reviews for the books on my reading list”</em> gets both halves it needs</li>
-<li><strong>Six get worse</strong>: four gain a search they do not need; <em>“what documents do you have indexed”</em> gains unneeded tools; one question loses its tools</li>
-<li><strong>One is a wash</strong>, failing differently under both rules</li>
-</ul>
-<p>Week 7 said a submission with honest middling numbers and sharp explanations wins. This is what that looks like in a design doc: the aggregate says “ship,” and the row-level reading says exactly what the regression risk is, by name.</p>
+<p>Aggregates summarize; rows explain. The new rule routes 14 of 153 questions differently, and the doc reads every one of them:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 29%">
+<col style="width: 39%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th><code>top</code> sent it to</th>
+<th><code>marginal</code> sends it to</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“text alex that I’m on my way”</td>
+<td>search (no tools)</td>
+<td>search+tools</td>
+<td>fixed</td>
+</tr>
+<tr class="even">
+<td>“look up reviews for the books on my reading list”</td>
+<td>search</td>
+<td>search+tools</td>
+<td>fixed</td>
+</tr>
+<tr class="odd">
+<td>“what documents do you have indexed”</td>
+<td>its route</td>
+<td>gains unneeded tools</td>
+<td>worse</td>
+</tr>
+<tr class="even">
+<td>“what’s changed in upstream ollama since…”</td>
+<td>fallback (had tools)</td>
+<td>loses its tools</td>
+<td>worse</td>
+</tr>
+</tbody>
+</table>
+<p>Overall: <strong>seven improve, six get worse, one fails differently</strong>. The aggregate says ship; the row reading names the regression risk question by question, so the next failure report is already half-diagnosed.</p>
+<p>This is week 7’s “honest middling numbers with sharp explanations,” as practiced in a real design doc.</p>
 </section>
 <section id="the-decision-and-its-honesty" class="slide level2 smaller">
 <h2>The Decision, and Its Honesty</h2>
-<p><code>marginal</code> shipped, behind a config flag, with <code>top</code> still available. The shape of the deciding sentence is worth copying in your EVALS.md:</p>
+<p>How it shipped: as a <strong>config choice</strong>, <code>decision = &quot;marginal&quot;</code>, with the old rule one line away. A reversible ship means a wrong call costs an edit, and both rules stay measurable side by side forever.</p>
+<p>The deciding sentence, worth copying in your EVALS.md:</p>
 <blockquote>
 <p><code>marginal</code> lowers the missed rate on both sets and keeps tool over-offer within 3 points, so it ships. On 46 held-out rows the gain is 2 turns, it costs one exact match – <strong>and the email question that prompted it already gets Gmail tools from a rule after the router.</strong></p>
 </blockquote>
-<p>That last clause is the honest footnote: by ship time, the original motivating failure had also been fixed elsewhere. The eval still justified the change on the class of failures rather than on the one anecdote.</p>
+<p>Read that last clause again. By ship time, a different change had already fixed the original motivating turn. A dishonest doc hides that; this one states it, because the eval justified the change on the <strong>class</strong> of failures, and the class is still real.</p>
 <ul>
-<li>The doc ends with its own next step: <em>“revisit with labelled turns from real transcripts”</em> – the loop pointing back at the traces</li>
-<li>Decisions age, so write down what would reopen them</li>
+<li>Why the footnote matters: the next maintainer needs to know what evidence the decision rests on, or they cannot tell when it has expired</li>
+<li>The doc names its own expiry condition: <em>“revisit with labelled turns from real transcripts.”</em> Decisions age; write down what reopens them</li>
 </ul>
 </section>
 <section id="guarding-it-the-regression-suite" class="slide level2 smaller">
@@ -1374,10 +1416,11 @@ Amit Arora
 <span id="cb4-2"><a href aria-label="2"></a> <span class="dt">&quot;question&quot;</span><span class="fu">:</span> <span class="st">&quot;What is the capital of Australia?&quot;</span><span class="fu">,</span></span>
 <span id="cb4-3"><a href aria-label="3"></a> <span class="dt">&quot;want&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;route&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;direct&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;no_tools&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
 <span id="cb4-4"><a href aria-label="4"></a>          <span class="dt">&quot;answer_any&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;Canberra&quot;</span><span class="ot">]</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>One dated results file per run. A real one, 2026-09-25: <strong>36 of 38 passed</strong>, and the two failures share a name (<code>web-go</code>, a web question that routed to <code>tools</code>), so the morning after a change starts with a specific question, not a feeling.</p>
+<p>Each question carries assertions code can grade: the expected <strong>route</strong>, whether tools should fire (<code>no_tools</code>), and strings the answer must contain (<code>answer_any</code>). One dated results file per run. A real run, 2026-09-25: <strong>36 of 38 passed</strong>, and both failures share a name, <code>web-go</code>, so the morning after a change starts with a specific question instead of a feeling.</p>
+<p>Two regression layers now guard the router, and they test different things:</p>
 <ul>
-<li>Route assertions, tool-use assertions (<code>no_tools</code>), substring answer checks: all code, all local, run after every change</li>
-<li>38 questions across nine categories: direct, retrieval, files, web, MCP, session memory, date math, commands, profile</li>
+<li><strong><code>routes.jsonl</code> + the harness</strong> test the router <em>in isolation</em>: given this question, is the route right? Fast, surgical, runs on router changes</li>
+<li><strong><code>meru check</code></strong> tests the <em>whole agent</em> end to end: route, tools, and final answer together, 38 questions across nine categories. Runs after any change, because a prompt edit or a model upgrade can break a turn without touching the router</li>
 </ul>
 </section>
 <section id="what-cheap-checks-do-not-catch" class="slide level2 smaller">
