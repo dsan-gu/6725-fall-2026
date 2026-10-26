@@ -40,15 +40,14 @@ Week 7 closed with a claim:
 > regressions block bad deploys, and production generates tomorrow's eval
 > cases. Teams that ship reliable agents are running this loop.
 
-Today is that claim with the receipts. One real agent, one real failure
-pulled from its logs, and every artifact of the loop that fixed it: the
+Today tests that claim on a real agent: one failure pulled from its logs, and every artifact of the loop that fixed it: the
 trace line, the labeled set, the harness, the calibration, the decision
 table, the regression suite, and the honest footnotes.
 
 - Everything shown today is in a public repo you can read:
   [github.com/aarora79/meru](https://github.com/aarora79/meru)
-- And the model making the failing decision is an old friend: MiniCPM5-2B,
-  the same 2B model from weeks 2 through 7
+- The model making the failing decision is MiniCPM5-2B, the same 2B model
+  you have used since week 2
 
 # Case Study: Improving a Real Agent from Its Traces
 
@@ -144,10 +143,10 @@ Requests against connected servers were systematically starved of their
 tools when the model's probability mass split between `tools` and
 `search+tools`.
 
-- A class, not an anecdote -- so it earns an eval, not a patch
-- Note what did NOT happen: nobody edited the prompt and eyeballed two
-  answers. The failure got a name, and the name became a measurable claim:
-  *the top-pick rule wastes summed evidence*
+- The failure is a class, so it earns an eval before any patch
+- Nobody edited the prompt and eyeballed two answers. The failure got a
+  name, and the name became a measurable claim: *the top-pick rule wastes
+  summed evidence*
 
 ## The Design Constraint: a 2B Router {.smaller}
 
@@ -161,13 +160,12 @@ wrong answer indistinguishable from a right one.
 Meru's router does not parse what the model writes. It asks for **one
 token** with log probabilities, options lettered A through D:
 
-- The model physically cannot invent a route: the answer is read from the
-  probabilities of four fixed letters, not from prose
+- The model cannot invent a route: the answer is read from the
+  probabilities of four fixed letters rather than from whatever it wrote
 - One decoded token means the turn pays for prompt evaluation and nothing
   else: the route costs milliseconds
-- And the probabilities are the point: the decision rule gets a
-  *distribution*, not a verdict -- which is exactly what the failing turn
-  needed
+- The decision rule receives a *distribution* over the four routes rather
+  than a single verdict, and the failing turn needed that distribution
 
 ## The Hypothesis {.smaller}
 
@@ -184,8 +182,8 @@ of the same four numbers:
 On the failing turn: P(tools) = 0.260 + 0.218 = **0.478**. The evidence was
 there all along; the rule just had to add it up.
 
-A hypothesis is not a fix. Before any code ships, the week 7 question: **how
-would you know it is better?**
+Before any code ships, the week 7 question applies: **how would you know
+it is better?**
 
 ## Measure First: the Labeled Set {.smaller}
 
@@ -306,8 +304,8 @@ regression risk is, by name.
 
 ## The Decision, and Its Honesty {.smaller}
 
-`marginal` shipped -- behind a config flag, with `top` still available. The
-deciding sentence structure is worth stealing for your EVALS.md:
+`marginal` shipped, behind a config flag, with `top` still available. The
+shape of the deciding sentence is worth copying in your EVALS.md:
 
 > `marginal` lowers the missed rate on both sets and keeps tool over-offer
 > within 3 points, so it ships. On 46 held-out rows the gain is 2 turns,
@@ -316,11 +314,11 @@ deciding sentence structure is worth stealing for your EVALS.md:
 
 That last clause is the honest footnote: by ship time, the original
 motivating failure had also been fixed elsewhere. The eval still justified
-the change on the class of failures, not the anecdote.
+the change on the class of failures rather than on the one anecdote.
 
 - The doc ends with its own next step: *"revisit with labelled turns from
   real transcripts"* -- the loop pointing back at the traces
-- Decisions age. Write down what would reopen them
+- Decisions age, so write down what would reopen them
 
 ## Guarding It: the Regression Suite {.smaller}
 
@@ -370,7 +368,7 @@ The check **passed** while the answer hallucinated a date.
 
 Every box exists in the repo you can read: the sessions folder, the email
 turn, the grep, `routes.jsonl`, `make router-eval`, the `marginal` rule
-behind its flag, and `meru check`. This loop is the job.
+behind its flag, and `meru check`. Running this loop is the recurring work of shipping agents.
 
 ## What It Cost {.smaller}
 
