@@ -167,23 +167,28 @@ token** with log probabilities, options lettered A through D:
 - The decision rule receives a *distribution* over the four routes rather
   than a single verdict, and the failing turn needed that distribution
 
-## The Hypothesis {.smaller}
+## The Fix: Read the Same Numbers Differently {.smaller}
 
-The `top` rule takes the most likely letter and falls back when the winner
-is below a confidence floor. The failing turn suggests a different reading
-of the same four numbers:
+::: {.idea-callout}
+**What was wrong:** the `top` rule looked only at the single most likely
+route, so when the model's evidence split between `tools` (0.260) and
+`search+tools` (0.218), both lost to `search` (0.473) and the turn ran
+without the Gmail tools it needed.
+**What fixed it:** a new decision rule, `marginal`, that sums the
+evidence: P(tools) = P(C) + P(D) = **0.478**, over a 0.25 threshold, so
+the turn gets its tools. Shipped behind `decision = "marginal"` in config.
+:::
+
+How `marginal` reads the same four probabilities:
 
 - B (`search`) and D (`search+tools`) both mean *search*, so
-  **P(search) = P(B) + P(D)**
-- C (`tools`) and D both mean *tools*, so **P(tools) = P(C) + P(D)**
-- Ask two yes/no questions against two thresholds; two yeses give
+  **P(search) = P(B) + P(D)**; C and D both mean *tools*, so
+  **P(tools) = P(C) + P(D)**
+- Two yes/no questions against two thresholds: two yeses give
   `search+tools`, one gives that half, none gives `direct`
 
-On the failing turn: P(tools) = 0.260 + 0.218 = **0.478**. The evidence was
-there all along; the rule just had to add it up.
-
-Before any code ships, the week 7 question applies: **how would you know
-it is better?**
+Before that rule could ship, the week 7 question applied: **how would you
+know it is better?** The next five slides are that answer.
 
 ## Measure First: the Labeled Set {.smaller}
 

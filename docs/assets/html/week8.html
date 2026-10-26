@@ -1183,16 +1183,17 @@ Amit Arora
 <li>The decision rule receives a <em>distribution</em> over the four routes rather than a single verdict, and the failing turn needed that distribution</li>
 </ul>
 </section>
-<section id="the-hypothesis" class="slide level2 smaller">
-<h2>The Hypothesis</h2>
-<p>The <code>top</code> rule takes the most likely letter and falls back when the winner is below a confidence floor. The failing turn suggests a different reading of the same four numbers:</p>
+<section id="the-fix-read-the-same-numbers-differently" class="slide level2 smaller">
+<h2>The Fix: Read the Same Numbers Differently</h2>
+<div class="idea-callout">
+<p><strong>What was wrong:</strong> the <code>top</code> rule looked only at the single most likely route, so when the model’s evidence split between <code>tools</code> (0.260) and <code>search+tools</code> (0.218), both lost to <code>search</code> (0.473) and the turn ran without the Gmail tools it needed. <strong>What fixed it:</strong> a new decision rule, <code>marginal</code>, that sums the evidence: P(tools) = P(C) + P(D) = <strong>0.478</strong>, over a 0.25 threshold, so the turn gets its tools. Shipped behind <code>decision = &quot;marginal&quot;</code> in config.</p>
+</div>
+<p>How <code>marginal</code> reads the same four probabilities:</p>
 <ul>
-<li>B (<code>search</code>) and D (<code>search+tools</code>) both mean <em>search</em>, so <strong>P(search) = P(B) + P(D)</strong></li>
-<li>C (<code>tools</code>) and D both mean <em>tools</em>, so <strong>P(tools) = P(C) + P(D)</strong></li>
-<li>Ask two yes/no questions against two thresholds; two yeses give <code>search+tools</code>, one gives that half, none gives <code>direct</code></li>
+<li>B (<code>search</code>) and D (<code>search+tools</code>) both mean <em>search</em>, so <strong>P(search) = P(B) + P(D)</strong>; C and D both mean <em>tools</em>, so <strong>P(tools) = P(C) + P(D)</strong></li>
+<li>Two yes/no questions against two thresholds: two yeses give <code>search+tools</code>, one gives that half, none gives <code>direct</code></li>
 </ul>
-<p>On the failing turn: P(tools) = 0.260 + 0.218 = <strong>0.478</strong>. The evidence was there all along; the rule just had to add it up.</p>
-<p>Before any code ships, the week 7 question applies: <strong>how would you know it is better?</strong></p>
+<p>Before that rule could ship, the week 7 question applied: <strong>how would you know it is better?</strong> The next five slides are that answer.</p>
 </section>
 <section id="measure-first-the-labeled-set" class="slide level2 smaller">
 <h2>Measure First: the Labeled Set</h2>
