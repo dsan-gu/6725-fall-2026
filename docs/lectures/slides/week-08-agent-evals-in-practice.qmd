@@ -57,20 +57,22 @@ table, the regression suite, and the honest footnotes.
 runs entirely on one machine: local models through Ollama, the user's own
 notes, mail, repos, and tools, with no path to a cloud model.
 
-What matters for today is its shape, which is the shape you built in weeks
-5 and 6:
+Its shape is the shape you built in weeks 5 and 6:
 
-- An **agent loop**: a model called in a loop by code that can search files
-  and call MCP tools
-- A **router** in front of it: every turn starts with a 2B model deciding
-  one of four routes -- `direct` (just answer), `search` (read the user's
-  files first), `tools` (call MCP tools), or `search+tools` (both)
-- **Everything is logged**: every turn and every tool call, to plain JSONL
-  files on disk
+- An **agent loop**: a model, file search, and MCP tools
+- A **router** in front of it: a 2B model picks one of four routes on
+  every turn
+- **Everything is logged** to plain JSONL files on disk
 
-The router is the case study. It is an LLM making a decision on every
-single turn, which means it fails like an LLM, and it needs evals like
-everything else you have built.
+The router is today's case study: an LLM making a decision on every turn,
+so it fails like an LLM and needs evals like everything else you built.
+
+## One Turn Through Meru {.smaller}
+
+![](img/meru-turn-flow.svg){height=400 fig-align="center"}
+
+The router's choice decides what the agent loop is allowed to touch. A
+wrong route starves the turn before the first tool call.
 
 ## Where the Traces Live {.smaller}
 
@@ -90,11 +92,9 @@ No Phoenix here: one JSONL file per conversation, under
 ```
 
 - The week 7 vocabulary maps straight on: the file is a session, the
-  `trace_id` ties a turn's records together, tool calls land as their own
-  lines with args, outcome, and duration
-- The four pillars survive the tooling change: a flat file the owner can
-  `grep` is a legitimate trace store. The standard matters less than the
-  habit of recording everything
+  `trace_id` ties a turn's records together, and tool calls land as their
+  own lines with args, outcome, and duration
+- A flat file the owner can `grep` is a legitimate trace store
 
 ## Mining Traces Is Ten Lines {.smaller}
 
@@ -120,52 +120,43 @@ print(routes, sorted(slow)[-5:])
   anyway
 - Failure hunting starts here, with a loop over your own logs
 
-## A Real Failure, Verbatim {.smaller}
+## A Real Failure, as a Sequence {.smaller}
 
-From a real turn in the logs: *"what was the last email I sent?"* The
-router's four probabilities, and what each decision rule does with them:
+From a real turn in the logs: *"what was the last email I sent?"*
 
-![](img/router-probs.svg){height=400 fig-align="center"}
+![](img/failing-turn-seq.svg){height=400 fig-align="center"}
 
-The answer evidence was split across two letters that both mean "use
-tools." The rule that only looks at the single winner threw that evidence
-away, and the turn went to search with no Gmail tools attached.
+## The Same Turn, in Numbers {.smaller}
+
+Why did the router say `search`? Its four probabilities for that turn:
+
+![](img/router-probs.svg){height=420 fig-align="center"}
 
 ## Classify Before You Fix {.smaller}
 
-Week 7's failure taxonomy, applied: this is a **wrong route** failure (the
-agent-level cousin of wrong tool), and one trace is an anecdote, so the
-first move is to ask whether it is a class.
+One trace is an anecdote. The first move is to ask whether it is a class:
 
-Grepping the transcripts for turns that mention mail, calendars, and
-messages found siblings: *"text alex that I'm on my way"* routed to search.
-Requests against connected servers were systematically starved of their
-tools when the model's probability mass split between `tools` and
-`search+tools`.
+- In week 7's taxonomy this is a **wrong route** failure, the agent-level
+  cousin of wrong tool
+- A `grep` over the transcripts found siblings: *"text alex that I'm on my
+  way"* also routed to search. Tool questions were being starved whenever
+  the probability mass split between `tools` and `search+tools`
+- The failure now has a name, and the name is a measurable claim: **the
+  top-pick rule wastes summed evidence**
 
-- The failure is a class, so it earns an eval before any patch
-- Nobody edited the prompt and eyeballed two answers. The failure got a
-  name, and the name became a measurable claim: *the top-pick rule wastes
-  summed evidence*
+Nobody edited the prompt and eyeballed two answers. The class earns an
+eval before any patch.
 
 ## The Design Constraint: a 2B Router {.smaller}
 
-Why a router this small fails this way is worth two minutes, because it is
-the week 5 and 6 lesson again.
+Asking a 2B model for JSON (`{"route": "search"}`) fails three ways:
+malformed JSON, an invented fifth route, and a confident wrong answer that
+looks like a right one. Meru's router asks for one token instead:
 
-Asking a 2B model to answer with JSON (`{"route": "search"}`) has three
-failure modes: malformed JSON, an invented fifth route, and a confident
-wrong answer indistinguishable from a right one.
+![](img/router-mechanism.svg){height=350 fig-align="center"}
 
-Meru's router does not parse what the model writes. It asks for **one
-token** with log probabilities, options lettered A through D:
-
-- The model cannot invent a route: the answer is read from the
-  probabilities of four fixed letters rather than from whatever it wrote
-- One decoded token means the turn pays for prompt evaluation and nothing
-  else: the route costs milliseconds
-- The decision rule receives a *distribution* over the four routes rather
-  than a single verdict, and the failing turn needed that distribution
+The decision rule receives a *distribution* over the four routes, and the
+failing turn needed that distribution.
 
 ## The Fix: Read the Same Numbers Differently {.smaller}
 
@@ -207,68 +198,47 @@ Real rows:
               "a": "A mutex guards shared memory ..."}]}
 ```
 
-- Follow-ups carry their conversation history, because routers see
-  histories; 18 rows ask about connected servers (mail, calendar, a git
-  repo); 9 ask about images
-- This is week 7's golden-set discipline: small, real, labeled, and
-  deliberately including the hard tiers
+- Follow-ups carry their history; 18 rows ask about connected servers; 9
+  ask about images. Small, real, labeled, and the hard tiers are in
 
 ## Golden-Set Discipline: the Split {.smaller}
 
-The set is split once, by a fixed rule: of every ten rows with the same
-route, the 3rd, 6th and 9th go to a **held-out** set (48 rows); the rest
-form the **fit** set (114).
+![](img/labeled-split.svg){height=320 fig-align="center"}
 
-- **New rows go at the end of the file**, so rows already in the set never
-  switch sides. The split survives growth -- this is "version your golden
-  set like code," enforced by a convention a reviewer can check
-- Thresholds and temperature are tuned on the fit set alone. **The held-out
-  numbers play no part in any pick.** They exist to answer one question:
-  did the tuning generalize, or did it memorize the fit set?
-- 48 held-out rows is small, and the doc says so where it matters: the
-  calibration metric is "too jumpy" to fit on them, so the temperature fit
-  uses all rows -- defensible only because temperature cannot change which
-  letter wins
+- Tune on the fit set; **held-out numbers play no part in any pick**. They
+  answer one question: did the tuning generalize?
+- This is "version your golden set like code," enforced by a convention a
+  reviewer can check
 
 ## The Harness {.smaller}
 
 `make router-eval` runs every question through the real router against the
 local Ollama and reports, per set:
 
-| What | Why it is there |
-|------|-----------------|
-| accuracy, and per-route precision and recall | the headline, and where it hides |
-| the confusion matrix | *which* routes eat which |
-| **missed rate** | turns whose route lacks a search or tool the question needs -- the failure that started all this, promoted to a first-class metric |
-| two **over-offer rates**, search and tools separately | extra tools cost more than extra search: every schema lengthens the prompt and worsens the pick |
-| mean confidence when right vs. wrong, and calibration error | can the confidence number be trusted? |
-| latency, p50 and p95 | the router runs on every turn |
+| What it reports | Why |
+|-----------------|-----|
+| accuracy, per-route precision and recall, confusion matrix | the headline, and where it hides |
+| **missed rate** | the route lacks a search or tool the question needs: the failure that started all this, promoted to a metric |
+| two **over-offer rates** | extra tools cost more than extra search, so they are counted apart |
+| calibration error, latency p50/p95 | can the confidence be trusted, and is the router fast enough to run every turn |
 
-- No LLM judge anywhere: the labels exist, so every metric is **code** --
-  cheap, deterministic, rerunnable on every change
-- The harness keeps each raw model completion and replays the arithmetic
-  offline, so one pass over the model scores every temperature and
-  threshold
+- No LLM judge anywhere: labels exist, so every metric is **code**, and the
+  whole harness reruns in minutes on a laptop
 
 ## Calibration, for a Classifier {.smaller}
 
-Week 7 calibrated judges against humans. The router needs the same
-treatment: its confidence gates the fallback, so the confidence has to
-*mean something*.
+Week 7 calibrated judges against humans. The router's confidence gates its
+fallback, so the confidence has to *mean something*:
 
-- The raw probabilities come out overconfident, so each logit is divided by
-  a **temperature** before normalizing -- fitted by sweeping 0.5 to 5 and
-  picking the lowest expected calibration error. The shipped value: 1.25
-- The fit uses all 162 rows, and the doc defends it in one line:
-  temperature never changes which letter wins, so fitting it everywhere
-  leaks nothing into the accuracy numbers
-- Below the floor (`min_confidence = 0.45`), the router takes the fallback:
-  `search+tools`, the only route that cannot fail for want of context. An
+- Raw probabilities come out overconfident, so each logit is divided by a
+  **temperature**, fitted by sweeping for the lowest calibration error.
+  Shipped value: 1.25
+- Below `min_confidence = 0.45` the router takes the fallback,
+  `search+tools`: the one route that cannot fail for want of context. An
   unsure router should spend tokens rather than guess
-
-The threshold sweep that follows is pure discipline: 49 pairs ranked on the
-fit set with written tie-break rules, so the choice is reproducible and
-nobody can nudge it after seeing held-out numbers.
+- The threshold sweep is discipline in code: 49 pairs, ranked on the fit
+  set with written tie-break rules, so nobody can nudge the pick after
+  seeing held-out numbers
 
 ## The Results {.smaller}
 
@@ -281,14 +251,19 @@ The real table, from the design doc (Ollama, MiniCPM5-2B Q4_K_M):
 | `top`, floor 0.45 | held-out | 0.761 | 0.196 | 0.130 | 0.000 |
 | `marginal` 0.30/0.25 | held-out | 0.739 | **0.152** | 0.174 | 0.022 |
 
-How to read it, because the headline misleads:
+One sentence before the next slide reads it: the headline metric and the
+harm metric disagree.
 
-- Accuracy went **down** (0.761 to 0.739 held-out). If accuracy were the
-  only metric, the change would be rejected
-- But the metric that encodes the actual failure -- **missed** -- dropped on
-  both sets, and the expensive over-offer (tools) stayed within 3 points
-- The eval is only as good as the metric that matches the harm. Defining
-  "missed" was the real work; the arithmetic after it is bookkeeping
+## How to Read That Table {.smaller}
+
+- Accuracy went **down**, 0.761 to 0.739 held-out. On accuracy alone, the
+  change is rejected
+- The metric that encodes the actual failure, **missed**, dropped on both
+  sets: 0.196 to 0.152 held-out
+- The expensive over-offer (tools) stayed within 3 points
+
+The eval is only as good as the metric that matches the harm. Defining
+"missed" was the real work; the arithmetic after it is bookkeeping.
 
 ## Read the Rows, Not Just the Means {.smaller}
 

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 330" width="880" height="330">
+<defs>
+<marker id="arrow-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="arrow-amber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+<marker id="arrow-ink" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#111827"/>
+</marker>
+</defs>
+<rect width="880" height="330" fill="white"/>
+<rect x="60" y="60" width="320" height="110" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="220" y="95" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#111827" text-anchor="middle">routes.jsonl</text>
+<text x="220" y="120" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#6b7280" text-anchor="middle">162 labeled questions</text>
+<text x="220" y="140" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7280" text-anchor="middle">34-48 per route, written like users type</text>
+<rect x="520" y="30" width="300" height="86" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="670" y="60" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">FIT SET: 114 rows</text>
+<text x="670" y="82" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7280" text-anchor="middle">tune everything here: thresholds,</text>
+<text x="670" y="99" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7280" text-anchor="middle">temperature, tie-breaks</text>
+<line x1="380" y1="95" x2="516" y2="72" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<rect x="520" y="150" width="300" height="86" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="670" y="180" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">HELD-OUT SET: 48 rows</text>
+<text x="670" y="202" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#b45309" text-anchor="middle">report here; plays no part in any</text>
+<text x="670" y="219" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#b45309" text-anchor="middle">pick. Did the tuning generalize?</text>
+<line x1="380" y1="140" x2="516" y2="190" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<text x="440" y="280" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">the split rule is fixed: of every ten rows per route, the 3rd, 6th and 9th are held out;</text>
+<text x="440" y="300" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">new rows append at the end of the file, so old rows never switch sides</text>
+</svg>
