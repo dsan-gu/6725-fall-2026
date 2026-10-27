@@ -22,6 +22,7 @@ receive per-student copies named `<repo>-<username>-fall-2026` via
 | 12 | Fine-tuning | [unsloth-finetune-ec2](https://github.com/gu-dsan6725/unsloth-finetune-ec2) | -- | Spring carryover, needs review |
 | 13 | AI Ethics | -- | -- | No lab planned |
 | 14 | Project Presentations | -- | Final project (max grade weight; abstract is a graded milestone) | Template: [final-project](https://github.com/gu-dsan6725/final-project) |
+| any | (floating) | [social-post](https://github.com/gu-dsan6725/social-post) -- 50 pts | Share one course topic publicly: LinkedIn or X post with an infographic, course context up front | Built 2026-10-26; schedule when rosters and timing suit |
 
 ## Conventions every repo follows
 
