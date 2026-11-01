@@ -209,8 +209,8 @@ a container; the container boundary is the exposure control now.
 | [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/) | Azure's serverless container platform, the Cloud Run analogue |
 | [LangSmith Deployment](https://www.langchain.com/langsmith/deployment) | Yes, LangSmith deploys agents: the SaaS formerly named LangGraph Platform, renamed in late 2025. Managed, stateful, long-running agent infrastructure; framework-agnostic, Strands included |
 
-Every row takes the same input. The container you build in the lab is the
-admission ticket to all of them.
+Every row takes the same input: the container you build in the lab runs,
+with configuration, on all of them.
 
 ## Choosing Among Them {.smaller}
 
