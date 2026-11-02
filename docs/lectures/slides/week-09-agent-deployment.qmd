@@ -87,7 +87,7 @@ as the reference:
 - **`POST /invocations`**: the request body carries the user's input, the
   response carries the agent's answer. Streaming responses go out as
   server-sent events, the same mechanism MCP used in week 6
-- **Port 8080**, and for AgentCore specifically, an **arm64 Linux image**
+- **Port 8080**
 - Session identity arrives in a header
   (`X-Amzn-Bedrock-AgentCore-Runtime-Session-Id`), and AgentCore runs **one
   container per session, each in its own microVM**, a design choice Part 2

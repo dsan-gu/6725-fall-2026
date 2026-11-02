@@ -1125,7 +1125,7 @@ Amit Arora
 <ul>
 <li><strong><code>GET /ping</code></strong>: respond 200 with <code>{&quot;status&quot;: &quot;Healthy&quot;}</code>. The platform polls it; a container that stops answering gets replaced. A busy variant (<code>HealthyBusy</code>) tells the platform a long turn is still alive</li>
 <li><strong><code>POST /invocations</code></strong>: the request body carries the user’s input, the response carries the agent’s answer. Streaming responses go out as server-sent events, the same mechanism MCP used in week 6</li>
-<li><strong>Port 8080</strong>, and for AgentCore specifically, an <strong>arm64 Linux image</strong></li>
+<li><strong>Port 8080</strong></li>
 <li>Session identity arrives in a header (<code>X-Amzn-Bedrock-AgentCore-Runtime-Session-Id</code>), and AgentCore runs <strong>one container per session, each in its own microVM</strong>, a design choice Part 2 explains</li>
 </ul>
 <p>The shape generalizes: Cloud Run, Lambda, and Kubernetes each have their own health and invoke conventions, but a container exposing these two endpoints adapts to any of them with configuration.</p>
