@@ -1135,7 +1135,7 @@ Amit Arora
 <p>The lab’s agent answers weather questions with the free, keyless <a href="https://open-meteo.com/">Open-Meteo</a> API. The tool is week 5’s pattern:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href aria-label="1"></a><span class="at">@tool</span></span>
 <span id="cb1-2"><a href aria-label="2"></a><span class="kw">def</span> get_weather(place: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="cb1-3"><a href aria-label="3"></a>    <span class="co">&quot;&quot;&quot;Current weather for a place name, for example &#39;Georgetown, DC&#39;.&quot;&quot;&quot;</span></span>
+<span id="cb1-3"><a href aria-label="3"></a>    <span class="co">&quot;&quot;&quot;Current weather for a place name, for example &#39;Washington&#39;.&quot;&quot;&quot;</span></span>
 <span id="cb1-4"><a href aria-label="4"></a>    geo <span class="op">=</span> httpx.get(</span>
 <span id="cb1-5"><a href aria-label="5"></a>        <span class="st">&quot;https://geocoding-api.open-meteo.com/v1/search&quot;</span>,</span>
 <span id="cb1-6"><a href aria-label="6"></a>        params<span class="op">=</span>{<span class="st">&quot;name&quot;</span>: place, <span class="st">&quot;count&quot;</span>: <span class="dv">1</span>},</span>
@@ -1218,7 +1218,7 @@ Amit Arora
 <span id="cb3-4"><a href aria-label="4"></a><span class="kw">COPY</span> pyproject.toml uv.lock ./</span>
 <span id="cb3-5"><a href aria-label="5"></a><span class="kw">RUN</span> <span class="ex">pip</span> install uv <span class="kw">&amp;&amp;</span> <span class="ex">uv</span> sync <span class="at">--frozen</span></span>
 <span id="cb3-6"><a href aria-label="6"></a></span>
-<span id="cb3-7"><a href aria-label="7"></a><span class="kw">COPY</span> main.py weather.py ./</span>
+<span id="cb3-7"><a href aria-label="7"></a><span class="kw">COPY</span> agent.py main.py ./</span>
 <span id="cb3-8"><a href aria-label="8"></a></span>
 <span id="cb3-9"><a href aria-label="9"></a><span class="kw">EXPOSE</span> 8080</span>
 <span id="cb3-10"><a href aria-label="10"></a><span class="kw">CMD</span> [<span class="st">&quot;uv&quot;</span>, <span class="st">&quot;run&quot;</span>, <span class="st">&quot;uvicorn&quot;</span>, <span class="st">&quot;main:app&quot;</span>, <span class="st">&quot;--host&quot;</span>, <span class="st">&quot;0.0.0.0&quot;</span>, <span class="st">&quot;--port&quot;</span>, <span class="st">&quot;8080&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1230,7 +1230,7 @@ Amit Arora
 <span id="cb4-5"><a href aria-label="5"></a><span class="co"># {&quot;status&quot;:&quot;Healthy&quot;}</span></span>
 <span id="cb4-6"><a href aria-label="6"></a><span class="ex">curl</span> <span class="at">-X</span> POST localhost:8080/invocations <span class="dt">\</span></span>
 <span id="cb4-7"><a href aria-label="7"></a>  <span class="at">-H</span> <span class="st">&#39;Content-Type: application/json&#39;</span> <span class="dt">\</span></span>
-<span id="cb4-8"><a href aria-label="8"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;prompt&quot;: &quot;Is it raining in Georgetown?&quot;}&#39;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-8"><a href aria-label="8"></a>  <span class="at">-d</span> <span class="st">&#39;{&quot;prompt&quot;: &quot;Is it raining in Washington?&quot;}&#39;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>One note for the graders of week 6: binding <code>0.0.0.0</code> is correct <strong>inside</strong> a container; the container boundary is the exposure control now.</p>
 </section>
 <section id="where-to-run-it-aws" class="slide level2 smaller">
@@ -1317,15 +1317,14 @@ Amit Arora
 </section>
 <section id="this-weeks-lab" class="slide level2 smaller">
 <h2>This Week’s Lab</h2>
-<p>Build the agent from these slides, end to end:</p>
+<p>The agent from these slides, provided complete and run end to end (<a href="https://github.com/gu-dsan6725/agent-deployment">gu-dsan6725/agent-deployment</a>, 100 points):</p>
 <ol type="1">
-<li><strong>The agent</strong>: Strands, one <code>get_weather</code> tool against Open-Meteo (keyless, free), any OpenAI-compatible model via the week 7 <code>.env</code> pattern</li>
-<li><strong>The wrapper</strong>: FastAPI serving <code>GET /ping</code> and <code>POST /invocations</code> on 8080</li>
-<li><strong>The box</strong>: a Dockerfile; build and run locally</li>
-<li><strong>Prove the contract</strong>: <code>curl</code> both endpoints, commit the transcript</li>
-<li>The deployment itself stays local (Docker on your machine); the container you produce is the artifact every platform on the landscape slides accepts</li>
+<li><strong>The agent</strong>: Strands, <code>get_weather</code> against Open-Meteo (keyless, free) plus a <code>calculator</code> tool, any OpenAI-compatible model via the week 7 <code>.env</code> pattern</li>
+<li><strong>The wrapper and the box</strong>: the FastAPI <code>/ping</code> + <code>/invocations</code> app and the Dockerfile from these slides; build and run locally with Docker Desktop or Podman</li>
+<li><strong>Prove the contract</strong>: <code>curl</code> both endpoints against the container, then break it with a wrong API key (<code>/ping</code> stays Healthy while <code>/invocations</code> fails)</li>
+<li><strong>Two questions, 50 points each</strong>: a transcript proving the end-to-end run, and one hand-written page on what you saw</li>
 </ol>
-<p>Repo details land with the lab.</p>
+<p>The deployment stays local; the container you produce is the artifact every platform on the landscape slides accepts.</p>
 </section></section>
 <section>
 <section id="part-2-agent-sandboxes" class="title-slide slide level1 center">

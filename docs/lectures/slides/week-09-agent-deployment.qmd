@@ -105,7 +105,7 @@ The lab's agent answers weather questions with the free, keyless
 ```python
 @tool
 def get_weather(place: str) -> str:
-    """Current weather for a place name, for example 'Georgetown, DC'."""
+    """Current weather for a place name, for example 'Washington'."""
     geo = httpx.get(
         "https://geocoding-api.open-meteo.com/v1/search",
         params={"name": place, "count": 1},
@@ -184,7 +184,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN pip install uv && uv sync --frozen
 
-COPY main.py weather.py ./
+COPY agent.py main.py ./
 
 EXPOSE 8080
 CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
@@ -200,7 +200,7 @@ curl localhost:8080/ping
 # {"status":"Healthy"}
 curl -X POST localhost:8080/invocations \
   -H 'Content-Type: application/json' \
-  -d '{"prompt": "Is it raining in Georgetown?"}'
+  -d '{"prompt": "Is it raining in Washington?"}'
 ```
 
 One note for the graders of week 6: binding `0.0.0.0` is correct **inside**
@@ -260,20 +260,24 @@ this course has not opened yet.
 
 ## This Week's Lab {.smaller}
 
-Build the agent from these slides, end to end:
+The agent from these slides, provided complete and run end to end
+([gu-dsan6725/agent-deployment](https://github.com/gu-dsan6725/agent-deployment),
+100 points):
 
-1. **The agent**: Strands, one `get_weather` tool against Open-Meteo
-   (keyless, free), any OpenAI-compatible model via the week 7 `.env`
-   pattern
-2. **The wrapper**: FastAPI serving `GET /ping` and `POST /invocations` on
-   8080
-3. **The box**: a Dockerfile; build and run locally
-4. **Prove the contract**: `curl` both endpoints, commit the transcript
-5. The deployment itself stays local (Docker on your machine); the
-   container you produce is the artifact every platform on the landscape
-   slides accepts
+1. **The agent**: Strands, `get_weather` against Open-Meteo (keyless,
+   free) plus a `calculator` tool, any OpenAI-compatible model via the
+   week 7 `.env` pattern
+2. **The wrapper and the box**: the FastAPI `/ping` + `/invocations`
+   app and the Dockerfile from these slides; build and run locally with
+   Docker Desktop or Podman
+3. **Prove the contract**: `curl` both endpoints against the container,
+   then break it with a wrong API key (`/ping` stays Healthy while
+   `/invocations` fails)
+4. **Two questions, 50 points each**: a transcript proving the
+   end-to-end run, and one hand-written page on what you saw
 
-Repo details land with the lab.
+The deployment stays local; the container you produce is the artifact
+every platform on the landscape slides accepts.
 
 # Part 2: Agent Sandboxes
 
