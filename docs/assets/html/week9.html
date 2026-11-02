@@ -1151,27 +1151,60 @@ Amit Arora
 <span id="cb1-16"><a href aria-label="16"></a>    <span class="cf">return</span> json.dumps({<span class="st">&quot;place&quot;</span>: spot[<span class="st">&quot;name&quot;</span>], <span class="op">**</span>wx})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Two HTTP calls: a geocoder turns the place name into coordinates, the forecast endpoint returns current conditions. Errors come back as values, the week 5 rule.</p>
 </section>
+<section id="background-what-is-fastapi" class="slide level2 smaller">
+<h2>Background: What Is FastAPI?</h2>
+<p><a href="https://fastapi.tiangolo.com/">FastAPI</a> is a Python web framework: you decorate ordinary functions and they become HTTP endpoints, served by a small server called uvicorn. That is the whole job it has here.</p>
+<p>Think of it as an <strong>add-on, bolted to the outside of your agent</strong>. Your agent code does not change:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>What lives there</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>agent.py</code></td>
+<td>The agent you already know how to write: the model client, the system prompt, the <code>get_weather</code> tool. Weeks 5 to 8 code, unchanged</td>
+</tr>
+<tr class="even">
+<td><code>main.py</code></td>
+<td>The FastAPI app: imports from <code>agent.py</code>, exposes <code>/ping</code> and <code>/invocations</code>, and nothing else</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The split is the point: <code>agent.py</code> runs fine in a terminal without <code>main.py</code>, and <code>main.py</code> knows nothing about tools or prompts</li>
+<li>Swap FastAPI for Flask or anything else and <code>agent.py</code> never notices; the contract lives entirely in the wrapper</li>
+</ul>
+</section>
 <section id="the-wrapper-main.py" class="slide level2 smaller">
 <h2>The Wrapper: main.py</h2>
-<p>FastAPI turns the agent into the two-endpoint contract. This is the entire file structure:</p>
+<p>The entire file, importing the unchanged agent:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href aria-label="1"></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
 <span id="cb2-2"><a href aria-label="2"></a><span class="im">from</span> pydantic <span class="im">import</span> BaseModel</span>
 <span id="cb2-3"><a href aria-label="3"></a><span class="im">from</span> strands <span class="im">import</span> Agent</span>
 <span id="cb2-4"><a href aria-label="4"></a></span>
-<span id="cb2-5"><a href aria-label="5"></a>app <span class="op">=</span> FastAPI()</span>
+<span id="cb2-5"><a href aria-label="5"></a><span class="im">from</span> agent <span class="im">import</span> SYSTEM_PROMPT, get_weather, make_model</span>
 <span id="cb2-6"><a href aria-label="6"></a></span>
-<span id="cb2-7"><a href aria-label="7"></a><span class="kw">class</span> Invocation(BaseModel):</span>
-<span id="cb2-8"><a href aria-label="8"></a>    prompt: <span class="bu">str</span></span>
-<span id="cb2-9"><a href aria-label="9"></a></span>
-<span id="cb2-10"><a href aria-label="10"></a><span class="at">@app.get</span>(<span class="st">&quot;/ping&quot;</span>)</span>
-<span id="cb2-11"><a href aria-label="11"></a><span class="kw">def</span> ping() <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
-<span id="cb2-12"><a href aria-label="12"></a>    <span class="cf">return</span> {<span class="st">&quot;status&quot;</span>: <span class="st">&quot;Healthy&quot;</span>}</span>
-<span id="cb2-13"><a href aria-label="13"></a></span>
-<span id="cb2-14"><a href aria-label="14"></a><span class="at">@app.post</span>(<span class="st">&quot;/invocations&quot;</span>)</span>
-<span id="cb2-15"><a href aria-label="15"></a><span class="kw">def</span> invoke(request: Invocation) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
-<span id="cb2-16"><a href aria-label="16"></a>    agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(), tools<span class="op">=</span>[get_weather],</span>
-<span id="cb2-17"><a href aria-label="17"></a>                  system_prompt<span class="op">=</span>SYSTEM_PROMPT, callback_handler<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb2-18"><a href aria-label="18"></a>    <span class="cf">return</span> {<span class="st">&quot;answer&quot;</span>: <span class="bu">str</span>(agent(request.prompt))}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-7"><a href aria-label="7"></a>app <span class="op">=</span> FastAPI()</span>
+<span id="cb2-8"><a href aria-label="8"></a></span>
+<span id="cb2-9"><a href aria-label="9"></a><span class="kw">class</span> Invocation(BaseModel):</span>
+<span id="cb2-10"><a href aria-label="10"></a>    prompt: <span class="bu">str</span></span>
+<span id="cb2-11"><a href aria-label="11"></a></span>
+<span id="cb2-12"><a href aria-label="12"></a><span class="at">@app.get</span>(<span class="st">&quot;/ping&quot;</span>)</span>
+<span id="cb2-13"><a href aria-label="13"></a><span class="kw">def</span> ping() <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb2-14"><a href aria-label="14"></a>    <span class="cf">return</span> {<span class="st">&quot;status&quot;</span>: <span class="st">&quot;Healthy&quot;</span>}</span>
+<span id="cb2-15"><a href aria-label="15"></a></span>
+<span id="cb2-16"><a href aria-label="16"></a><span class="at">@app.post</span>(<span class="st">&quot;/invocations&quot;</span>)</span>
+<span id="cb2-17"><a href aria-label="17"></a><span class="kw">def</span> invoke(request: Invocation) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb2-18"><a href aria-label="18"></a>    agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(), tools<span class="op">=</span>[get_weather],</span>
+<span id="cb2-19"><a href aria-label="19"></a>                  system_prompt<span class="op">=</span>SYSTEM_PROMPT, callback_handler<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb2-20"><a href aria-label="20"></a>    <span class="cf">return</span> {<span class="st">&quot;answer&quot;</span>: <span class="bu">str</span>(agent(request.prompt))}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>A fresh <code>Agent</code> per invocation keeps requests independent, the same per-question discipline as the labs</li>
 <li>Nothing about the agent changed; the loop gained an HTTP skin</li>
@@ -1272,6 +1305,15 @@ Amit Arora
 <li><strong>How much isolation does a session need?</strong> If every user session must be a separate box, per-session microVMs (AgentCore’s model) or your own sandbox tier matter, which is Part 2’s whole subject</li>
 </ol>
 <p>The portable decision: build to the two-endpoint container contract, and changing your answer later is a redeploy rather than a rewrite.</p>
+</section>
+<section id="the-deployed-agent-is-never-alone" class="slide level2 smaller">
+<h2>The Deployed Agent Is Never Alone</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img role="img" data-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDgwIDU3NSIgd2lkdGg9IjEwODAiIGhlaWdodD0iNTc1Ij4KPGRlZnM+CjxtYXJrZXIgaWQ9ImFyIiBtYXJrZXJXaWR0aD0iOSIgbWFya2VySGVpZ2h0PSI3IiByZWZYPSI4IiByZWZZPSIzLjUiIG9yaWVudD0iYXV0byI+CiAgPHBvbHlnb24gcG9pbnRzPSIwIDAsIDkgMy41LCAwIDciIGZpbGw9IiM2YjcyODAiLz4KPC9tYXJrZXI+CjxtYXJrZXIgaWQ9ImFyMiIgbWFya2VyV2lkdGg9IjkiIG1hcmtlckhlaWdodD0iNyIgcmVmWD0iMSIgcmVmWT0iMy41IiBvcmllbnQ9ImF1dG8tc3RhcnQtcmV2ZXJzZSI+CiAgPHBvbHlnb24gcG9pbnRzPSIwIDAsIDkgMy41LCAwIDciIGZpbGw9IiM2YjcyODAiLz4KPC9tYXJrZXI+CjxtYXJrZXIgaWQ9ImFyQSIgbWFya2VyV2lkdGg9IjkiIG1hcmtlckhlaWdodD0iNyIgcmVmWD0iOCIgcmVmWT0iMy41IiBvcmllbnQ9ImF1dG8iPgogIDxwb2x5Z29uIHBvaW50cz0iMCAwLCA5IDMuNSwgMCA3IiBmaWxsPSIjYjQ1MzA5Ii8+CjwvbWFya2VyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjU3NSIgZmlsbD0id2hpdGUiLz4KPHJlY3QgeD0iMzgwIiB5PSIxOTAiIHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiByeD0iOCIgZmlsbD0iI2YzZjRmNiIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIuNSIvPgo8dGV4dCB4PSI1MzAiIHk9IjIyMiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMTExODI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5USEUgREVQTE9ZRUQgQUdFTlQ8L3RleHQ+Cjx0ZXh0IHg9IjUzMCIgeT0iMjQ2IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMi41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj55b3VyIGNvbnRhaW5lcjo8L3RleHQ+Cjx0ZXh0IHg9IjUzMCIgeT0iMjY1IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMi41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4vcGluZyArIC9pbnZvY2F0aW9ucyw8L3RleHQ+Cjx0ZXh0IHg9IjUzMCIgeT0iMjg0IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMi41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50aGUgbG9vcCwgdGhlIHRvb2xzPC90ZXh0Pgo8dGV4dCB4PSI1MzAiIHk9IjMxNiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj5zY2FsZWQgYW5kIHJlc3RhcnRlZCBieSB0aGUgcGxhdGZvcm08L3RleHQ+CjxyZWN0IHg9IjQwIiB5PSIyMjAiIHdpZHRoPSIxNzAiIGhlaWdodD0iOTAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjEyNSIgeT0iMjU4IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPlVTRVJTPC90ZXh0Pgo8dGV4dCB4PSIxMjUiIHk9IjI4MCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnJlcXVlc3RzLCBzZXNzaW9uczwvdGV4dD4KPGxpbmUgeDE9IjIxMCIgeTE9IjI2NSIgeDI9IjM3MiIgeTI9IjI2NSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjEuOCIgbWFya2VyLWVuZD0idXJsKCNhcikiLz4KPHJlY3QgeD0iMjEwIiB5PSI0MCIgd2lkdGg9IjI1MCIgaGVpZ2h0PSI5MCIgcng9IjgiIGZpbGw9IiNmM2Y0ZjYiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHRleHQgeD0iMzM1IiB5PSI3MiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMTExODI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JREVOVElUWSBTWVNURU08L3RleHQ+Cjx0ZXh0IHg9IjMzNSIgeT0iOTMiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPndobyBpcyBjYWxsaW5nLCB3aGF0IG1heSB0aGlzPC90ZXh0Pgo8dGV4dCB4PSIzMzUiIHk9IjExMCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+c2Vzc2lvbiB0b3VjaDogT0F1dGgsIHRva2VuIGV4Y2hhbmdlPC90ZXh0Pgo8bGluZSB4MT0iMzkwIiB5MT0iMTMwIiB4Mj0iNDcwIiB5Mj0iMTg2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS42IiBtYXJrZXItZW5kPSJ1cmwoI2FyKSIgbWFya2VyLXN0YXJ0PSJ1cmwoI2FyMikiLz4KPHRleHQgeD0iNDAwIiB5PSIxNjUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0iZW5kIj52ZXJpZnksIHNjb3BlPC90ZXh0Pgo8cmVjdCB4PSI2MTAiIHk9IjQwIiB3aWR0aD0iMjUwIiBoZWlnaHQ9IjkwIiByeD0iOCIgZmlsbD0iI2YzZjRmNiIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8dGV4dCB4PSI3MzUiIHk9IjcyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1PREVMIEVORFBPSU5UPC90ZXh0Pgo8dGV4dCB4PSI3MzUiIHk9IjkzIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50aGUgTExNIEFQSSB0aGUgbG9vcCBjYWxsczo8L3RleHQ+Cjx0ZXh0IHg9IjczNSIgeT0iMTEwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ob3N0ZWQgb3IgeW91ciBvd24gc2VydmluZzwvdGV4dD4KPGxpbmUgeDE9IjY3MCIgeTE9IjE4NiIgeDI9IjcyMCIgeTI9IjEzMCIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjEuNiIgbWFya2VyLWVuZD0idXJsKCNhcikiIG1hcmtlci1zdGFydD0idXJsKCNhcjIpIi8+CjxyZWN0IHg9Ijc3MCIgeT0iMjIwIiB3aWR0aD0iMjYwIiBoZWlnaHQ9IjExMCIgcng9IjgiIGZpbGw9IiNmM2Y0ZjYiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHRleHQgeD0iOTAwIiB5PSIyNTIiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T0JTRVJWQUJJTElUWTwvdGV4dD4KPHRleHQgeD0iOTAwIiB5PSIyNzMiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9UZWwgdHJhY2VzIG91dCBvZiBldmVyeSB0dXJuOzwvdGV4dD4KPHRleHQgeD0iOTAwIiB5PSIyOTAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnRoZSB3ZWVrIDcgbG9vcDogdHJhY2VzIGZlZWQ8L3RleHQ+Cjx0ZXh0IHg9IjkwMCIgeT0iMzA3IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ldmFscywgZXZhbHMgZ2F0ZSBkZXBsb3lzPC90ZXh0Pgo8bGluZSB4MT0iNjgwIiB5MT0iMjY1IiB4Mj0iNzYyIiB5Mj0iMjY1IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS42IiBtYXJrZXItZW5kPSJ1cmwoI2FyKSIvPgo8dGV4dCB4PSI3MjEiIHk9IjI1NSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnNwYW5zPC90ZXh0Pgo8cmVjdCB4PSIzODAiIHk9IjQxMCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxMDAiIHJ4PSI4IiBmaWxsPSIjZmZmYmViIiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjUzMCIgeT0iNDQyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1FTU9SWSBTWVNURU0gKjwvdGV4dD4KPHRleHQgeD0iNTMwIiB5PSI0NjMiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnNlc3Npb24gc3RhdGUgYWNyb3NzIHR1cm5zLCBhbmQ8L3RleHQ+Cjx0ZXh0IHg9IjUzMCIgeT0iNDgwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjYjQ1MzA5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj53aGF0IHRoZSBhZ2VudCBrZWVwcyBhY3Jvc3Mgc2Vzc2lvbnM8L3RleHQ+CjxsaW5lIHgxPSI1MzAiIHkxPSIzNDAiIHgyPSI1MzAiIHkyPSI0MDIiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjYXJBKSIvPgo8dGV4dCB4PSI1NDMiIHk9IjM3NSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJzdGFydCI+cmVhZCAvIHdyaXRlPC90ZXh0Pgo8cmVjdCB4PSI3NzAiIHk9IjQxMCIgd2lkdGg9IjI2MCIgaGVpZ2h0PSIxMDAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjkwMCIgeT0iNDQyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPlJFTU9URSBUT09MUzogTUNQIFNFUlZFUlM8L3RleHQ+Cjx0ZXh0IHg9IjkwMCIgeT0iNDYzIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmb250LXdlaWdodD0ibm9ybWFsIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50aGUgd2VlayA2IHN0b3J5OiB0b29scyBsaXZlIGluPC90ZXh0Pgo8dGV4dCB4PSI5MDAiIHk9IjQ4MCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+b3RoZXIgc2VydmljZXMsIGJlaGluZCBhIGdhdGV3YXk8L3RleHQ+CjxsaW5lIHgxPSI2NjAiIHkxPSIzNDAiIHgyPSI4MTAiIHkyPSI0MDYiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjYiIG1hcmtlci1lbmQ9InVybCgjYXIpIi8+Cjx0ZXh0IHg9Ijc0NSIgeT0iMzgwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dG9vbHMvY2FsbDwvdGV4dD4KPHJlY3QgeD0iNjAiIHk9IjQxMCIgd2lkdGg9IjI1MCIgaGVpZ2h0PSIxMDAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjE4NSIgeT0iNDQyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMy41IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T1RIRVIgQUdFTlRTIChBMkEpPC90ZXh0Pgo8dGV4dCB4PSIxODUiIHk9IjQ2MyIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+ZGVsZWdhdGlvbiBhY3Jvc3MgdGhlIHRydXN0PC90ZXh0Pgo8dGV4dCB4PSIxODUiIHk9IjQ4MCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Ym91bmRhcnksIGFnZW50IGNhcmQgZmlyc3Q8L3RleHQ+CjxsaW5lIHgxPSI0MDAiIHkxPSIzNDAiIHgyPSIyNTAiIHkyPSI0MDYiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjYiIG1hcmtlci1lbmQ9InVybCgjYXIpIi8+Cjx0ZXh0IHg9IjMxMCIgeT0iMzgwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dGFza3M8L3RleHQ+Cjx0ZXh0IHg9IjUzMCIgeT0iNTQ4IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMi41IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+KiBtZW1vcnkgZ2V0cyBpdHMgb3duIGxlY3R1cmUgbmV4dCB3ZWVrPC90ZXh0Pgo8L3N2Zz4K" class="quarto-figure quarto-figure-center" height="480"></p>
+</figure>
+</div>
+<p>Every satellite is a course week: identity (6), observability and evals (7, 8), MCP tools (6), other agents over A2A (6). Memory is the one box this course has not opened yet.</p>
 </section>
 <section id="this-weeks-lab" class="slide level2 smaller">
 <h2>This Week’s Lab</h2>

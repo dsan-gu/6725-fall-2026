@@ -125,15 +125,35 @@ Two HTTP calls: a geocoder turns the place name into coordinates, the
 forecast endpoint returns current conditions. Errors come back as values,
 the week 5 rule.
 
+## Background: What Is FastAPI? {.smaller}
+
+[FastAPI](https://fastapi.tiangolo.com/) is a Python web framework: you
+decorate ordinary functions and they become HTTP endpoints, served by a
+small server called uvicorn. That is the whole job it has here.
+
+Think of it as an **add-on, bolted to the outside of your agent**. Your
+agent code does not change:
+
+| File | What lives there |
+|------|------------------|
+| `agent.py` | The agent you already know how to write: the model client, the system prompt, the `get_weather` tool. Weeks 5 to 8 code, unchanged |
+| `main.py` | The FastAPI app: imports from `agent.py`, exposes `/ping` and `/invocations`, and nothing else |
+
+- The split is the point: `agent.py` runs fine in a terminal without
+  `main.py`, and `main.py` knows nothing about tools or prompts
+- Swap FastAPI for Flask or anything else and `agent.py` never notices; the
+  contract lives entirely in the wrapper
+
 ## The Wrapper: main.py {.smaller}
 
-FastAPI turns the agent into the two-endpoint contract. This is the entire
-file structure:
+The entire file, importing the unchanged agent:
 
 ```python
 from fastapi import FastAPI
 from pydantic import BaseModel
 from strands import Agent
+
+from agent import SYSTEM_PROMPT, get_weather, make_model
 
 app = FastAPI()
 
@@ -229,6 +249,14 @@ Three questions sort the landscape faster than any feature table:
 
 The portable decision: build to the two-endpoint container contract, and
 changing your answer later is a redeploy rather than a rewrite.
+
+## The Deployed Agent Is Never Alone {.smaller}
+
+![](img/agent-infra.svg){height=480 fig-align="center"}
+
+Every satellite is a course week: identity (6), observability and evals
+(7, 8), MCP tools (6), other agents over A2A (6). Memory is the one box
+this course has not opened yet.
 
 ## This Week's Lab {.smaller}
 

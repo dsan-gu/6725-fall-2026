@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 575" width="1080" height="575">
+<defs>
+<marker id="ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="ar2" markerWidth="9" markerHeight="7" refX="1" refY="3.5" orient="auto-start-reverse">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="arA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="575" fill="white"/>
+<rect x="380" y="190" width="300" height="150" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2.5"/>
+<text x="530" y="222" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#111827" text-anchor="middle">THE DEPLOYED AGENT</text>
+<text x="530" y="246" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">your container:</text>
+<text x="530" y="265" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">/ping + /invocations,</text>
+<text x="530" y="284" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#6b7280" text-anchor="middle">the loop, the tools</text>
+<text x="530" y="316" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle" font-style="italic">scaled and restarted by the platform</text>
+<rect x="40" y="220" width="170" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="125" y="258" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">USERS</text>
+<text x="125" y="280" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#6b7280" text-anchor="middle">requests, sessions</text>
+<line x1="210" y1="265" x2="372" y2="265" stroke="#6b7280" stroke-width="1.8" marker-end="url(#ar)"/>
+<rect x="210" y="40" width="250" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="335" y="72" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">IDENTITY SYSTEM</text>
+<text x="335" y="93" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">who is calling, what may this</text>
+<text x="335" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">session touch: OAuth, token exchange</text>
+<line x1="390" y1="130" x2="470" y2="186" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)" marker-start="url(#ar2)"/>
+<text x="400" y="165" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#6b7280" text-anchor="end">verify, scope</text>
+<rect x="610" y="40" width="250" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="735" y="72" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">MODEL ENDPOINT</text>
+<text x="735" y="93" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">the LLM API the loop calls:</text>
+<text x="735" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">hosted or your own serving</text>
+<line x1="670" y1="186" x2="720" y2="130" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)" marker-start="url(#ar2)"/>
+<rect x="770" y="220" width="260" height="110" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="900" y="252" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">OBSERVABILITY</text>
+<text x="900" y="273" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">OTel traces out of every turn;</text>
+<text x="900" y="290" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">the week 7 loop: traces feed</text>
+<text x="900" y="307" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">evals, evals gate deploys</text>
+<line x1="680" y1="265" x2="762" y2="265" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="721" y="255" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#6b7280" text-anchor="middle">spans</text>
+<rect x="380" y="410" width="300" height="100" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="530" y="442" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">MEMORY SYSTEM *</text>
+<text x="530" y="463" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#b45309" text-anchor="middle">session state across turns, and</text>
+<text x="530" y="480" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#b45309" text-anchor="middle">what the agent keeps across sessions</text>
+<line x1="530" y1="340" x2="530" y2="402" stroke="#b45309" stroke-width="1.8" marker-end="url(#arA)"/>
+<text x="543" y="375" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#b45309" text-anchor="start">read / write</text>
+<rect x="770" y="410" width="260" height="100" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="900" y="442" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">REMOTE TOOLS: MCP SERVERS</text>
+<text x="900" y="463" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">the week 6 story: tools live in</text>
+<text x="900" y="480" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">other services, behind a gateway</text>
+<line x1="660" y1="340" x2="810" y2="406" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="745" y="380" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#6b7280" text-anchor="middle">tools/call</text>
+<rect x="60" y="410" width="250" height="100" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="185" y="442" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#111827" text-anchor="middle">OTHER AGENTS (A2A)</text>
+<text x="185" y="463" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">delegation across the trust</text>
+<text x="185" y="480" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#6b7280" text-anchor="middle">boundary, agent card first</text>
+<line x1="400" y1="340" x2="250" y2="406" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="310" y="380" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#6b7280" text-anchor="middle">tasks</text>
+<text x="530" y="548" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">* memory gets its own lecture next week</text>
+</svg>
