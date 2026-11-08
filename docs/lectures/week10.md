@@ -1,4 +1,4 @@
-# Week 10: Agentic Platforms
+# Week 10: A2A and the Agent Primitives
 
 <p class="deck-actions"><a href="../assets/html/week10.html" target="_blank">Open slides full screen &rarr;</a></p>
 

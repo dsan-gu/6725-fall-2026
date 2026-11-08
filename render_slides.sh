@@ -11,7 +11,7 @@ week_files=(
   "week-07-evals-and-observability"
   "week-08-agent-evals-in-practice"
   "week-09-agent-deployment"
-  "week-10-agentic-platforms"
+  "week-10-a2a-and-agent-primitives"
   "week-11-ontology-semantic-layer"
   "week-12-finetuning"
   "week-13-ai-ethics"

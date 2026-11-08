@@ -122,7 +122,7 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | 7     | Evals and Observability                              | Model, RAG, and agent evals; LLM-as-a-judge; tracing GenAI apps with the OTel GenAI conventions |
 | 8     | Agent Evals in Practice                              | A real agent improved by studying its traces: failure to labeled set to harness to shipped change; guest lecture on agent sandboxes |
 | 9     | Agent Deployment and Agent Sandboxes                 | Containerizing agents, the ping/invocations contract, managed agent runtimes across clouds; sandboxing agentic AI |
-| 10    | Agentic Platforms                                    | Designing platforms and not just apps: agent runtimes, deployment patterns, governance |
+| 10    | A2A and the Agent Primitives                         | The A2A protocol on the wire: tasks, streaming, push; the five agent primitives, with memory as the new one |
 | 11    | Ontology and the Semantic Layer                      | Knowledge graphs, graph RAG, ontologies, building a semantic layer over enterprise data for agents |
 | 12    | Fine-tuning Generative AI Models                     | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques; when to fine-tune vs RAG vs prompt |
 | 13    | AI Ethics and Responsible AI                         | Bias mitigation, safety, societal impact, regulation, and responsible deployment of GenAI systems |

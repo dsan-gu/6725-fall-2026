@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 500" width="1080" height="500">
+<defs>
+<marker id="mw-ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="mw-arA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="500" fill="white"/>
+
+<rect x="60" y="150" width="260" height="200" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="190" y="185" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">THE CONTEXT WINDOW</text>
+<text x="190" y="212" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">system prompt</text>
+<rect x="90" y="225" width="200" height="30" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+<text x="190" y="245" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#b45309" text-anchor="middle">retrieved memories</text>
+<text x="190" y="280" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">this session's messages</text>
+<text x="190" y="302" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">tool results</text>
+<text x="190" y="334" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-style="italic" fill="#6b7280" text-anchor="middle">empties when the session ends</text>
+
+<rect x="440" y="190" width="200" height="110" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2.5"/>
+<text x="540" y="230" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">THE TURN</text>
+<text x="540" y="255" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">the agent answers,</text>
+<text x="540" y="274" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">new facts surface</text>
+
+<rect x="760" y="150" width="260" height="200" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="2.5"/>
+<text x="890" y="185" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">THE MEMORY STORE</text>
+<text x="890" y="212" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">extracted facts and preferences</text>
+<text x="890" y="233" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">"prefers window seats"</text>
+<text x="890" y="254" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">"project deadline: Dec 5"</text>
+<text x="890" y="275" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">keyed per user, searchable</text>
+<text x="890" y="307" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-style="italic" fill="#b45309" text-anchor="middle">survives across sessions,</text>
+<text x="890" y="324" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-style="italic" fill="#b45309" text-anchor="middle">processes, and machines</text>
+
+<path d="M 640 230 C 700 150, 760 120, 870 146" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#mw-ar)"/>
+<text x="760" y="110" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#111827" text-anchor="middle">THE WRITE PATH (after the turn)</text>
+<text x="760" y="130" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">extract what is worth keeping, dedupe, store</text>
+
+<path d="M 758 370 C 650 420, 420 420, 200 358" fill="none" stroke="#b45309" stroke-width="1.8" marker-end="url(#mw-arA)"/>
+<text x="480" y="440" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#b45309" text-anchor="middle">THE READ PATH (before the turn)</text>
+<text x="480" y="460" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">search the store for what this question needs, inject the top few into the prompt</text>
+
+<line x1="320" y1="245" x2="432" y2="245" stroke="#6b7280" stroke-width="1.8" marker-end="url(#mw-ar)"/>
+<text x="376" y="235" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">prompt</text>
+</svg>
