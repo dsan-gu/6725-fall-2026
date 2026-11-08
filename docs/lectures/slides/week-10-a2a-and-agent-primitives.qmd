@@ -81,7 +81,7 @@ were the 0.x dialect; here is the mapping:
 | Send a message | `"method": "message/send"` | `"method": "SendMessage"` |
 | Fetch a task | `"method": "tasks/get"` | `"method": "GetTask"` |
 | Task state | `"state": "submitted"` | `"state": "TASK_STATE_SUBMITTED"` |
-| Bindings | JSON-RPC with SSE | JSON-RPC, **gRPC**, and **REST**, equal citizens |
+| Bindings | JSON-RPC with SSE | JSON-RPC, **gRPC**, and **REST**, all three official |
 | Versioning | implicit | `A2A-Version` request header |
 | Agent cards | plain JSON | can be **cryptographically signed** |
 
@@ -89,14 +89,14 @@ were the 0.x dialect; here is the mapping:
   JSON you see is its ProtoJSON serialization: camelCase fields,
   SCREAMING_SNAKE_CASE enums
 - Content type on the wire: `application/a2a+json`
-- A protocol young enough to rename its methods at 1.0 is a protocol you
-  check against the [spec](https://a2a-protocol.org/latest/specification/),
-  not against a blog post
+- The methods got renamed at 1.0, so check the
+  [spec](https://a2a-protocol.org/latest/specification/) before you write
+  code against this protocol; most blog posts still show the old wire
 
 ## The Task's Life, in Full {.smaller}
 
-Week 6 showed four states. The 1.0 lifecycle has more, and the extra ones
-carry the interesting semantics:
+Week 6 showed four states. The 1.0 lifecycle has more, and the two pause
+states are where the protocol earns its keep:
 
 ![](img/a2a-task-states.svg){height=460 fig-align="center"}
 
@@ -237,7 +237,8 @@ Poll any time with the task id; a completed task carries its output as
 
 - A large file never rides inside the JSON: the artifact part carries a
   URL and a media type, and the client fetches it
-- `history` on the task replays the message turns that produced this
+- The task also carries a `history` field with the message turns, so you
+  can see how it got to this state
 
 ## Wire Tour 4: Streaming {.smaller}
 
@@ -382,8 +383,8 @@ print(card.name, [s.id for s in card.skills])
 
 ## Code: the Remote Agent as a Tool {.smaller}
 
-Week 6 said a whole agent can hide behind a tool interface. A2A makes
-that pattern cross the network:
+Week 6 said a whole agent can hide behind a tool interface. A2A takes
+that pattern across the network:
 
 ```python
 from strands import Agent, tool
@@ -404,8 +405,8 @@ orchestrator("Should the Saturday game move indoors?")
 - To the orchestrator's model this is a tool call; on the wire it is a
   full A2A task against another team's agent
 - The boundary rule from week 6 still decides the design: opaque
-  ask-and-wait delegation is a tool; work needing status updates and
-  follow-up questions deserves the task lifecycle directly
+  ask-and-wait delegation is a tool; work that needs status updates and
+  follow-up questions gets the full task lifecycle
 
 ## Production Notes {.smaller}
 
@@ -439,8 +440,9 @@ The 300 level -- what changes between the demo and the deployment:
 
 ::: {.idea-callout}
 A production agent speaks both: MCP downward to its tools, A2A sideways
-to its peers. The same agent can be an MCP client, an A2A server, and an
-A2A client at once -- week 9's weather agent just was.
+to its peers. One agent can be an MCP client, an A2A server, and an A2A
+client all at once -- our weather agent picked up two of those three
+roles in the last four slides.
 :::
 
 # Part 2: The Agent Primitives
@@ -524,13 +526,14 @@ Nothing is broken. Every piece we built behaves exactly as designed:
 - The platform **restarts containers freely** (week 9's contract), so even
   in-process state would not survive
 
-**Memory is the primitive that makes something survive**: not the whole
-transcript replayed forever, but the facts worth keeping, stored outside
-the process and retrieved when relevant.
+**Memory is the primitive that fixes this**: keep the facts worth keeping
+outside the process, and pull them back into the prompt when a question
+needs them.
 
 ## What Agents Remember {.smaller}
 
-Two axes organize every memory system you will meet:
+Every memory system you will meet answers two questions: how long does a
+memory live, and what kind of thing is it?
 
 **How long it lives:**
 
@@ -570,8 +573,8 @@ own history:
 And the same failure modes transfer:
 
 - **Retrieval misses**: the memory exists, the query does not surface it
-- **Bystander context**: irrelevant memories retrieved and dutifully
-  believed -- week 7's context-precision problem again
+- **Bystander context**: an irrelevant memory comes back and the model
+  believes it -- week 7's context-precision problem again
 - **Staleness**: the sourdough decoy from the week 7 lab, now
   self-inflicted: last year's preference outranks this year's correction
 
@@ -639,8 +642,8 @@ agent("Book me a good seat on the Tokyo flight.")
 
 ## 300 Level: Memory as a Managed Service {.smaller}
 
-The same read/write architecture, productized. Name level, current as of
-November 2026:
+You can also buy the read/write loop as a service. Name level, current as
+of November 2026:
 
 | Service | Shape |
 |---------|-------|

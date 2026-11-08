@@ -1155,7 +1155,7 @@ Amit Arora
 <tr class="even">
 <td>Bindings</td>
 <td>JSON-RPC with SSE</td>
-<td>JSON-RPC, <strong>gRPC</strong>, and <strong>REST</strong>, equal citizens</td>
+<td>JSON-RPC, <strong>gRPC</strong>, and <strong>REST</strong>, all three official</td>
 </tr>
 <tr class="odd">
 <td>Versioning</td>
@@ -1172,12 +1172,12 @@ Amit Arora
 <ul>
 <li>The data model is now defined protocol-first (Protocol Buffers), and the JSON you see is its ProtoJSON serialization: camelCase fields, SCREAMING_SNAKE_CASE enums</li>
 <li>Content type on the wire: <code>application/a2a+json</code></li>
-<li>A protocol young enough to rename its methods at 1.0 is a protocol you check against the <a href="https://a2a-protocol.org/latest/specification/">spec</a>, not against a blog post</li>
+<li>The methods got renamed at 1.0, so check the <a href="https://a2a-protocol.org/latest/specification/">spec</a> before you write code against this protocol; most blog posts still show the old wire</li>
 </ul>
 </section>
 <section id="the-tasks-life-in-full" class="slide level2 smaller">
 <h2>The Task’s Life, in Full</h2>
-<p>Week 6 showed four states. The 1.0 lifecycle has more, and the extra ones carry the interesting semantics:</p>
+<p>Week 6 showed four states. The 1.0 lifecycle has more, and the two pause states are where the protocol earns its keep:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img role="img" data-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDgwIDU0MCIgd2lkdGg9IjEwODAiIGhlaWdodD0iNTQwIj4KPGRlZnM+CjxtYXJrZXIgaWQ9InRzLWFyIiBtYXJrZXJXaWR0aD0iOSIgbWFya2VySGVpZ2h0PSI3IiByZWZYPSI4IiByZWZZPSIzLjUiIG9yaWVudD0iYXV0byI+CiAgPHBvbHlnb24gcG9pbnRzPSIwIDAsIDkgMy41LCAwIDciIGZpbGw9IiM2YjcyODAiLz4KPC9tYXJrZXI+CjxtYXJrZXIgaWQ9InRzLWFyMiIgbWFya2VyV2lkdGg9IjkiIG1hcmtlckhlaWdodD0iNyIgcmVmWD0iMSIgcmVmWT0iMy41IiBvcmllbnQ9ImF1dG8tc3RhcnQtcmV2ZXJzZSI+CiAgPHBvbHlnb24gcG9pbnRzPSIwIDAsIDkgMy41LCAwIDciIGZpbGw9IiM2YjcyODAiLz4KPC9tYXJrZXI+CjxtYXJrZXIgaWQ9InRzLWFyQSIgbWFya2VyV2lkdGg9IjkiIG1hcmtlckhlaWdodD0iNyIgcmVmWD0iOCIgcmVmWT0iMy41IiBvcmllbnQ9ImF1dG8iPgogIDxwb2x5Z29uIHBvaW50cz0iMCAwLCA5IDMuNSwgMCA3IiBmaWxsPSIjYjQ1MzA5Ii8+CjwvbWFya2VyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjU0MCIgZmlsbD0id2hpdGUiLz4KCjxyZWN0IHg9IjUwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iODAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSIxNTAiIHk9IjIzNSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMTExODI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TVUJNSVRURUQ8L3RleHQ+Cjx0ZXh0IHg9IjE1MCIgeT0iMjU4IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+YWNjZXB0ZWQsIG5vdCBzdGFydGVkPC90ZXh0PgoKPHJlY3QgeD0iMzkwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iODAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSI0OTAiIHk9IjIzNSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMTExODI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5XT1JLSU5HPC90ZXh0Pgo8dGV4dCB4PSI0OTAiIHk9IjI1OCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnRoZSByZW1vdGUgYWdlbnQgcnVuczwvdGV4dD4KPGxpbmUgeDE9IjI1MCIgeTE9IjI0MCIgeDI9IjM4MiIgeTI9IjI0MCIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjEuOCIgbWFya2VyLWVuZD0idXJsKCN0cy1hcikiLz4KCjxyZWN0IHg9IjMxMCIgeT0iNTAiIHdpZHRoPSIxODAiIGhlaWdodD0iNzAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjQwMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QVVUSF9SRVFVSVJFRDwvdGV4dD4KPHRleHQgeD0iNDAwIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5uZWVkcyBjcmVkZW50aWFscyBmaXJzdDwvdGV4dD4KPGxpbmUgeDE9IjQzMCIgeTE9IjEyMCIgeDI9IjQ3MCIgeTI9IjE5NCIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjEuNiIgbWFya2VyLWVuZD0idXJsKCN0cy1hcikiIG1hcmtlci1zdGFydD0idXJsKCN0cy1hcjIpIi8+Cgo8cmVjdCB4PSIzOTAiIHk9IjQwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI4MCIgcng9IjgiIGZpbGw9IiNmZmZiZWIiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjQ5MCIgeT0iNDMzIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklOUFVUX1JFUVVJUkVEPC90ZXh0Pgo8dGV4dCB4PSI0OTAiIHk9IjQ1NiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnBhdXNlZDogYXNrcyB0aGUgY2xpZW50IGEgcXVlc3Rpb248L3RleHQ+CjxsaW5lIHgxPSI0NjUiIHkxPSIyODAiIHgyPSI0NjUiIHkyPSIzOTIiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjdHMtYXJBKSIvPgo8bGluZSB4MT0iNTE1IiB5MT0iMzkyIiB4Mj0iNTE1IiB5Mj0iMjg4IiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS13aWR0aD0iMS44IiBtYXJrZXItZW5kPSJ1cmwoI3RzLWFyQSkiLz4KPHRleHQgeD0iNTg1IiB5PSIzNDUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjYjQ1MzA5IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPmNsaWVudCBhbnN3ZXJzIHdpdGg8L3RleHQ+Cjx0ZXh0IHg9IjU4NSIgeT0iMzYxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZW5kTWVzc2FnZSArIHRhc2tJZDwvdGV4dD4KCjxyZWN0IHg9IjgwMCIgeT0iNzAiIHdpZHRoPSIyMjAiIGhlaWdodD0iNzAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiMxMTE4MjciIHN0cm9rZS13aWR0aD0iMi41Ii8+Cjx0ZXh0IHg9IjkxMCIgeT0iMTAwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNPTVBMRVRFRDwvdGV4dD4KPHRleHQgeD0iOTEwIiB5PSIxMjEiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5hcnRpZmFjdHMgYXR0YWNoZWQ8L3RleHQ+CjxsaW5lIHgxPSI1OTAiIHkxPSIyMTUiIHgyPSI3OTIiIHkyPSIxMjAiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjdHMtYXIpIi8+Cgo8cmVjdCB4PSI4MDAiIHk9IjIwMCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSI3MCIgcng9IjgiIGZpbGw9IiNmM2Y0ZjYiIHN0cm9rZT0iIzExMTgyNyIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KPHRleHQgeD0iOTEwIiB5PSIyMzAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RkFJTEVEPC90ZXh0Pgo8dGV4dCB4PSI5MTAiIHk9IjI1MSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPmVycm9yIHN1cmZhY2VkIHRvIHRoZSBjbGllbnQ8L3RleHQ+CjxsaW5lIHgxPSI1OTAiIHkxPSIyNDAiIHgyPSI3OTIiIHkyPSIyMzciIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjdHMtYXIpIi8+Cgo8cmVjdCB4PSI4MDAiIHk9IjMzMCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSI3MCIgcng9IjgiIGZpbGw9IiNmM2Y0ZjYiIHN0cm9rZT0iIzExMTgyNyIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KPHRleHQgeD0iOTEwIiB5PSIzNjAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q0FOQ0VMRUQ8L3RleHQ+Cjx0ZXh0IHg9IjkxMCIgeT0iMzgxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Y2xpZW50IGNhbGxlZCBDYW5jZWxUYXNrPC90ZXh0Pgo8bGluZSB4MT0iNTkwIiB5MT0iMjY1IiB4Mj0iNzkyIiB5Mj0iMzU1IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS44IiBtYXJrZXItZW5kPSJ1cmwoI3RzLWFyKSIvPgoKPHJlY3QgeD0iNTAiIHk9IjQwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI3MCIgcng9IjgiIGZpbGw9IiNmM2Y0ZjYiIHN0cm9rZT0iIzExMTgyNyIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KPHRleHQgeD0iMTUwIiB5PSI0MzAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UkVKRUNURUQ8L3RleHQ+Cjx0ZXh0IHg9IjE1MCIgeT0iNDUxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dGhlIGFnZW50IGRlY2xpbmVzIHRoZSB0YXNrPC90ZXh0Pgo8bGluZSB4MT0iMTUwIiB5MT0iMjgwIiB4Mj0iMTUwIiB5Mj0iMzkyIiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS44IiBtYXJrZXItZW5kPSJ1cmwoI3RzLWFyKSIvPgoKPHRleHQgeD0iOTEwIiB5PSI0MzAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+dGhpY2sgYm9yZGVyID0gdGVybWluYWw6PC90ZXh0Pgo8dGV4dCB4PSI5MTAiIHk9IjQ0NyIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zdHlsZT0iaXRhbGljIj50aGUgdGFzayBuZXZlciBsZWF2ZXMgdGhpcyBzdGF0ZTwvdGV4dD4KCjx0ZXh0IHg9IjU0MCIgeT0iNTIwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXN0eWxlPSJpdGFsaWMiPm9uIHRoZSB3aXJlIHRoZXNlIHNlcmlhbGl6ZSBhcyBUQVNLX1NUQVRFX1NVQk1JVFRFRCwgVEFTS19TVEFURV9XT1JLSU5HLCAuLi4gKEEyQSAxLjAgZW51bSBuYW1lcyk8L3RleHQ+Cjwvc3ZnPgo=" class="quarto-figure quarto-figure-center" height="460"></p>
@@ -1290,7 +1290,7 @@ Amit Arora
 <span id="cb7-14"><a href aria-label="14"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>A large file never rides inside the JSON: the artifact part carries a URL and a media type, and the client fetches it</li>
-<li><code>history</code> on the task replays the message turns that produced this</li>
+<li>The task also carries a <code>history</code> field with the message turns, so you can see how it got to this state</li>
 </ul>
 </section>
 <section id="wire-tour-4-streaming" class="slide level2 smaller">
@@ -1435,7 +1435,7 @@ Amit Arora
 </section>
 <section id="code-the-remote-agent-as-a-tool" class="slide level2 smaller">
 <h2>Code: the Remote Agent as a Tool</h2>
-<p>Week 6 said a whole agent can hide behind a tool interface. A2A makes that pattern cross the network:</p>
+<p>Week 6 said a whole agent can hide behind a tool interface. A2A takes that pattern across the network:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href aria-label="1"></a><span class="im">from</span> strands <span class="im">import</span> Agent, tool</span>
 <span id="cb14-2"><a href aria-label="2"></a><span class="im">from</span> strands.agent.a2a_agent <span class="im">import</span> A2AAgent</span>
 <span id="cb14-3"><a href aria-label="3"></a></span>
@@ -1451,7 +1451,7 @@ Amit Arora
 <span id="cb14-13"><a href aria-label="13"></a>orchestrator(<span class="st">&quot;Should the Saturday game move indoors?&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>To the orchestrator’s model this is a tool call; on the wire it is a full A2A task against another team’s agent</li>
-<li>The boundary rule from week 6 still decides the design: opaque ask-and-wait delegation is a tool; work needing status updates and follow-up questions deserves the task lifecycle directly</li>
+<li>The boundary rule from week 6 still decides the design: opaque ask-and-wait delegation is a tool; work that needs status updates and follow-up questions gets the full task lifecycle</li>
 </ul>
 </section>
 <section id="production-notes" class="slide level2 smaller">
@@ -1509,7 +1509,7 @@ Amit Arora
 </tbody>
 </table>
 <div class="idea-callout">
-<p>A production agent speaks both: MCP downward to its tools, A2A sideways to its peers. The same agent can be an MCP client, an A2A server, and an A2A client at once – week 9’s weather agent just was.</p>
+<p>A production agent speaks both: MCP downward to its tools, A2A sideways to its peers. One agent can be an MCP client, an A2A server, and an A2A client all at once – our weather agent picked up two of those three roles in the last four slides.</p>
 </div>
 </section></section>
 <section>
@@ -1613,11 +1613,11 @@ Amit Arora
 <li><code>main.py</code> builds a <strong>fresh Agent per request</strong> – our own week 9 code guarantees the amnesia</li>
 <li>The platform <strong>restarts containers freely</strong> (week 9’s contract), so even in-process state would not survive</li>
 </ul>
-<p><strong>Memory is the primitive that makes something survive</strong>: not the whole transcript replayed forever, but the facts worth keeping, stored outside the process and retrieved when relevant.</p>
+<p><strong>Memory is the primitive that fixes this</strong>: keep the facts worth keeping outside the process, and pull them back into the prompt when a question needs them.</p>
 </section>
 <section id="what-agents-remember" class="slide level2 smaller">
 <h2>What Agents Remember</h2>
-<p>Two axes organize every memory system you will meet:</p>
+<p>Every memory system you will meet answers two questions: how long does a memory live, and what kind of thing is it?</p>
 <p><strong>How long it lives:</strong></p>
 <table class="caption-top">
 <colgroup>
@@ -1720,7 +1720,7 @@ Amit Arora
 <p>And the same failure modes transfer:</p>
 <ul>
 <li><strong>Retrieval misses</strong>: the memory exists, the query does not surface it</li>
-<li><strong>Bystander context</strong>: irrelevant memories retrieved and dutifully believed – week 7’s context-precision problem again</li>
+<li><strong>Bystander context</strong>: an irrelevant memory comes back and the model believes it – week 7’s context-precision problem again</li>
 <li><strong>Staleness</strong>: the sourdough decoy from the week 7 lab, now self-inflicted: last year’s preference outranks this year’s correction</li>
 </ul>
 <p>The new part is the <strong>write path</strong>: RAG’s corpus arrives from outside, but memories must be <em>extracted</em> – deciding what is worth keeping is itself an LLM call with an error rate.</p>
@@ -1767,7 +1767,7 @@ Amit Arora
 </section>
 <section id="level-memory-as-a-managed-service" class="slide level2 smaller">
 <h2>300 Level: Memory as a Managed Service</h2>
-<p>The same read/write architecture, productized. Name level, current as of November 2026:</p>
+<p>You can also buy the read/write loop as a service. Name level, current as of November 2026:</p>
 <table class="caption-top">
 <thead>
 <tr class="header">
