@@ -539,24 +539,212 @@ memory live, and what kind of thing is it?
 
 | Scope | What it holds | Mechanism |
 |-------|---------------|-----------|
-| Short-term | this conversation's turns | the context window, session storage |
-| Long-term | facts that outlive any conversation | an external store with retrieval |
+| Short-term | this conversation's turns: user messages, assistant replies, tool results | the context window, session storage |
+| Long-term | what is worth keeping from them | an external store with retrieval |
 
-**What kind of thing it is:**
+**What kind of thing it is** -- four kinds recur, and the next four
+slides take one each:
 
-| Kind | Example |
-|------|---------|
-| Episodic -- what happened | "On Nov 3 the user asked about Oslo picnics" |
-| Semantic -- extracted facts | "prefers outdoor plans on Saturdays" |
-| Procedural -- how to behave | "always answer in Celsius first" |
-
+- **Preferences** (what the user likes), **semantic facts** (what is
+  true about the user and their world), **episodic** (what happened,
+  when), **procedural** (how to behave)
 - Short-term is a solved problem (you have been using it since week 5);
   the engineering lives in long-term: **what to write, and what to read
   back, when**
 
+The examples on the next slides are real: they come from the week 10
+memory lab's demo run, quoted from its local Mem0 store.
+
+## Memory Kind 1: User Preferences {.smaller}
+
+What the user likes and chooses -- taste, not fact. The conversation:
+
+```text
+Alice: Please remember: my favorite language is Python, and I prefer
+       clean, maintainable code over clever one-liners.
+```
+
+What the extractor stored:
+
+```text
+User Alice's favorite programming language is Python and she prefers
+writing clean, maintainable code
+
+User Alice prefers Pythonic, idiomatic solutions following PEP 8,
+with clear, descriptive names
+```
+
+- How it is used: retrieved whenever a later question touches code
+  style, so the agent writes PEP 8 answers without being asked again
+- Preferences change; a good store lets "I switched to tabs" **replace**
+  the old preference instead of piling up contradictions
+- Productized: AgentCore Memory ships a built-in **user preference**
+  strategy for exactly this kind
+
+## Memory Kind 2: Semantic Facts {.smaller}
+
+Stable facts about the user and their world. The conversation:
+
+```text
+Alice: I'm a software engineer, and right now I'm building a machine
+       learning project with scikit-learn.
+```
+
+What the extractor stored:
+
+```text
+User Alice is a software engineer
+
+User Alice is working with scikit-learn on a machine learning project
+```
+
+- The difference from a preference: a fact goes stale rather than out of
+  taste -- "works at X" needs correcting when Alice changes jobs, which
+  is what the write path's UPDATE and DELETE operations are for
+- Facts compound: "software engineer" plus "scikit-learn project" lets a
+  later answer skip the basics without being told to
+- Productized: AgentCore Memory's **semantic** strategy; mem0's default
+  extraction prompt spends most of its instructions on this kind
+
+## Memory Kind 3: Episodic {.smaller}
+
+What happened, and when -- the agent's history as events. Two turns
+later in the same demo:
+
+```text
+Alice: What was that project I said I was working on?
+```
+
+The episodic records that answer it -- note the first one captures what
+the **assistant** did, not what the user said:
+
+```text
+Alice was provided a clean, maintainable scikit-learn example using
+MLPClassifier with a pipeline
+
+User Alice mentioned earlier that she is working on a machine learning
+project using scikit-learn
+```
+
+- Episodes carry tense and time: "mentioned earlier", timestamps,
+  session ids -- retrieval can answer "what did we decide last Tuesday?"
+- A session summary is a compressed episode; AgentCore Memory's
+  **summary** strategy writes one per session
+- The privacy question starts here: a stream of episodes is a diary,
+  and a diary is personal data
+
+## Memory Kind 4: Procedural {.smaller}
+
+How to behave -- instructions the agent accumulates, not facts it knows:
+
+```text
+User: When you give me temperatures, always put Celsius first.
+User: Never use emoji in code comments.
+```
+
+Stored procedural memories work like a learned system prompt:
+
+```text
+Give temperatures in Celsius first
+No emoji in code comments
+```
+
+- Retrieved procedural memories are injected next to the system prompt,
+  so the behavior survives across sessions with no code change
+- mem0 ships a dedicated procedural-memory prompt
+  (`PROCEDURAL_MEMORY_SYSTEM_PROMPT`); Letta's agents edit their own
+  behavior blocks with tools
+- You already maintain procedural memory by hand: this course's
+  `AGENTS.md` files are exactly this kind, written by humans instead of
+  extracted by a model
+
 ## The Write Path and the Read Path
 
 ![](img/memory-read-write.svg){height=440 fig-align="center"}
+
+## The Write Path, Step 1: What the Extractor Sees {.smaller}
+
+Short-term memory is the raw transcript: user messages, assistant
+replies, and tool results, in order. The extractor is **an LLM reading
+those turns with an extraction prompt** and returning short candidate
+facts. mem0's default prompt, from the installed package:
+
+```text
+You are a Personal Information Organizer, specialized in accurately
+storing facts, user memories, and preferences...
+
+1. Store Personal Preferences: ... likes, dislikes ...
+2. Maintain Important Personal Details: ... names, relationships ...
+3. Track Plans and Intentions: ... upcoming events, trips, goals ...
+6. Store Professional Details: ... job titles, work habits ...
+```
+
+- In: the turn "Hi, I'm Alice, a software engineer..." Out: a short list
+  of facts, never the transcript itself
+- Tool results and assistant replies count as input: the lab's store
+  holds "Alice was provided a scikit-learn example using MLPClassifier",
+  a memory about what the **agent** did
+- One turn can yield zero facts (chit-chat) or several; this prompt is
+  the definition of "worth keeping"
+
+## The Write Path, Step 2: Short-Term to Long-Term, Asynchronously {.smaller}
+
+![](img/memory-extraction-pipeline.svg){height=300 fig-align="center"}
+
+- The move runs **after the turn, off the critical path**: the user never
+  waits on a memory write. AgentCore Memory runs its strategies
+  server-side on each conversation event; the lab calls mem0 after the
+  response has already gone out
+- Phase two is what keeps the store sane: each candidate fact is compared
+  against related existing memories, and an LLM picks an operation per
+  fact. mem0's update prompt names them: **ADD, UPDATE, DELETE, or NONE**
+  ("if the fact is already present or irrelevant")
+- That reconcile step is why "I switched from aisle to window seats"
+  replaces the old preference instead of contradicting it forever
+
+## The Prompts Are Yours to Edit {.smaller}
+
+Both phases are plain prompts, and both are configuration:
+
+```python
+memory = Memory.from_config({
+    "custom_instructions": (
+        "Extract only durable facts about the user's projects and "
+        "coding preferences. Never store health information, precise "
+        "locations, or anything about third parties."
+    ),
+    # llm / embedder / vector_store as before
+})
+
+memory.add(messages, user_id="user_42",
+           prompt=TRIP_FACTS_ONLY)     # or override one call at a time
+```
+
+- Why you would: domain focus (a travel agent keeps trips, not recipes),
+  privacy rules enforced at **write time**, the tone of procedural
+  memories, the language facts are stored in
+- AgentCore Memory has the same ladder: built-in strategies, built-in
+  **overrides** (your prompts, their managed pipeline), and self-managed
+  strategies where the whole pipeline is yours
+- The week 7 lesson applies unchanged: an extraction prompt is a judge
+  prompt -- eval what it keeps, what it misses, and what it invents
+
+## How Frameworks Wire Memory In {.smaller}
+
+Three integration patterns, all in things you have now used:
+
+| Pattern | Who decides | Where you saw it |
+|---------|-------------|------------------|
+| **Tools** | the model, turn by turn | the lab's `search_memory` / `insert_memory`; `strands_tools` `mem0_memory`; Letta's self-editing memory |
+| **Hooks and session managers** | the framework, every turn | Strands `FileSessionManager` (persist the transcript); `AgentCoreMemorySessionManager` (load long-term memories at session start, ship events after each turn); LangGraph checkpointers with LangMem |
+| **Prompt injection** | the harness, before the model runs | retrieved memories templated into the system prompt; Letta's in-context memory blocks |
+
+- Tools make memory **visible and optional**: every search and store
+  shows up in the trace, and the model may skip both
+- Hooks make memory **guaranteed and invisible**: nothing depends on the
+  model remembering to remember
+- Real systems mix them: hook-driven writes, tool-driven search, and
+  procedural memories injected into the system prompt
 
 ## Memory Is RAG Turned Inward {.smaller}
 

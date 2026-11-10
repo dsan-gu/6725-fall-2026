@@ -1635,45 +1635,83 @@ Amit Arora
 <tbody>
 <tr class="odd">
 <td>Short-term</td>
-<td>this conversation’s turns</td>
+<td>this conversation’s turns: user messages, assistant replies, tool results</td>
 <td>the context window, session storage</td>
 </tr>
 <tr class="even">
 <td>Long-term</td>
-<td>facts that outlive any conversation</td>
+<td>what is worth keeping from them</td>
 <td>an external store with retrieval</td>
 </tr>
 </tbody>
 </table>
-<p><strong>What kind of thing it is:</strong></p>
-<table class="caption-top">
-<colgroup>
-<col style="width: 40%">
-<col style="width: 60%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Kind</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Episodic – what happened</td>
-<td>“On Nov 3 the user asked about Oslo picnics”</td>
-</tr>
-<tr class="even">
-<td>Semantic – extracted facts</td>
-<td>“prefers outdoor plans on Saturdays”</td>
-</tr>
-<tr class="odd">
-<td>Procedural – how to behave</td>
-<td>“always answer in Celsius first”</td>
-</tr>
-</tbody>
-</table>
+<p><strong>What kind of thing it is</strong> – four kinds recur, and the next four slides take one each:</p>
 <ul>
+<li><strong>Preferences</strong> (what the user likes), <strong>semantic facts</strong> (what is true about the user and their world), <strong>episodic</strong> (what happened, when), <strong>procedural</strong> (how to behave)</li>
 <li>Short-term is a solved problem (you have been using it since week 5); the engineering lives in long-term: <strong>what to write, and what to read back, when</strong></li>
+</ul>
+<p>The examples on the next slides are real: they come from the week 10 memory lab’s demo run, quoted from its local Mem0 store.</p>
+</section>
+<section id="memory-kind-1-user-preferences" class="slide level2 smaller">
+<h2>Memory Kind 1: User Preferences</h2>
+<p>What the user likes and chooses – taste, not fact. The conversation:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb16-1"><a href aria-label="1"></a>Alice: Please remember: my favorite language is Python, and I prefer</span>
+<span id="cb16-2"><a href aria-label="2"></a>       clean, maintainable code over clever one-liners.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>What the extractor stored:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb17-1"><a href aria-label="1"></a>User Alice&#39;s favorite programming language is Python and she prefers</span>
+<span id="cb17-2"><a href aria-label="2"></a>writing clean, maintainable code</span>
+<span id="cb17-3"><a href aria-label="3"></a></span>
+<span id="cb17-4"><a href aria-label="4"></a>User Alice prefers Pythonic, idiomatic solutions following PEP 8,</span>
+<span id="cb17-5"><a href aria-label="5"></a>with clear, descriptive names</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>How it is used: retrieved whenever a later question touches code style, so the agent writes PEP 8 answers without being asked again</li>
+<li>Preferences change; a good store lets “I switched to tabs” <strong>replace</strong> the old preference instead of piling up contradictions</li>
+<li>Productized: AgentCore Memory ships a built-in <strong>user preference</strong> strategy for exactly this kind</li>
+</ul>
+</section>
+<section id="memory-kind-2-semantic-facts" class="slide level2 smaller">
+<h2>Memory Kind 2: Semantic Facts</h2>
+<p>Stable facts about the user and their world. The conversation:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb18-1"><a href aria-label="1"></a>Alice: I&#39;m a software engineer, and right now I&#39;m building a machine</span>
+<span id="cb18-2"><a href aria-label="2"></a>       learning project with scikit-learn.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>What the extractor stored:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb19-1"><a href aria-label="1"></a>User Alice is a software engineer</span>
+<span id="cb19-2"><a href aria-label="2"></a></span>
+<span id="cb19-3"><a href aria-label="3"></a>User Alice is working with scikit-learn on a machine learning project</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>The difference from a preference: a fact goes stale rather than out of taste – “works at X” needs correcting when Alice changes jobs, which is what the write path’s UPDATE and DELETE operations are for</li>
+<li>Facts compound: “software engineer” plus “scikit-learn project” lets a later answer skip the basics without being told to</li>
+<li>Productized: AgentCore Memory’s <strong>semantic</strong> strategy; mem0’s default extraction prompt spends most of its instructions on this kind</li>
+</ul>
+</section>
+<section id="memory-kind-3-episodic" class="slide level2 smaller">
+<h2>Memory Kind 3: Episodic</h2>
+<p>What happened, and when – the agent’s history as events. Two turns later in the same demo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb20-1"><a href aria-label="1"></a>Alice: What was that project I said I was working on?</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The episodic records that answer it – note the first one captures what the <strong>assistant</strong> did, not what the user said:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb21-1"><a href aria-label="1"></a>Alice was provided a clean, maintainable scikit-learn example using</span>
+<span id="cb21-2"><a href aria-label="2"></a>MLPClassifier with a pipeline</span>
+<span id="cb21-3"><a href aria-label="3"></a></span>
+<span id="cb21-4"><a href aria-label="4"></a>User Alice mentioned earlier that she is working on a machine learning</span>
+<span id="cb21-5"><a href aria-label="5"></a>project using scikit-learn</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Episodes carry tense and time: “mentioned earlier”, timestamps, session ids – retrieval can answer “what did we decide last Tuesday?”</li>
+<li>A session summary is a compressed episode; AgentCore Memory’s <strong>summary</strong> strategy writes one per session</li>
+<li>The privacy question starts here: a stream of episodes is a diary, and a diary is personal data</li>
+</ul>
+</section>
+<section id="memory-kind-4-procedural" class="slide level2 smaller">
+<h2>Memory Kind 4: Procedural</h2>
+<p>How to behave – instructions the agent accumulates, not facts it knows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb22-1"><a href aria-label="1"></a>User: When you give me temperatures, always put Celsius first.</span>
+<span id="cb22-2"><a href aria-label="2"></a>User: Never use emoji in code comments.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Stored procedural memories work like a learned system prompt:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb23-1"><a href aria-label="1"></a>Give temperatures in Celsius first</span>
+<span id="cb23-2"><a href aria-label="2"></a>No emoji in code comments</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Retrieved procedural memories are injected next to the system prompt, so the behavior survives across sessions with no code change</li>
+<li>mem0 ships a dedicated procedural-memory prompt (<code>PROCEDURAL_MEMORY_SYSTEM_PROMPT</code>); Letta’s agents edit their own behavior blocks with tools</li>
+<li>You already maintain procedural memory by hand: this course’s <code>AGENTS.md</code> files are exactly this kind, written by humans instead of extracted by a model</li>
 </ul>
 </section>
 <section id="the-write-path-and-the-read-path" class="slide level2">
@@ -1683,6 +1721,95 @@ Amit Arora
 <p><img role="img" data-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDgwIDUwMCIgd2lkdGg9IjEwODAiIGhlaWdodD0iNTAwIj4KPGRlZnM+CjxtYXJrZXIgaWQ9Im13LWFyIiBtYXJrZXJXaWR0aD0iOSIgbWFya2VySGVpZ2h0PSI3IiByZWZYPSI4IiByZWZZPSIzLjUiIG9yaWVudD0iYXV0byI+CiAgPHBvbHlnb24gcG9pbnRzPSIwIDAsIDkgMy41LCAwIDciIGZpbGw9IiM2YjcyODAiLz4KPC9tYXJrZXI+CjxtYXJrZXIgaWQ9Im13LWFyQSIgbWFya2VyV2lkdGg9IjkiIG1hcmtlckhlaWdodD0iNyIgcmVmWD0iOCIgcmVmWT0iMy41IiBvcmllbnQ9ImF1dG8iPgogIDxwb2x5Z29uIHBvaW50cz0iMCAwLCA5IDMuNSwgMCA3IiBmaWxsPSIjYjQ1MzA5Ii8+CjwvbWFya2VyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjUwMCIgZmlsbD0id2hpdGUiLz4KCjxyZWN0IHg9IjYwIiB5PSIxNTAiIHdpZHRoPSIyNjAiIGhlaWdodD0iMjAwIiByeD0iOCIgZmlsbD0iI2YzZjRmNiIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iMTkwIiB5PSIxODUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEhFIENPTlRFWFQgV0lORE9XPC90ZXh0Pgo8dGV4dCB4PSIxOTAiIHk9IjIxMiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnN5c3RlbSBwcm9tcHQ8L3RleHQ+CjxyZWN0IHg9IjkwIiB5PSIyMjUiIHdpZHRoPSIyMDAiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjZmZmYmViIiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS13aWR0aD0iMS41Ii8+Cjx0ZXh0IHg9IjE5MCIgeT0iMjQ1IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cmV0cmlldmVkIG1lbW9yaWVzPC90ZXh0Pgo8dGV4dCB4PSIxOTAiIHk9IjI4MCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnRoaXMgc2Vzc2lvbidzIG1lc3NhZ2VzPC90ZXh0Pgo8dGV4dCB4PSIxOTAiIHk9IjMwMiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnRvb2wgcmVzdWx0czwvdGV4dD4KPHRleHQgeD0iMTkwIiB5PSIzMzQiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+ZW1wdGllcyB3aGVuIHRoZSBzZXNzaW9uIGVuZHM8L3RleHQ+Cgo8cmVjdCB4PSI0NDAiIHk9IjE5MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMTAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMi41Ii8+Cjx0ZXh0IHg9IjU0MCIgeT0iMjMwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRIRSBUVVJOPC90ZXh0Pgo8dGV4dCB4PSI1NDAiIHk9IjI1NSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnRoZSBhZ2VudCBhbnN3ZXJzLDwvdGV4dD4KPHRleHQgeD0iNTQwIiB5PSIyNzQiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5uZXcgZmFjdHMgc3VyZmFjZTwvdGV4dD4KCjxyZWN0IHg9Ijc2MCIgeT0iMTUwIiB3aWR0aD0iMjYwIiBoZWlnaHQ9IjIwMCIgcng9IjgiIGZpbGw9IiNmZmZiZWIiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KPHRleHQgeD0iODkwIiB5PSIxODUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEhFIE1FTU9SWSBTVE9SRTwvdGV4dD4KPHRleHQgeD0iODkwIiB5PSIyMTIiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5leHRyYWN0ZWQgZmFjdHMgYW5kIHByZWZlcmVuY2VzPC90ZXh0Pgo8dGV4dCB4PSI4OTAiIHk9IjIzMyIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPiJwcmVmZXJzIHdpbmRvdyBzZWF0cyI8L3RleHQ+Cjx0ZXh0IHg9Ijg5MCIgeT0iMjU0IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+InByb2plY3QgZGVhZGxpbmU6IERlYyA1IjwvdGV4dD4KPHRleHQgeD0iODkwIiB5PSIyNzUiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5rZXllZCBwZXIgdXNlciwgc2VhcmNoYWJsZTwvdGV4dD4KPHRleHQgeD0iODkwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+c3Vydml2ZXMgYWNyb3NzIHNlc3Npb25zLDwvdGV4dD4KPHRleHQgeD0iODkwIiB5PSIzMjQiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cHJvY2Vzc2VzLCBhbmQgbWFjaGluZXM8L3RleHQ+Cgo8cGF0aCBkPSJNIDY0MCAyMzAgQyA3MDAgMTUwLCA3NjAgMTIwLCA4NzAgMTQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS44IiBtYXJrZXItZW5kPSJ1cmwoI213LWFyKSIvPgo8dGV4dCB4PSI3NjAiIHk9IjExMCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIuNSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRIRSBXUklURSBQQVRIIChhZnRlciB0aGUgdHVybik8L3RleHQ+Cjx0ZXh0IHg9Ijc2MCIgeT0iMTMwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5leHRyYWN0IHdoYXQgaXMgd29ydGgga2VlcGluZywgZGVkdXBlLCBzdG9yZTwvdGV4dD4KCjxwYXRoIGQ9Ik0gNzU4IDM3MCBDIDY1MCA0MjAsIDQyMCA0MjAsIDIwMCAzNTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjbXctYXJBKSIvPgo8dGV4dCB4PSI0ODAiIHk9IjQ0MCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIuNSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRIRSBSRUFEIFBBVEggKGJlZm9yZSB0aGUgdHVybik8L3RleHQ+Cjx0ZXh0IHg9IjQ4MCIgeT0iNDYwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5zZWFyY2ggdGhlIHN0b3JlIGZvciB3aGF0IHRoaXMgcXVlc3Rpb24gbmVlZHMsIGluamVjdCB0aGUgdG9wIGZldyBpbnRvIHRoZSBwcm9tcHQ8L3RleHQ+Cgo8bGluZSB4MT0iMzIwIiB5MT0iMjQ1IiB4Mj0iNDMyIiB5Mj0iMjQ1IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS44IiBtYXJrZXItZW5kPSJ1cmwoI213LWFyKSIvPgo8dGV4dCB4PSIzNzYiIHk9IjIzNSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnByb21wdDwvdGV4dD4KPC9zdmc+Cg==" class="quarto-figure quarto-figure-center" height="440"></p>
 </figure>
 </div>
+</section>
+<section id="the-write-path-step-1-what-the-extractor-sees" class="slide level2 smaller">
+<h2>The Write Path, Step 1: What the Extractor Sees</h2>
+<p>Short-term memory is the raw transcript: user messages, assistant replies, and tool results, in order. The extractor is <strong>an LLM reading those turns with an extraction prompt</strong> and returning short candidate facts. mem0’s default prompt, from the installed package:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb24-1"><a href aria-label="1"></a>You are a Personal Information Organizer, specialized in accurately</span>
+<span id="cb24-2"><a href aria-label="2"></a>storing facts, user memories, and preferences...</span>
+<span id="cb24-3"><a href aria-label="3"></a></span>
+<span id="cb24-4"><a href aria-label="4"></a>1. Store Personal Preferences: ... likes, dislikes ...</span>
+<span id="cb24-5"><a href aria-label="5"></a>2. Maintain Important Personal Details: ... names, relationships ...</span>
+<span id="cb24-6"><a href aria-label="6"></a>3. Track Plans and Intentions: ... upcoming events, trips, goals ...</span>
+<span id="cb24-7"><a href aria-label="7"></a>6. Store Professional Details: ... job titles, work habits ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>In: the turn “Hi, I’m Alice, a software engineer…” Out: a short list of facts, never the transcript itself</li>
+<li>Tool results and assistant replies count as input: the lab’s store holds “Alice was provided a scikit-learn example using MLPClassifier”, a memory about what the <strong>agent</strong> did</li>
+<li>One turn can yield zero facts (chit-chat) or several; this prompt is the definition of “worth keeping”</li>
+</ul>
+</section>
+<section id="the-write-path-step-2-short-term-to-long-term-asynchronously" class="slide level2 smaller">
+<h2>The Write Path, Step 2: Short-Term to Long-Term, Asynchronously</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img role="img" data-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDgwIDQwMCIgd2lkdGg9IjEwODAiIGhlaWdodD0iNDAwIj4KPGRlZnM+CjxtYXJrZXIgaWQ9ImVwLWFyIiBtYXJrZXJXaWR0aD0iOSIgbWFya2VySGVpZ2h0PSI3IiByZWZYPSI4IiByZWZZPSIzLjUiIG9yaWVudD0iYXV0byI+CiAgPHBvbHlnb24gcG9pbnRzPSIwIDAsIDkgMy41LCAwIDciIGZpbGw9IiM2YjcyODAiLz4KPC9tYXJrZXI+CjxtYXJrZXIgaWQ9ImVwLWFyQSIgbWFya2VyV2lkdGg9IjkiIG1hcmtlckhlaWdodD0iNyIgcmVmWD0iOCIgcmVmWT0iMy41IiBvcmllbnQ9ImF1dG8iPgogIDxwb2x5Z29uIHBvaW50cz0iMCAwLCA5IDMuNSwgMCA3IiBmaWxsPSIjYjQ1MzA5Ii8+CjwvbWFya2VyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjQwMCIgZmlsbD0id2hpdGUiLz4KCjxyZWN0IHg9IjMwIiB5PSI5MCIgd2lkdGg9IjIzMCIgaGVpZ2h0PSIxODAiIHJ4PSI4IiBmaWxsPSIjZjNmNGY2IiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSIxNDUiIHk9IjEyMiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxMTE4MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNIT1JULVRFUk08L3RleHQ+Cjx0ZXh0IHg9IjE0NSIgeT0iMTQxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dGhlIHNlc3Npb24gdHJhbnNjcmlwdDwvdGV4dD4KPHRleHQgeD0iMTQ1IiB5PSIxNjgiIGZvbnQtZmFtaWx5PSJDb3VyaWVyLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTEuNSIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dXNlciBtZXNzYWdlPC90ZXh0Pgo8dGV4dCB4PSIxNDUiIHk9IjE4OCIgZm9udC1mYW1pbHk9IkNvdXJpZXIsIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5hc3Npc3RhbnQgcmVwbHk8L3RleHQ+Cjx0ZXh0IHg9IjE0NSIgeT0iMjA4IiBmb250LWZhbWlseT0iQ291cmllciwgbW9ub3NwYWNlIiBmb250LXNpemU9IjExLjUiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnRvb2wgcmVzdWx0PC90ZXh0Pgo8dGV4dCB4PSIxNDUiIHk9IjIzOCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cmF3IHR1cm5zLCBpbiBvcmRlcjwvdGV4dD4KCjxsaW5lIHgxPSIyNjAiIHkxPSIxODAiIHgyPSIzMzIiIHkyPSIxODAiIHN0cm9rZT0iI2I0NTMwOSIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjZXAtYXJBKSIvPgo8dGV4dCB4PSIyOTYiIHk9IjE2NSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAuNSIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+YXN5bmMsPC90ZXh0Pgo8dGV4dCB4PSIyOTYiIHk9IjIwMCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAuNSIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+YWZ0ZXIgdGhlIHR1cm48L3RleHQ+Cgo8cmVjdCB4PSIzNDAiIHk9IjExMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNDAiIHJ4PSI4IiBmaWxsPSIjZmZmYmViIiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSI0NDAiIHk9IjE0MiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlBIQVNFIDE6IEVYVFJBQ1Q8L3RleHQ+Cjx0ZXh0IHg9IjQ0MCIgeT0iMTY0IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+YW4gTExNIHJlYWRzIHRoZSB0dXJuczwvdGV4dD4KPHRleHQgeD0iNDQwIiB5PSIxODMiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj53aXRoIHRoZSBleHRyYWN0aW9uIHByb21wdCw8L3RleHQ+Cjx0ZXh0IHg9IjQ0MCIgeT0iMjAyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cmV0dXJucyBzaG9ydCBjYW5kaWRhdGUgZmFjdHM8L3RleHQ+Cjx0ZXh0IHg9IjQ0MCIgeT0iMjMwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSIjYjQ1MzA5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50aGUgcHJvbXB0IGlzIGNvbmZpZ3VyYWJsZTwvdGV4dD4KCjxsaW5lIHgxPSI1NDAiIHkxPSIxODAiIHgyPSI1OTIiIHkyPSIxODAiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjZXAtYXIpIi8+Cgo8cmVjdCB4PSI2MDAiIHk9IjExMCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIxNDAiIHJ4PSI4IiBmaWxsPSIjZmZmYmViIiBzdHJva2U9IiNiNDUzMDkiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSI3MTAiIHk9IjE0MiIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNiNDUzMDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlBIQVNFIDI6IFJFQ09OQ0lMRTwvdGV4dD4KPHRleHQgeD0iNzEwIiB5PSIxNjQiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5zZWFyY2ggdGhlIHN0b3JlIGZvciByZWxhdGVkPC90ZXh0Pgo8dGV4dCB4PSI3MTAiIHk9IjE4MyIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPm1lbW9yaWVzOyBhbiBMTE0gcGlja3MsIHBlciBmYWN0OjwvdGV4dD4KPHRleHQgeD0iNzEwIiB5PSIyMDciIGZvbnQtZmFtaWx5PSJDb3VyaWVyLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMTExODI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BREQgVVBEQVRFIERFTEVURSBOT05FPC90ZXh0Pgo8dGV4dCB4PSI3MTAiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iI2I0NTMwOSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dGhpcyBwcm9tcHQgaXMgY29uZmlndXJhYmxlIHRvbzwvdGV4dD4KCjxsaW5lIHgxPSI4MjAiIHkxPSIxODAiIHgyPSI4NzIiIHkyPSIxODAiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjgiIG1hcmtlci1lbmQ9InVybCgjZXAtYXIpIi8+Cgo8cmVjdCB4PSI4ODAiIHk9IjkwIiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjgiIGZpbGw9IiNmM2Y0ZjYiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9Ijk3MCIgeT0iMTIyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMy41IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TE9ORy1URVJNPC90ZXh0Pgo8dGV4dCB4PSI5NzAiIHk9IjE0NCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEuNSIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+IkFsaWNlIGlzIGEgc29mdHdhcmU8L3RleHQ+Cjx0ZXh0IHg9Ijk3MCIgeT0iMTYxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5lbmdpbmVlciI8L3RleHQ+Cjx0ZXh0IHg9Ijk3MCIgeT0iMTgyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4icHJlZmVycyBjbGVhbiw8L3RleHQ+Cjx0ZXh0IHg9Ijk3MCIgeT0iMTk5IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5tYWludGFpbmFibGUgY29kZSI8L3RleHQ+Cjx0ZXh0IHg9Ijk3MCIgeT0iMjI2IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5lbWJlZGRlZCwga2V5ZWQgYnk8L3RleHQ+Cjx0ZXh0IHg9Ijk3MCIgeT0iMjQyIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj51c2VyLCB0aW1lc3RhbXBlZDwvdGV4dD4KCjxwYXRoIGQ9Ik0gNzAwIDI1MCBDIDY4MCAzMTAsIDQ4MCAzMTAsIDQ1MCAyNTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZiNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1kYXNoYXJyYXk9IjUsNCIgbWFya2VyLWVuZD0idXJsKCNlcC1hcikiLz4KPHRleHQgeD0iNTc1IiB5PSIzMzAiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExLjUiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnBoYXNlIDIgcmVhZHMgdGhlIHN0b3JlIGJlZm9yZSBpdCB3cml0ZXM6IG5ldyBmYWN0cyBhcmUgY29tcGFyZWQsIG1lcmdlZCwgb3IgZHJvcHBlZCw8L3RleHQ+Cjx0ZXh0IHg9IjU3NSIgeT0iMzQ3IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMS41IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5zbyBhIGNoYW5nZWQgcHJlZmVyZW5jZSByZXBsYWNlcyB0aGUgb2xkIG9uZSBpbnN0ZWFkIG9mIGNvbnRyYWRpY3RpbmcgaXQ8L3RleHQ+Cjwvc3ZnPgo=" class="quarto-figure quarto-figure-center" height="300"></p>
+</figure>
+</div>
+<ul>
+<li>The move runs <strong>after the turn, off the critical path</strong>: the user never waits on a memory write. AgentCore Memory runs its strategies server-side on each conversation event; the lab calls mem0 after the response has already gone out</li>
+<li>Phase two is what keeps the store sane: each candidate fact is compared against related existing memories, and an LLM picks an operation per fact. mem0’s update prompt names them: <strong>ADD, UPDATE, DELETE, or NONE</strong> (“if the fact is already present or irrelevant”)</li>
+<li>That reconcile step is why “I switched from aisle to window seats” replaces the old preference instead of contradicting it forever</li>
+</ul>
+</section>
+<section id="the-prompts-are-yours-to-edit" class="slide level2 smaller">
+<h2>The Prompts Are Yours to Edit</h2>
+<p>Both phases are plain prompts, and both are configuration:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href aria-label="1"></a>memory <span class="op">=</span> Memory.from_config({</span>
+<span id="cb25-2"><a href aria-label="2"></a>    <span class="st">&quot;custom_instructions&quot;</span>: (</span>
+<span id="cb25-3"><a href aria-label="3"></a>        <span class="st">&quot;Extract only durable facts about the user&#39;s projects and &quot;</span></span>
+<span id="cb25-4"><a href aria-label="4"></a>        <span class="st">&quot;coding preferences. Never store health information, precise &quot;</span></span>
+<span id="cb25-5"><a href aria-label="5"></a>        <span class="st">&quot;locations, or anything about third parties.&quot;</span></span>
+<span id="cb25-6"><a href aria-label="6"></a>    ),</span>
+<span id="cb25-7"><a href aria-label="7"></a>    <span class="co"># llm / embedder / vector_store as before</span></span>
+<span id="cb25-8"><a href aria-label="8"></a>})</span>
+<span id="cb25-9"><a href aria-label="9"></a></span>
+<span id="cb25-10"><a href aria-label="10"></a>memory.add(messages, user_id<span class="op">=</span><span class="st">&quot;user_42&quot;</span>,</span>
+<span id="cb25-11"><a href aria-label="11"></a>           prompt<span class="op">=</span>TRIP_FACTS_ONLY)     <span class="co"># or override one call at a time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Why you would: domain focus (a travel agent keeps trips, not recipes), privacy rules enforced at <strong>write time</strong>, the tone of procedural memories, the language facts are stored in</li>
+<li>AgentCore Memory has the same ladder: built-in strategies, built-in <strong>overrides</strong> (your prompts, their managed pipeline), and self-managed strategies where the whole pipeline is yours</li>
+<li>The week 7 lesson applies unchanged: an extraction prompt is a judge prompt – eval what it keeps, what it misses, and what it invents</li>
+</ul>
+</section>
+<section id="how-frameworks-wire-memory-in" class="slide level2 smaller">
+<h2>How Frameworks Wire Memory In</h2>
+<p>Three integration patterns, all in things you have now used:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 32%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>Who decides</th>
+<th>Where you saw it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Tools</strong></td>
+<td>the model, turn by turn</td>
+<td>the lab’s <code>search_memory</code> / <code>insert_memory</code>; <code>strands_tools</code> <code>mem0_memory</code>; Letta’s self-editing memory</td>
+</tr>
+<tr class="even">
+<td><strong>Hooks and session managers</strong></td>
+<td>the framework, every turn</td>
+<td>Strands <code>FileSessionManager</code> (persist the transcript); <code>AgentCoreMemorySessionManager</code> (load long-term memories at session start, ship events after each turn); LangGraph checkpointers with LangMem</td>
+</tr>
+<tr class="odd">
+<td><strong>Prompt injection</strong></td>
+<td>the harness, before the model runs</td>
+<td>retrieved memories templated into the system prompt; Letta’s in-context memory blocks</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Tools make memory <strong>visible and optional</strong>: every search and store shows up in the trace, and the model may skip both</li>
+<li>Hooks make memory <strong>guaranteed and invisible</strong>: nothing depends on the model remembering to remember</li>
+<li>Real systems mix them: hook-driven writes, tool-driven search, and procedural memories injected into the system prompt</li>
+</ul>
 </section>
 <section id="memory-is-rag-turned-inward" class="slide level2 smaller">
 <h2>Memory Is RAG Turned Inward</h2>
@@ -1728,17 +1855,17 @@ Amit Arora
 <section id="code-100-level-sessions-that-survive-restarts" class="slide level2 smaller">
 <h2>Code, 100 Level: Sessions That Survive Restarts</h2>
 <p>Strands separates the agent from its session state. Persist the session and the transcript outlives the process:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href aria-label="1"></a><span class="im">from</span> strands <span class="im">import</span> Agent</span>
-<span id="cb16-2"><a href aria-label="2"></a><span class="im">from</span> strands.session.file_session_manager <span class="im">import</span> FileSessionManager</span>
-<span id="cb16-3"><a href aria-label="3"></a></span>
-<span id="cb16-4"><a href aria-label="4"></a>agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(),</span>
-<span id="cb16-5"><a href aria-label="5"></a>              session_manager<span class="op">=</span>FileSessionManager(session_id<span class="op">=</span><span class="st">&quot;amit-main&quot;</span>))</span>
-<span id="cb16-6"><a href aria-label="6"></a>agent(<span class="st">&quot;I&#39;m planning a picnic in Oslo on Saturday.&quot;</span>)</span>
-<span id="cb16-7"><a href aria-label="7"></a><span class="co"># process exits</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href aria-label="1"></a><span class="co"># days later, a brand new process:</span></span>
-<span id="cb17-2"><a href aria-label="2"></a>agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(),</span>
-<span id="cb17-3"><a href aria-label="3"></a>              session_manager<span class="op">=</span>FileSessionManager(session_id<span class="op">=</span><span class="st">&quot;amit-main&quot;</span>))</span>
-<span id="cb17-4"><a href aria-label="4"></a>agent(<span class="st">&quot;Is my picnic going to stay dry?&quot;</span>)   <span class="co"># it knows: Oslo, Saturday</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href aria-label="1"></a><span class="im">from</span> strands <span class="im">import</span> Agent</span>
+<span id="cb26-2"><a href aria-label="2"></a><span class="im">from</span> strands.session.file_session_manager <span class="im">import</span> FileSessionManager</span>
+<span id="cb26-3"><a href aria-label="3"></a></span>
+<span id="cb26-4"><a href aria-label="4"></a>agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(),</span>
+<span id="cb26-5"><a href aria-label="5"></a>              session_manager<span class="op">=</span>FileSessionManager(session_id<span class="op">=</span><span class="st">&quot;amit-main&quot;</span>))</span>
+<span id="cb26-6"><a href aria-label="6"></a>agent(<span class="st">&quot;I&#39;m planning a picnic in Oslo on Saturday.&quot;</span>)</span>
+<span id="cb26-7"><a href aria-label="7"></a><span class="co"># process exits</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href aria-label="1"></a><span class="co"># days later, a brand new process:</span></span>
+<span id="cb27-2"><a href aria-label="2"></a>agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(),</span>
+<span id="cb27-3"><a href aria-label="3"></a>              session_manager<span class="op">=</span>FileSessionManager(session_id<span class="op">=</span><span class="st">&quot;amit-main&quot;</span>))</span>
+<span id="cb27-4"><a href aria-label="4"></a>agent(<span class="st">&quot;Is my picnic going to stay dry?&quot;</span>)   <span class="co"># it knows: Oslo, Saturday</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>This is <strong>short-term memory made durable</strong>: the whole transcript comes back, nothing is summarized or selected</li>
 <li>Honest limits: one session id, ever-growing transcript, no retrieval – at some length you are paying tokens for January’s small talk</li>
@@ -1748,18 +1875,18 @@ Amit Arora
 <section id="code-200-level-long-term-memory-with-mem0" class="slide level2 smaller">
 <h2>Code, 200 Level: Long-Term Memory with Mem0</h2>
 <p>Long-term memory stores <em>extracted facts</em>, keyed per user, searched per turn. The <code>strands-agents-tools</code> package wraps <a href="https://mem0.ai">Mem0</a>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href aria-label="1"></a><span class="im">from</span> strands <span class="im">import</span> Agent</span>
-<span id="cb18-2"><a href aria-label="2"></a><span class="im">from</span> strands_tools.mem0_memory <span class="im">import</span> Mem0MemoryTool</span>
-<span id="cb18-3"><a href aria-label="3"></a></span>
-<span id="cb18-4"><a href aria-label="4"></a>memory <span class="op">=</span> Mem0MemoryTool(user_id<span class="op">=</span><span class="st">&quot;user_42&quot;</span>)      <span class="co"># tenant bound here</span></span>
-<span id="cb18-5"><a href aria-label="5"></a>agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(), tools<span class="op">=</span>[memory.mem0_memory])</span>
-<span id="cb18-6"><a href aria-label="6"></a></span>
-<span id="cb18-7"><a href aria-label="7"></a>agent(<span class="st">&quot;Remember that I prefer aisle seats.&quot;</span>)</span>
-<span id="cb18-8"><a href aria-label="8"></a><span class="co"># agent calls: mem0_memory(action=&quot;store&quot;, content=&quot;prefers aisle seats&quot;)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href aria-label="1"></a><span class="co"># weeks later, any session, any machine:</span></span>
-<span id="cb19-2"><a href aria-label="2"></a>agent(<span class="st">&quot;Book me a good seat on the Tokyo flight.&quot;</span>)</span>
-<span id="cb19-3"><a href aria-label="3"></a><span class="co"># agent calls: mem0_memory(action=&quot;retrieve&quot;, query=&quot;seat preference&quot;)</span></span>
-<span id="cb19-4"><a href aria-label="4"></a><span class="co"># retrieved: &quot;prefers aisle seats&quot; -&gt; the answer books an aisle seat</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href aria-label="1"></a><span class="im">from</span> strands <span class="im">import</span> Agent</span>
+<span id="cb28-2"><a href aria-label="2"></a><span class="im">from</span> strands_tools.mem0_memory <span class="im">import</span> Mem0MemoryTool</span>
+<span id="cb28-3"><a href aria-label="3"></a></span>
+<span id="cb28-4"><a href aria-label="4"></a>memory <span class="op">=</span> Mem0MemoryTool(user_id<span class="op">=</span><span class="st">&quot;user_42&quot;</span>)      <span class="co"># tenant bound here</span></span>
+<span id="cb28-5"><a href aria-label="5"></a>agent <span class="op">=</span> Agent(model<span class="op">=</span>make_model(), tools<span class="op">=</span>[memory.mem0_memory])</span>
+<span id="cb28-6"><a href aria-label="6"></a></span>
+<span id="cb28-7"><a href aria-label="7"></a>agent(<span class="st">&quot;Remember that I prefer aisle seats.&quot;</span>)</span>
+<span id="cb28-8"><a href aria-label="8"></a><span class="co"># agent calls: mem0_memory(action=&quot;store&quot;, content=&quot;prefers aisle seats&quot;)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href aria-label="1"></a><span class="co"># weeks later, any session, any machine:</span></span>
+<span id="cb29-2"><a href aria-label="2"></a>agent(<span class="st">&quot;Book me a good seat on the Tokyo flight.&quot;</span>)</span>
+<span id="cb29-3"><a href aria-label="3"></a><span class="co"># agent calls: mem0_memory(action=&quot;retrieve&quot;, query=&quot;seat preference&quot;)</span></span>
+<span id="cb29-4"><a href aria-label="4"></a><span class="co"># retrieved: &quot;prefers aisle seats&quot; -&gt; the answer books an aisle seat</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>The model chooses <code>store</code> and <code>retrieve</code> and their content; the <strong><code>user_id</code> is bound in code at construction</strong> – the model never picks whose memory it touches</li>
 <li>Mem0 runs locally against FAISS for the vector side, or as a hosted platform; the extraction step is an LLM call it makes for you</li>

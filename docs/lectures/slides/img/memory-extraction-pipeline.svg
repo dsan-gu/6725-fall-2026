@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 400" width="1080" height="400">
+<defs>
+<marker id="ep-ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="ep-arA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="400" fill="white"/>
+
+<rect x="30" y="90" width="230" height="180" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="145" y="122" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#111827" text-anchor="middle">SHORT-TERM</text>
+<text x="145" y="141" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">the session transcript</text>
+<text x="145" y="168" font-family="Courier, monospace" font-size="11.5" fill="#6b7280" text-anchor="middle">user message</text>
+<text x="145" y="188" font-family="Courier, monospace" font-size="11.5" fill="#6b7280" text-anchor="middle">assistant reply</text>
+<text x="145" y="208" font-family="Courier, monospace" font-size="11.5" fill="#6b7280" text-anchor="middle">tool result</text>
+<text x="145" y="238" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#6b7280" text-anchor="middle">raw turns, in order</text>
+
+<line x1="260" y1="180" x2="332" y2="180" stroke="#b45309" stroke-width="1.8" marker-end="url(#ep-arA)"/>
+<text x="296" y="165" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#b45309" text-anchor="middle">async,</text>
+<text x="296" y="200" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#b45309" text-anchor="middle">after the turn</text>
+
+<rect x="340" y="110" width="200" height="140" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+<text x="440" y="142" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#b45309" text-anchor="middle">PHASE 1: EXTRACT</text>
+<text x="440" y="164" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">an LLM reads the turns</text>
+<text x="440" y="183" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">with the extraction prompt,</text>
+<text x="440" y="202" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">returns short candidate facts</text>
+<text x="440" y="230" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#b45309" text-anchor="middle">the prompt is configurable</text>
+
+<line x1="540" y1="180" x2="592" y2="180" stroke="#6b7280" stroke-width="1.8" marker-end="url(#ep-ar)"/>
+
+<rect x="600" y="110" width="220" height="140" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+<text x="710" y="142" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#b45309" text-anchor="middle">PHASE 2: RECONCILE</text>
+<text x="710" y="164" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">search the store for related</text>
+<text x="710" y="183" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">memories; an LLM picks, per fact:</text>
+<text x="710" y="207" font-family="Courier, monospace" font-size="12" font-weight="bold" fill="#111827" text-anchor="middle">ADD UPDATE DELETE NONE</text>
+<text x="710" y="230" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#b45309" text-anchor="middle">this prompt is configurable too</text>
+
+<line x1="820" y1="180" x2="872" y2="180" stroke="#6b7280" stroke-width="1.8" marker-end="url(#ep-ar)"/>
+
+<rect x="880" y="90" width="180" height="180" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="970" y="122" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="bold" fill="#111827" text-anchor="middle">LONG-TERM</text>
+<text x="970" y="144" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">"Alice is a software</text>
+<text x="970" y="161" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">engineer"</text>
+<text x="970" y="182" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">"prefers clean,</text>
+<text x="970" y="199" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">maintainable code"</text>
+<text x="970" y="226" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#6b7280" text-anchor="middle">embedded, keyed by</text>
+<text x="970" y="242" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#6b7280" text-anchor="middle">user, timestamped</text>
+
+<path d="M 700 250 C 680 310, 480 310, 450 255" fill="none" stroke="#6b7280" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#ep-ar)"/>
+<text x="575" y="330" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">phase 2 reads the store before it writes: new facts are compared, merged, or dropped,</text>
+<text x="575" y="347" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">so a changed preference replaces the old one instead of contradicting it</text>
+</svg>
