@@ -14,7 +14,7 @@ Slides for each week are rendered from Quarto (`.qmd`) sources in `docs/lectures
 | [8](week8.md) | Agent Evals in Practice |
 | [9](week9.md) | Agent Deployment and Agent Sandboxes |
 | [10](week10.md) | A2A and the Agent Primitives |
-| [11](week11.md) | Ontology and the Semantic Layer |
+| [11](week11.md) | Agent Identity, Policy, and Guardrails |
 | [12](week12.md) | Fine-tuning Generative AI Models |
 | [13](week13.md) | AI Ethics and Responsible AI |
 | 14 | Project Presentations (no slides) |

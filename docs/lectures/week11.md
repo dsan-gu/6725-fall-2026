@@ -1,4 +1,4 @@
-# Week 11: Ontology and the Semantic Layer
+# Week 11: Agent Identity, Policy, and Guardrails
 
 <p class="deck-actions"><a href="../assets/html/week11.html" target="_blank">Open slides full screen &rarr;</a></p>
 

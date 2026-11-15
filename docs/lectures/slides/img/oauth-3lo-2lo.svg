@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 470" width="1080" height="470">
+<defs>
+<marker id="ol-ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="ol-arA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="470" fill="white"/>
+
+<text x="270" y="38" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#111827" text-anchor="middle">3LO: three-legged OAuth (a human consents)</text>
+
+<rect x="40" y="60" width="130" height="46" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+<text x="105" y="88" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#111827" text-anchor="middle">ALICE</text>
+<rect x="205" y="60" width="130" height="46" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+<text x="270" y="81" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#111827" text-anchor="middle">APP</text>
+<text x="270" y="98" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">(the client)</text>
+<rect x="370" y="60" width="130" height="46" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+<text x="435" y="81" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#111827" text-anchor="middle">AUTH SERVER</text>
+<text x="435" y="98" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">(the IdP)</text>
+
+<line x1="105" y1="106" x2="105" y2="430" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="270" y1="106" x2="270" y2="430" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="435" y1="106" x2="435" y2="430" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+
+<line x1="105" y1="140" x2="262" y2="140" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="185" y="131" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">"connect my calendar"</text>
+<line x1="270" y1="175" x2="428" y2="175" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="350" y="166" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">redirect Alice to log in</text>
+<line x1="435" y1="215" x2="113" y2="215" stroke="#b45309" stroke-width="1.8" marker-end="url(#ol-arA)"/>
+<text x="275" y="206" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#b45309" text-anchor="middle">consent screen: "App wants calendar access. Allow?"</text>
+<line x1="105" y1="250" x2="428" y2="250" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="270" y="241" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Alice logs in, clicks Allow</text>
+<line x1="435" y1="290" x2="278" y2="290" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="355" y="281" font-family="Courier, monospace" font-size="10.5" fill="#6b7280" text-anchor="middle">authorization code -&gt; tokens</text>
+<text x="270" y="330" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">the app now acts WITH Alice's</text>
+<text x="270" y="347" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">consent, inside her scopes</text>
+<text x="270" y="395" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#b45309" text-anchor="middle">three legs: user, app, server.</text>
+<text x="270" y="412" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#b45309" text-anchor="middle">Built for a human at a browser.</text>
+
+<line x1="560" y1="60" x2="560" y2="430" stroke="#e5e7eb" stroke-width="1.5"/>
+
+<text x="810" y="38" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#111827" text-anchor="middle">2LO: two-legged OAuth (no human anywhere)</text>
+
+<rect x="610" y="60" width="150" height="46" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+<text x="685" y="81" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#111827" text-anchor="middle">SERVICE</text>
+<text x="685" y="98" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">(nightly batch job)</text>
+<rect x="800" y="60" width="140" height="46" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+<text x="870" y="88" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#111827" text-anchor="middle">AUTH SERVER</text>
+<rect x="970" y="60" width="90" height="46" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+<text x="1015" y="88" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#111827" text-anchor="middle">API</text>
+
+<line x1="685" y1="106" x2="685" y2="430" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="870" y1="106" x2="870" y2="430" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="1015" y1="106" x2="1015" y2="430" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+
+<line x1="685" y1="150" x2="862" y2="150" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="775" y="141" font-family="Courier, monospace" font-size="10.5" fill="#6b7280" text-anchor="middle">client_credentials + secret</text>
+<line x1="870" y1="190" x2="693" y2="190" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="780" y="181" font-family="Courier, monospace" font-size="10.5" fill="#6b7280" text-anchor="middle">access token (its OWN identity)</text>
+<line x1="685" y1="235" x2="1007" y2="235" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ol-ar)"/>
+<text x="846" y="226" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">call the API as itself</text>
+
+<text x="850" y="330" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">no consent screen, no user scopes:</text>
+<text x="850" y="347" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">the service is the principal</text>
+<text x="850" y="395" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#b45309" text-anchor="middle">two legs: service, server.</text>
+<text x="850" y="412" font-family="Helvetica, Arial, sans-serif" font-size="11" font-style="italic" fill="#b45309" text-anchor="middle">Built for machines acting as themselves.</text>
+</svg>

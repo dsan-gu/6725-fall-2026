@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 470" width="1080" height="470">
+<defs>
+<marker id="ob-ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="ob-arA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="470" fill="white"/>
+
+<rect x="50" y="30" width="160" height="52" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="130" y="53" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">ALICE</text>
+<text x="130" y="71" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">logged in via 3LO</text>
+<rect x="330" y="30" width="180" height="52" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="420" y="53" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">TRAVEL AGENT</text>
+<text x="420" y="71" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">workload identity (2LO)</text>
+<rect x="620" y="30" width="180" height="52" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="710" y="53" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">AUTH SERVER</text>
+<text x="710" y="71" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">token exchange endpoint</text>
+<rect x="890" y="30" width="160" height="52" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="970" y="53" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">BOOKINGS API</text>
+<text x="970" y="71" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">resource server</text>
+
+<line x1="130" y1="82" x2="130" y2="440" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="420" y1="82" x2="420" y2="440" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="710" y1="82" x2="710" y2="440" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+<line x1="970" y1="82" x2="970" y2="440" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,5"/>
+
+<line x1="130" y1="120" x2="412" y2="120" stroke="#6b7280" stroke-width="1.7" marker-end="url(#ob-ar)"/>
+<text x="272" y="111" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">"book my Tokyo trip" + Alice's token</text>
+
+<line x1="420" y1="175" x2="702" y2="175" stroke="#b45309" stroke-width="1.8" marker-end="url(#ob-arA)"/>
+<text x="563" y="152" font-family="Courier, monospace" font-size="11" fill="#b45309" text-anchor="middle">grant_type=token-exchange</text>
+<text x="563" y="168" font-family="Courier, monospace" font-size="11" fill="#b45309" text-anchor="middle">subject_token=&lt;Alice&gt;  audience=bookings</text>
+
+<line x1="710" y1="235" x2="428" y2="235" stroke="#b45309" stroke-width="1.8" marker-end="url(#ob-arA)"/>
+<text x="563" y="212" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#b45309" text-anchor="middle">the composite token:</text>
+<text x="563" y="228" font-family="Courier, monospace" font-size="11" fill="#b45309" text-anchor="middle">{"sub":"alice", "act":{"sub":"travel-agent"}}</text>
+
+<line x1="420" y1="290" x2="962" y2="290" stroke="#6b7280" stroke-width="1.7" marker-end="url(#ob-ar)"/>
+<text x="690" y="281" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">POST /reserve with the composite token (scope: bookings:write, 15 min)</text>
+
+<line x1="970" y1="345" x2="428" y2="345" stroke="#6b7280" stroke-width="1.7" marker-end="url(#ob-ar)"/>
+<text x="690" y="336" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">booked; audit line records BOTH principals</text>
+
+<line x1="420" y1="390" x2="138" y2="390" stroke="#6b7280" stroke-width="1.7" marker-end="url(#ob-ar)"/>
+<text x="272" y="381" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">"done: BK7341"</text>
+
+<text x="540" y="430" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-style="italic" fill="#6b7280" text-anchor="middle">OBO = on-behalf-of: 3LO got Alice in the door, 2LO gave the agent its own identity,</text>
+<text x="540" y="447" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-style="italic" fill="#6b7280" text-anchor="middle">and token exchange (RFC 8693) fuses them into one composite credential</text>
+</svg>
