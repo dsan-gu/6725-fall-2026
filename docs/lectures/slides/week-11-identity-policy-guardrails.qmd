@@ -233,6 +233,10 @@ grows up into **workload identity**:
 - Hotel version: the housekeeping badge re-issues itself every shift, per
   floor -- lose one and it is dead within the hour
 
+## SPIFFE: Identity Without Secrets
+
+![](img/spiffe-svid.svg){height=440 fig-align="center"}
+
 ## The 300 Level: the User Who Is Not There {.smaller}
 
 The agent patterns that stretch identity furthest are the unattended
@@ -336,6 +340,17 @@ the enterprise wants ONE place to govern it.
 - This is OBO grown up for the enterprise: same token-exchange idea,
   with the IdP as the policy point -- the loyalty program head office
   deciding which valets work in which hotels
+
+## ID-JAG, Step by Step
+
+![](img/id-jag-sequence.svg){height=440 fig-align="center"}
+
+## Cross App Access: the Admin's View
+
+![](img/xaa-hub.svg){height=430 fig-align="center"}
+
+One row in the matrix, one decision; the IdP mints ID-JAGs for ALLOW
+rows and refuses the rest. That console is why enterprises wanted XAA.
 
 ## Products and Standards {.smaller}
 

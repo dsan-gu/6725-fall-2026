@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 470" width="1080" height="470">
+<defs>
+<marker id="sp-ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#6b7280"/>
+</marker>
+<marker id="sp-arA" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+<marker id="sp-ar2" markerWidth="9" markerHeight="7" refX="1" refY="3.5" orient="auto-start-reverse">
+  <polygon points="0 0, 9 3.5, 0 7" fill="#b45309"/>
+</marker>
+</defs>
+<rect width="1080" height="470" fill="white"/>
+
+<rect x="360" y="30" width="300" height="80" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="510" y="60" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">SPIRE SERVER</text>
+<text x="510" y="81" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">the trust authority: knows which workloads</text>
+<text x="510" y="97" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">are registered and what identity each gets</text>
+
+<rect x="60" y="180" width="440" height="230" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="6,4"/>
+<text x="280" y="205" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="middle">THE NODE (week 9's host)</text>
+
+<rect x="90" y="225" width="180" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="180" y="257" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">THE AGENT</text>
+<text x="180" y="278" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">week 9's container,</text>
+<text x="180" y="294" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">deployed with NO secrets</text>
+
+<rect x="300" y="225" width="170" height="90" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="385" y="257" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">SPIRE AGENT</text>
+<text x="385" y="278" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">watches the node; checks</text>
+<text x="385" y="294" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">who is really asking</text>
+
+<line x1="270" y1="270" x2="292" y2="270" stroke="#6b7280" stroke-width="1.7" marker-end="url(#sp-ar)"/>
+<text x="281" y="258" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">1</text>
+<text x="180" y="340" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">1. "who am I?" -- attestation:</text>
+<text x="180" y="356" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">the process, image, and node are</text>
+<text x="180" y="372" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">inspected, not a password checked</text>
+
+<line x1="430" y1="225" x2="480" y2="116" stroke="#6b7280" stroke-width="1.6" marker-end="url(#sp-ar)"/>
+<text x="490" y="170" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b7280" text-anchor="start">2. verify against registry</text>
+
+<line x1="385" y1="315" x2="250" y2="315" stroke="#b45309" stroke-width="2" marker-end="url(#sp-arA)"/>
+<text x="318" y="332" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#b45309" text-anchor="middle">3. the SVID</text>
+
+<rect x="560" y="200" width="460" height="110" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+<text x="790" y="228" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b45309" text-anchor="middle">THE SVID: the identity document</text>
+<text x="790" y="252" font-family="Courier, monospace" font-size="12.5" fill="#111827" text-anchor="middle">spiffe://corp.example/agents/travel-agent</text>
+<text x="790" y="276" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">an X.509 certificate (or JWT) carrying that URI,</text>
+<text x="790" y="294" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b7280" text-anchor="middle">valid for about an hour, renewed automatically</text>
+
+<rect x="700" y="350" width="240" height="70" rx="8" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+<text x="820" y="378" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#111827" text-anchor="middle">PEER SERVICE</text>
+<text x="820" y="398" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle">has its own SVID</text>
+
+<line x1="270" y1="290" x2="692" y2="380" stroke="#b45309" stroke-width="1.8" marker-start="url(#sp-ar2)" marker-end="url(#sp-arA)"/>
+<text x="480" y="395" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#b45309" text-anchor="middle">4. mutual TLS: each side proves its SPIFFE identity</text>
+
+<text x="540" y="450" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-style="italic" fill="#6b7280" text-anchor="middle">no secret was ever provisioned, stored, or rotated by a human: identity comes from attestation, and it expires on its own</text>
+</svg>
