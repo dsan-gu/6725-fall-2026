@@ -1264,7 +1264,7 @@ Amit Arora
 <li>The tempting shortcut is the anti-pattern: give the agent one broadly scoped service account and let it act for everyone</li>
 </ul>
 <div class="idea-callout">
-<p>The hotel version of the shortcut: hand the concierge a master key that opens every room in the building. It works right up until the concierge is confused, compromised, or merely wrong – and the audit log says only “the master key was used.”</p>
+<p>The hotel version of the shortcut: hand the concierge a master key that opens every room in the building. It works right up until the concierge is confused, compromised, or just wrong – and the audit log says only “the master key was used.”</p>
 </div>
 <ul>
 <li>What an agent needs is both at once: its own identity, <em>and</em> the specific user’s authority, in one credential</li>
@@ -1315,7 +1315,7 @@ Amit Arora
 </div></div>
 <ul>
 <li>3LO got Alice in the door; 2LO gave the agent its own identity; token exchange fuses them</li>
-<li>Microsoft’s identity platform named this flow OBO years before agents; agents made it the main event</li>
+<li>Microsoft’s identity platform named this flow OBO years before agents; agents made it the common case</li>
 </ul>
 </section>
 <section id="the-whole-obo-round-trip" class="slide level2">
@@ -1351,7 +1351,7 @@ Amit Arora
 <p>The agent patterns that stretch identity furthest are the unattended ones: scheduled runs, long tasks, standing instructions.</p>
 <ul>
 <li><strong>Durable delegation</strong>: a refresh token or stored grant lets the agent keep acting after Alice closes her laptop – the reservation on file that mints new keycards without her passport</li>
-<li><strong>Expiry as a feature</strong>: a grant that lives forever is a liability with a calendar; bound every delegation in time and scope</li>
+<li><strong>Expiry as a feature</strong>: bound every delegation in time and scope; a grant with no end date is an incident that has not picked its day yet</li>
 <li><strong>Revocation – how do you fire an agent?</strong> Kill its workload identity and its stored grants, and every composite token it could mint dies with them. If you cannot answer “how would we revoke it,” the agent is not ready to run unattended</li>
 <li><strong>Consent that holds up</strong>: Alice should be able to see what standing authority her agents hold and withdraw it – the consent portal pattern (AgentCore ships one)</li>
 </ul>
@@ -1401,7 +1401,7 @@ Amit Arora
 <ul>
 <li><strong>ID-JAG – Identity Assertion JWT Authorization Grant</strong> (<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-assertion-authz-grant">IETF draft</a>): App A takes Alice’s ID token to the <strong>enterprise IdP</strong>, which exchanges it for a signed grant naming the target; App A redeems that grant at App B’s authorization server for an access token</li>
 <li>The IdP sits in the middle of every cross-app hop, so the enterprise admin decides <strong>which agents may reach which apps</strong> – in one console, revocable in one place</li>
-<li><strong>Cross App Access (XAA)</strong> is Okta’s productization of ID-JAG; Okta, Auth0, and Descope all shipped it within days of each other (Aug-Sep 2026), and MCP publishes the same pattern as its optional <strong>Enterprise-Managed Authorization</strong> extension</li>
+<li><strong>Cross App Access (XAA)</strong> is Okta’s shipping version of ID-JAG; Okta, Auth0, and Descope all shipped it within days of each other (Aug-Sep 2026), and MCP publishes the same pattern as its optional <strong>Enterprise-Managed Authorization</strong> extension</li>
 <li>This is OBO grown up for the enterprise: same token-exchange idea, with the IdP as the policy point – the loyalty program head office deciding which valets work in which hotels</li>
 </ul>
 </section>
@@ -1501,7 +1501,7 @@ Amit Arora
 <ul>
 <li>The model is <strong>relationship-based access control</strong>: “Alice may read doc-7 because she is in group X which owns folder Y” – the <a href="https://research.google/pubs/zanzibar-googles-consistent-global-authorization-system/">Zanzibar</a> lineage, open-sourced as <a href="https://openfga.dev/">OpenFGA</a></li>
 <li><strong>The RAG problem from weeks 3-4, now with teeth</strong>: the agent’s retriever must only surface chunks the <em>current user</em> may see. Filtering at generation time is too late – the context window already leaked. Filter at <strong>retrieval time</strong>, by permission</li>
-<li>Auth0’s fine-grained authorization for RAG productizes exactly that check; self-hosters put OpenFGA in the retriever</li>
+<li>Auth0 sells exactly that check as its fine-grained authorization for RAG; self-hosters put OpenFGA in the retriever</li>
 <li>Week 10 already taught the pattern once: <code>user_id</code> bound in code so one tenant cannot read another’s memories – FGA is that idea generalized to every document and tool</li>
 </ul>
 </section>
@@ -1546,7 +1546,7 @@ Amit Arora
 </table>
 <ul>
 <li>Decision and enforcement can separate: one policy engine, many enforcement points asking it</li>
-<li>The failure mode: policy that lives only in the system prompt. “Please do not call delete_rows” is a wish, not a policy – the model can be talked out of a wish</li>
+<li>The failure mode: policy that lives only in the system prompt. “Please do not call delete_rows” sits in text the model weighs against other text – an injected paragraph can outvote it</li>
 </ul>
 </section></section>
 <section>
@@ -1636,7 +1636,7 @@ Amit Arora
 <li><strong>Argument validation</strong>: week 4’s statement validator – permission to call a tool is separate from permission to pass any argument to it</li>
 <li><strong>Approval gates</strong>: week 5’s “gate destructive tools”; now wired to part 1’s async authorization for the human answer</li>
 <li><strong>Budget caps</strong>: iterations, tokens, dollars, wall clock – week 5’s caps, promoted to policy</li>
-<li>The deep reason tool rails work when text rails fail: a tool call is <strong>structured</strong> – you can parse it, type-check it, and bound it. Prose cannot be bounded; <code>amount_usd &lt;= 5000</code> can</li>
+<li>The deep reason tool rails work when text rails fail: a tool call is <strong>structured</strong> – you can parse it, type-check it, and bound it. You cannot bound prose; you can bound <code>amount_usd &lt;= 5000</code></li>
 </ul>
 </section>
 <section id="output-rails" class="slide level2 smaller">

@@ -121,7 +121,7 @@ An agent is neither of the identities we had:
 ::: {.idea-callout}
 The hotel version of the shortcut: hand the concierge a master key that
 opens every room in the building. It works right up until the concierge
-is confused, compromised, or merely wrong -- and the audit log says only
+is confused, compromised, or just wrong -- and the audit log says only
 "the master key was used."
 :::
 
@@ -199,7 +199,7 @@ either.
 - 3LO got Alice in the door; 2LO gave the agent its own identity; token
   exchange fuses them
 - Microsoft's identity platform named this flow OBO years before agents;
-  agents made it the main event
+  agents made it the common case
 
 ## The Whole OBO Round Trip
 
@@ -241,8 +241,8 @@ ones: scheduled runs, long tasks, standing instructions.
 - **Durable delegation**: a refresh token or stored grant lets the agent
   keep acting after Alice closes her laptop -- the reservation on file
   that mints new keycards without her passport
-- **Expiry as a feature**: a grant that lives forever is a liability with
-  a calendar; bound every delegation in time and scope
+- **Expiry as a feature**: bound every delegation in time and scope; a
+  grant with no end date is an incident that has not picked its day yet
 - **Revocation -- how do you fire an agent?** Kill its workload identity
   and its stored grants, and every composite token it could mint dies
   with them. If you cannot answer "how would we revoke it," the agent is
@@ -329,7 +329,7 @@ the enterprise wants ONE place to govern it.
 - The IdP sits in the middle of every cross-app hop, so the enterprise
   admin decides **which agents may reach which apps** -- in one console,
   revocable in one place
-- **Cross App Access (XAA)** is Okta's productization of ID-JAG; Okta,
+- **Cross App Access (XAA)** is Okta's shipping version of ID-JAG; Okta,
   Auth0, and Descope all shipped it within days of each other
   (Aug-Sep 2026), and MCP publishes the same pattern as its optional
   **Enterprise-Managed Authorization** extension
@@ -459,8 +459,8 @@ everything.
   retriever must only surface chunks the *current user* may see.
   Filtering at generation time is too late -- the context window already
   leaked. Filter at **retrieval time**, by permission
-- Auth0's fine-grained authorization for RAG productizes exactly that
-  check; self-hosters put OpenFGA in the retriever
+- Auth0 sells exactly that check as its fine-grained authorization for
+  RAG; self-hosters put OpenFGA in the retriever
 - Week 10 already taught the pattern once: `user_id` bound in code so one
   tenant cannot read another's memories -- FGA is that idea generalized
   to every document and tool
@@ -479,8 +479,8 @@ A policy needs an enforcement point -- somewhere the request must pass:
 - Decision and enforcement can separate: one policy engine, many
   enforcement points asking it
 - The failure mode: policy that lives only in the system prompt.
-  "Please do not call delete_rows" is a wish, not a policy -- the model
-  can be talked out of a wish
+  "Please do not call delete_rows" sits in text the model weighs against
+  other text -- an injected paragraph can outvote it
 
 # Part 3: Guardrails
 
@@ -553,8 +553,8 @@ because agents act -- and this is where weeks 4 and 5 already live:
 - **Budget caps**: iterations, tokens, dollars, wall clock -- week 5's
   caps, promoted to policy
 - The deep reason tool rails work when text rails fail: a tool call is
-  **structured** -- you can parse it, type-check it, and bound it. Prose
-  cannot be bounded; `amount_usd <= 5000` can
+  **structured** -- you can parse it, type-check it, and bound it. You
+  cannot bound prose; you can bound `amount_usd <= 5000`
 
 ## Output Rails {.smaller}
 
