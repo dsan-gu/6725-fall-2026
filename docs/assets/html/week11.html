@@ -1261,7 +1261,7 @@ Amit Arora
 <ul>
 <li><strong>Not a human</strong>: no browser to redirect, no password to type, and it runs at 3 a.m. when nobody can click Allow – so pure 3LO fails</li>
 <li><strong>Not a plain service</strong>: a batch job does the same thing for everyone; an agent does <em>different things for different users</em> with <em>their</em> permissions – so pure 2LO fails too</li>
-<li>The tempting shortcut is the anti-pattern: give the agent one powerful service account and let it act for everyone</li>
+<li>The tempting shortcut is the anti-pattern: give the agent one broadly scoped service account and let it act for everyone</li>
 </ul>
 <div class="idea-callout">
 <p>The hotel version of the shortcut: hand the concierge a master key that opens every room in the building. It works right up until the concierge is confused, compromised, or merely wrong – and the audit log says only “the master key was used.”</p>
@@ -1443,7 +1443,7 @@ Amit Arora
 <ul>
 <li><strong>The over-privileged agent</strong>: scoped to everything because scoping was hard that sprint; the blast radius of week 9’s sandbox discussion, but in credentials</li>
 <li><strong>The shared super-user key</strong>: one service account for every user’s errands – no per-user audit, no per-user revocation, the master key</li>
-<li><strong>The confused deputy</strong>: the agent tricked into spending ITS authority on an attacker’s behalf – injection (part 3) plus a too-powerful identity is exactly this</li>
+<li><strong>The confused deputy</strong>: the agent tricked into spending ITS authority on an attacker’s behalf – injection (part 3) plus an over-scoped identity is exactly this</li>
 <li><strong>Credentials visible to the model</strong>: a key in the prompt is a key the model can be talked into repeating; week 6’s lab rule (bind in code, never in context) is the defense</li>
 <li><strong>No revocation story</strong>: the agent that cannot be fired</li>
 <li>Every one of these is cheaper to prevent at design time than to explain in an incident review</li>
@@ -1633,7 +1633,7 @@ Amit Arora
 <p>Chat products need input and output rails. <strong>Agents need tool rails</strong>, because agents act – and this is where weeks 4 and 5 already live:</p>
 <ul>
 <li><strong>Allow-lists</strong>: the agent calls the tools on its list, nothing else; deny by default (part 2’s policy, enforced here)</li>
-<li><strong>Argument validation</strong>: week 4’s statement validator – the tool checks what the model asked for, not just that it may ask</li>
+<li><strong>Argument validation</strong>: week 4’s statement validator – permission to call a tool is separate from permission to pass any argument to it</li>
 <li><strong>Approval gates</strong>: week 5’s “gate destructive tools”; now wired to part 1’s async authorization for the human answer</li>
 <li><strong>Budget caps</strong>: iterations, tokens, dollars, wall clock – week 5’s caps, promoted to policy</li>
 <li>The deep reason tool rails work when text rails fail: a tool call is <strong>structured</strong> – you can parse it, type-check it, and bound it. Prose cannot be bounded; <code>amount_usd &lt;= 5000</code> can</li>

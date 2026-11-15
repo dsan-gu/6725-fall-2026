@@ -115,8 +115,8 @@ An agent is neither of the identities we had:
 - **Not a plain service**: a batch job does the same thing for everyone;
   an agent does *different things for different users* with *their*
   permissions -- so pure 2LO fails too
-- The tempting shortcut is the anti-pattern: give the agent one powerful
-  service account and let it act for everyone
+- The tempting shortcut is the anti-pattern: give the agent one broadly
+  scoped service account and let it act for everyone
 
 ::: {.idea-callout}
 The hotel version of the shortcut: hand the concierge a master key that
@@ -366,7 +366,7 @@ The ways agent identity goes wrong, all seen in the wild:
 - **The shared super-user key**: one service account for every user's
   errands -- no per-user audit, no per-user revocation, the master key
 - **The confused deputy**: the agent tricked into spending ITS authority
-  on an attacker's behalf -- injection (part 3) plus a too-powerful
+  on an attacker's behalf -- injection (part 3) plus an over-scoped
   identity is exactly this
 - **Credentials visible to the model**: a key in the prompt is a key the
   model can be talked into repeating; week 6's lab rule (bind in code,
@@ -546,8 +546,8 @@ because agents act -- and this is where weeks 4 and 5 already live:
 
 - **Allow-lists**: the agent calls the tools on its list, nothing else;
   deny by default (part 2's policy, enforced here)
-- **Argument validation**: week 4's statement validator -- the tool
-  checks what the model asked for, not just that it may ask
+- **Argument validation**: week 4's statement validator -- permission to
+  call a tool is separate from permission to pass any argument to it
 - **Approval gates**: week 5's "gate destructive tools"; now wired to
   part 1's async authorization for the human answer
 - **Budget caps**: iterations, tokens, dollars, wall clock -- week 5's
