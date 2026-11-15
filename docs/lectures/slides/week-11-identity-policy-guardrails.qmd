@@ -785,3 +785,11 @@ got through and why. Repo details land with the lab.
 - [Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) · [guardrail components](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-components.html) · [Azure AI Content Safety](https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety)
 - [Strands hooks](https://strandsagents.com/docs/user-guide/concepts/agents/hooks/)
 - [Simon Willison on prompt injection](https://simonwillison.net/series/prompt-injection/)
+
+## The Week on One Poster, Front
+
+![](img/poster-identity-p1.png){height=660 fig-align="center"}
+
+## The Week on One Poster, Back
+
+![](img/poster-identity-p2.png){height=660 fig-align="center"}
