@@ -334,7 +334,7 @@ picture.
 ## FMBench {.smaller}
 
 [FMBench](https://github.com/aws-samples/foundation-model-benchmarking-tool)
-benchmarks foundation models where they actually run:
+benchmarks foundation models on the stacks where they run in production:
 
 - Deployments on SageMaker, Bedrock, EKS, and EC2; open-source,
   proprietary, and third-party models
@@ -519,8 +519,9 @@ need. The vendors have noticed, which is the next five slides.
 - One source of business meaning, many consumers: Fabric data agents,
   operations agents, Foundry IQ, Copilot Studio, and **any MCP client**
   read the same ontology
-- The operational angle is distinctive: agents do not just answer from
-  the ontology, they **monitor what is happening and act on it**
+- The operational angle sets it apart: agents answer from the ontology
+  AND **monitor what is happening and act on it**, through the live data
+  bindings
 - Microsoft's bet: the semantic model you already maintain for BI
   becomes your agents' source of truth
 
