@@ -124,8 +124,8 @@ A Google Spreadsheet overview of the course with topics, dates, and deliverables
 | 9     | Agent Deployment and Agent Sandboxes                 | Containerizing agents, the ping/invocations contract, managed agent runtimes across clouds; sandboxing agentic AI |
 | 10    | A2A and the Agent Primitives                         | The A2A protocol on the wire: tasks, streaming, push; the five agent primitives, with memory as the new one |
 | 11    | Agent Identity, Policy, and Guardrails               | Composite identity, OBO and token exchange, policy as code, and runtime guardrails around deployed agents |
-| 12    | Fine-tuning Generative AI Models                     | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques; when to fine-tune vs RAG vs prompt |
-| 13    | AI Ethics and Responsible AI                         | Bias mitigation, safety, societal impact, regulation, and responsible deployment of GenAI systems |
+| 12    | Tokenomics and the Semantic Layer                    | The economics of token-metered systems, open-weight vs frontier model selection, and machine-readable meaning for agents |
+| 13    | Fine-tuning, Responsible AI, and the Course Close    | LoRA and PEFT, when to fine-tune vs RAG vs prompt, responsible AI, and the full course arc |
 | 14    | Project Presentations, Open Discussion               | Final project presentations and open discussion on course topics |
 
 ## Final Grades

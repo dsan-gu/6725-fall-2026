@@ -1,0 +1,624 @@
+---
+title: "Week 12: Tokenomics and the Semantic Layer"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: "c/t"
+    show-slide-number: all
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Agenda {.smaller}
+
+Two things every production agent runs on that no demo ever shows: a
+budget, and a shared vocabulary.
+
+- **Part 1: Tokenomics** -- what LLM calls cost, the levers that move the
+  bill (caching, batching, routing), cost-per-task thinking, the
+  open-weight vs frontier decision, and how to benchmark it on your own
+  workload
+- **Part 2: The semantic layer** -- ontologies and knowledge graphs,
+  grounding text-to-SQL, why agents need machine-readable meaning, and
+  the vendor race that broke out this year (AWS, Microsoft, Databricks,
+  NVIDIA, and an Apache standard)
+- Next week: fine-tuning, responsible AI, and the course close
+
+# Part 1: Tokenomics
+
+## What Is Tokenomics?
+
+- **Tokenomics**: the economics of building on token-metered models
+- Every LLM call is a purchase: you pay per **token in** and per
+  **token out**
+- Small design decisions (prompt length, model choice, retry policy)
+  compound into the largest line item of a GenAI product
+- The developer's job: deliver **required quality at the lowest
+  cost-per-task**, never the lowest cost-per-token
+
+## How API Pricing Works
+
+- Providers price per **million tokens**, split three ways:
+
+| Meter | What it covers | Typical relative price |
+|-------|----------------|------------------------|
+| **Input tokens** | Prompt: system, context, history, tools | Baseline |
+| **Output tokens** | Generated completion | ~3-5x input |
+| **Cached input tokens** | Previously seen prompt prefix | ~0.1-0.25x input |
+
+- Consequence: **verbose outputs are the most expensive thing you can
+  ask for**
+- Batch and asynchronous tiers offer roughly 50% discounts for
+  non-interactive work
+
+## Cost Drivers in Real Applications {.smaller}
+
+Everything this course built in weeks 5 to 11 shows up on the bill:
+
+- **Context stuffing**: RAG chunks, long system prompts, full
+  conversation history resent every turn
+- **Tool schemas**: every tool definition rides along in *every* request
+  -- week 6's MCP tool lists are input tokens
+- **Agent loops**: one user request becomes many model calls (plan, act,
+  reflect, retry) -- week 5's loop, priced
+- **Reasoning tokens**: extended-thinking modes bill hidden intermediate
+  tokens as output
+- **Retries and fallbacks**: failures you pay for twice
+- **Fan-out**: week 10's A2A delegation nests a full agent loop inside
+  another agent's tool call; the bills nest the same way
+
+## Anatomy of a Request's Cost
+
+```text
+cost = (input_tokens   x input_price)
+     + (cached_tokens  x cached_price)
+     + (output_tokens  x output_price)
+
+task_cost = sum over requests per task   <- the number that matters
+```
+
+- Instrument **per-task token accounting** from day one; the week 7
+  traces already carry the token counts
+- An agent that makes 25 calls at $0.01 each is a $0.25 agent -- price
+  it like one
+
+## Lever 1: Prompt Caching
+
+- Providers cache **stable prompt prefixes**: system prompt, tool
+  schemas, few-shot examples, large documents
+- Cache hits bill at a fraction of input price, and return faster
+- Design rule: **stable content first, volatile content last** -- any
+  change invalidates everything after it
+- Biggest wins: agents (same system prompt and tools every call),
+  long-document Q&A, chat with long history
+
+## Lever 2: Batching
+
+- **Batch APIs**: submit jobs asynchronously, get results within hours,
+  pay about half price
+- Ideal for: evaluation runs (week 7's eval suites belong here),
+  document pipelines, embedding generation, nightly enrichment
+- Self-hosted equivalent: **continuous batching** in vLLM and SGLang
+  raises GPU utilization, so more tokens per dollar of compute (week 2)
+- Ask of every workload: *does anyone need this answer in real time?*
+
+## Lever 3: Model Routing and Cascades {.smaller}
+
+- **Routing**: classify the request, send it to the cheapest model that
+  can handle it
+  - Small, fast models for extraction, classification, and easy traffic
+  - Frontier models for the hard reasoning
+- **Cascade**: try cheap first; escalate only on low confidence or
+  failed validation
+- **Model gateways** (LiteLLM, OpenRouter) centralize routing, fallback,
+  and spend tracking
+- You watched a real one get fixed: week 8's Meru case study was a
+  2B-parameter router choosing among execution paths, tuned with a
+  labeled set and a calibration pass
+- Routing typically cuts spend far more than prompt tweaking -- most
+  traffic is easy traffic
+
+## More Cost Levers {.smaller}
+
+- **Output discipline**: max-token limits, terse formats (JSON, not
+  prose), "answer only" instructions
+- **Context management**: summarize or truncate history; retrieve less
+  but better
+- **Distillation and fine-tuning**: move a high-volume narrow task from
+  a frontier model to a small tuned model -- next week's lecture
+- **Quantization** (self-hosted): more throughput per GPU (week 2)
+- **Semantic response caching**: identical and near-identical questions
+  answered from cache, zero tokens
+
+## Cost-per-Task vs Cost-per-Token
+
+- Cost-per-token comparisons across models mislead:
+  - A cheaper model that needs 3 attempts and a human review costs more
+  - A pricier model that one-shots the task may be the bargain
+- Define the task, measure **end-to-end**: tokens x calls x success rate
+
+```text
+effective_cost = task_cost / success_rate
+```
+
+- This is why **evaluation (week 7) and tokenomics are inseparable**:
+  you cannot optimize cost without measuring quality
+
+## Build vs Buy Economics {.smaller}
+
+| | **API (buy)** | **Self-hosted (build)** |
+|---|--------------|------------------------|
+| Cost shape | Pure variable (per token) | Fixed (GPUs) plus ops |
+| Utilization risk | None | You pay for idle GPUs |
+| Breakeven | Low or spiky volume | High, steady volume |
+| Capability ceiling | Highest | High and rising |
+| Version control | Provider-controlled | You pin the weights |
+| Time to first call | Minutes | Days to weeks |
+| Also consider | Data egress, rate limits | Talent, upgrades, model refresh cadence |
+
+- Hidden costs run both ways: migration effort, prompt re-tuning when
+  you swap models, egress
+- Which means the cost question is really a **model choice** question,
+  and that is the next section
+
+# Open-Weight vs Frontier Models
+
+## The Two Worlds of LLMs
+
+- **Frontier, proprietary models**: weights never leave the lab; access
+  by API only
+- **Open-weight models**: weights are downloadable; run them anywhere
+- The capability gap has narrowed, so the choice is now an engineering
+  decision rather than a foregone conclusion
+- Most real organizations end up with a **portfolio** of both
+
+## The Landscape, Name Level {.smaller}
+
+- **Frontier labs**: OpenAI (the GPT line), Anthropic (Claude in Opus,
+  Sonnet, Haiku tiers), Google DeepMind (Gemini) -- strongest raw
+  capability, managed safety, per-token pricing
+- **Open-weight families**: Meta Llama (community license), DeepSeek
+  (MoE and open reasoning models), Qwen (broad size range, strong
+  coding), Mistral (Apache-2.0 and research licenses), GLM (Zhipu),
+  OpenAI's gpt-oss line (Apache-2.0)
+- Hugging Face Hub is the distribution channel in practice
+
+::: {.hot-callout}
+Model names and version numbers on this slide go stale within months.
+Check the provider's own model page before you quote one in a design
+review.
+:::
+
+## Open Weights Are Not Open Source {.smaller}
+
+- **Open weights**: you get the trained parameters -- enough to run,
+  fine-tune, and deploy
+- **Open source**, in the strict sense: also the training code, the data
+  recipe, and an OSI-approved license
+- Most "open" LLMs release weights and inference code, **not** training
+  data
+- The [OSI Open Source AI Definition](https://opensource.org/ai)
+  formalizes what qualifies
+
+::: {.def-callout}
+This matters for reproducibility, for auditability, and above all for
+what your license permits you to ship.
+:::
+
+## Licenses: Read Before You Ship {.smaller}
+
+- **Apache-2.0 and MIT** (many Mistral and Qwen releases, gpt-oss):
+  permissive, commercial use, few strings
+- **Community licenses** (Llama, for one): custom terms, acceptable-use
+  policies, redistribution rules, and thresholds that kick in at very
+  large deployments
+- **Research-only licenses**: no commercial use at all
+- Check the derivative rules: what applies to your fine-tunes and your
+  distilled models?
+
+::: {.hot-callout}
+Legal review belongs in model selection, not after it. A license problem
+found at launch is a rebuild.
+:::
+
+## What Each World Buys You {.smaller}
+
+| **Frontier APIs** | **Open weights** |
+|-------------------|------------------|
+| Highest capability on the hardest tasks | **Control**: pin a version forever, no silent updates |
+| Zero infrastructure to run or patch | **Privacy**: data never leaves your VPC |
+| Fast access to new capabilities | **Customization**: full fine-tuning freedom (next week) |
+| Managed safety and abuse monitoring | **Cost at scale**: sustained volume undercuts per-token pricing |
+| Enterprise SLAs and data agreements | **Portability**: no lock-in across clouds and serving stacks |
+
+- The middle path exists: managed open-weight endpoints (Bedrock, Azure
+  AI Foundry, Together, Fireworks) give you the license and portability
+  benefits without owning a GPU
+
+## Model Selection Criteria {.smaller}
+
+- **Task fit**: measured quality on *your* evals, not leaderboard rank
+- **Modality and context**: text, vision, audio, and how much window you
+  need
+- **Latency budget**: interactive or batch
+- **Cost model**: per-token API against amortized GPU spend
+- **Data constraints**: residency, confidentiality, compliance regime
+- **License**: permitted use, redistribution, derivatives
+- **Ecosystem**: tooling, serving support, community fine-tunes
+
+## Distillation and Right-Sizing {.smaller}
+
+- **Knowledge distillation**: train a smaller student model on a
+  stronger teacher's outputs; synthetic data from frontier models is now
+  a standard training ingredient
+- Reasoning distillation brought chain-of-thought behavior to small open
+  models; the open ecosystem trails the frontier by months, not years
+- **Small models, big roles**: 1B to 14B models do well at
+  classification, extraction, routing, drafting -- the supply side of
+  the routing lever, and what this course ran locally all semester
+- A fine-tuned small model on a narrow task can match a general frontier
+  model at a fraction of the cost (next week)
+
+::: {.hot-callout}
+Most frontier API terms restrict using their outputs to train a
+competing model. Licenses, again.
+:::
+
+## Case Discussion
+
+You are the architect. Which way, and why?
+
+- A healthcare startup summarizing patient notes under HIPAA
+- A consumer app doing 50M simple classifications a day
+- An internal coding agent on a bank's proprietary codebase
+
+Defend your choice on capability, privacy, cost, and license grounds.
+
+# Measure, Then Decide
+
+## From Cost to Benchmarking
+
+- You cannot reason about tokenomics without **measured** performance
+- Benchmarking answers, for *your* workload:
+  - What does a request **cost**?
+  - How **fast** is it (latency)?
+  - How **much** can the system handle (throughput)?
+  - Is the output **good enough** (accuracy)?
+- The week 7 lesson carries: public leaderboards start the conversation;
+  your own eval set ends it
+
+## The Metrics That Matter
+
+| Metric | Definition | Who cares |
+|--------|-----------|-----------|
+| **TTFT** | Time to first token | Interactive UX |
+| **TPOT / ITL** | Time per output token | Streaming smoothness |
+| **E2E latency** | Full request round trip | Batch and agent steps |
+| **Throughput** | Tokens/sec or requests/min | Capacity planning |
+| **Cost per 1M tokens** | Dollars normalized to volume | Finance |
+| **Accuracy** | Task-specific quality score | Everyone |
+
+## Latency Percentiles
+
+- Never report averages alone -- LLM latency is long-tailed
+- Report **p50 / p90 / p99**:
+  - p50 is the typical experience
+  - p99 is what your angriest users see, and what the SLA is written
+    against
+- Tail latency worsens under load (queueing, batching effects); measure
+  at realistic **concurrency**, not with one sequential client
+- Agent pipelines compound tails: 5 sequential calls at p90 each is
+  close to a coin flip of at least one slow step
+
+## Benchmarking Methodology {.smaller}
+
+1. **Fix the workload**: real prompt and response length distributions
+   from your app, not synthetic short prompts
+2. **Sweep concurrency**: 1 to N clients; find where latency degrades
+3. **Measure everything per run**: TTFT, TPOT, E2E, throughput, errors,
+   dollars
+4. **Hold accuracy constant**: a faster config that degrades quality is
+   not faster, it is worse
+5. **Repeat runs**; report percentiles with configs pinned (model
+   version, quantization, instance)
+
+Tools: [MLPerf](https://mlcommons.org/benchmarks/) for hardware,
+[Ray LLMPerf](https://github.com/ray-project/llmperf) for load-testing
+endpoints, and FMBench (next slide) for the full price-performance
+picture.
+
+## FMBench {.smaller}
+
+[FMBench](https://github.com/aws-samples/foundation-model-benchmarking-tool)
+benchmarks foundation models where they actually run:
+
+- Deployments on SageMaker, Bedrock, EKS, and EC2; open-source,
+  proprietary, and third-party models
+- **Performance and cost in one run**: latency, throughput, and cost per
+  request per instance type
+- **LLM-judge evaluation**: a panel of judges scores relevance,
+  correctness, coherence -- quality and cost measured on the same run,
+  which is exactly the cost-per-task view
+- **Bring your own dataset**: benchmark on your domain data, so the
+  price-performance numbers reflect your task and not a leaderboard's
+- Finding that recurs: the cheapest instance per hour is rarely the
+  cheapest per token; the frontier must be **measured, not assumed**
+
+# Part 2: The Semantic Layer
+
+## Why Structure Knowledge at All?
+
+- LLMs are fluent but **ungrounded**: they do not know *your* entities,
+  relationships, or business definitions
+- Vector RAG retrieves **similar text**, not **connected facts**
+- Many real questions are relational: *"Which customers of our top
+  supplier are also vendors?"*
+- Structured knowledge gives agents something vectors cannot:
+  **explicit, traversable, auditable relationships**
+
+## Ontologies: the Vocabulary of a Domain
+
+- An **ontology** is a formal specification of a domain:
+  - **Classes** (types of things): `Person`, `Company`, `Drug`
+  - **Properties** (attributes): `foundedYear`, `dosage`
+  - **Relationships**: `worksFor`, `treats`, `acquiredBy`
+  - **Constraints**: a `Person` `worksFor` a `Company`, never the
+    reverse
+- It encodes the *rules of what can be said* about a domain
+- Standards: **RDF** (triples), **RDFS**, **OWL** (W3C)
+
+## Triples and Knowledge Graphs {.smaller}
+
+The atomic unit is the **triple**: *(subject, predicate, object)*
+
+```text
+(Bohr,       bornIn,           Copenhagen)
+(Bohr,       collaboratedWith, Heisenberg)
+(Heisenberg, developed,        UncertaintyPrinciple)
+```
+
+- Triples compose into a **knowledge graph**: nodes are entities, edges
+  are typed relationships. Ontology = the schema; knowledge graph = the
+  instance data
+- Famous examples: Google Knowledge Graph, Wikidata, biomedical KGs
+- Two dominant data models: **RDF / SPARQL** (W3C standards, formal
+  reasoning) and **labeled property graphs / Cypher** (pragmatic,
+  developer-friendly: Neo4j, Memgraph)
+- KGs excel at **multi-hop questions**: follow edges instead of hoping
+  chunks co-occur
+
+## Vector RAG vs Graph RAG {.smaller}
+
+You built both sides of this table in the week 4 labs:
+
+| | **Vector RAG** | **Graph RAG** |
+|---|---------------|---------------|
+| Retrieval | Nearest-neighbor over embeddings | Graph traversal queries |
+| Strength | Large unstructured corpora | Highly connected, relational data |
+| Multi-hop | Weak: chunks must co-occur | Native: follow edges |
+| Provenance | Similar chunks | Explicit paths, auditable |
+
+- Not either/or: hybrid systems retrieve from both and fuse
+- The graph-rag lab's pipeline was the standard one: ingest, LLM entity
+  extraction, LLM relationship extraction, merge and dedupe, load, then
+  traverse at query time
+
+## Microsoft GraphRAG {.smaller}
+
+[Microsoft GraphRAG](https://microsoft.github.io/graphrag/) is the
+open-source methodology that pushed past naive graph construction:
+
+- LLM-based entity and relationship extraction, with descriptions
+- **Community detection** (the Leiden algorithm) clusters the graph into
+  hierarchical communities; an LLM writes a **summary report per
+  community**
+- Two search modes: **local** (start from matched entities, expand to
+  neighbors and sources -- "what did X do?") and **global** (map-reduce
+  over community summaries -- "what are the main themes?")
+- Global search answers corpus-level questions that vector RAG
+  structurally cannot
+- The costs are real: every chunk passes through the LLM at indexing;
+  entity resolution is hard ("IBM" vs "Big Blue"); freshness requires
+  re-indexing. Use it when questions are relational or corpus-global
+
+## From Documents to Databases
+
+- Graph RAG structures **unstructured text**
+- The other half of enterprise knowledge lives in **structured data**:
+  warehouses, lakes, transactional stores
+- LLMs face the same grounding problem there:
+  - Which table is the *real* revenue table?
+  - What does "active customer" mean, precisely?
+- Enter the **semantic layer**
+
+## The Semantic Layer {.smaller}
+
+A **semantic layer** sits between raw data and consumers, defining:
+
+- **Metrics**: `revenue = sum(order_total) where status = 'complete'`
+- **Dimensions**: time, region, product hierarchies
+- **Entities and joins**: how tables relate
+- **Business definitions**: one agreed meaning of "churn", "active
+  user", "margin"
+
+Consumers -- BI tools, notebooks, and **agents** -- query *concepts*,
+not tables. The established tools: dbt Semantic Layer / MetricFlow,
+Cube, AtScale, Looker's LookML.
+
+## Text-to-SQL Without Grounding Fails {.smaller}
+
+Week 4's sql-rag lab met this head-on:
+
+- Raw schema to LLM: hundreds of tables, cryptic column names, no
+  definitions
+- The model guesses joins, invents filters, picks the wrong "revenue"
+  column
+- Answers come back **plausible and wrong** -- the most dangerous
+  failure mode in analytics
+- With a semantic layer, the flow changes: the agent finds the `revenue`
+  **metric** in the catalog (definition, valid dimensions), emits a
+  metric query, and the layer compiles correct, governed SQL
+- One definition of revenue means **consistent answers everywhere**:
+  text-to-SQL goes from *schema guessing* to *definition lookup*
+
+## Ontology vs Semantic Layer
+
+| | Ontology / KG | Semantic layer |
+|---|--------------|----------------|
+| Domain | Entities and relationships in the world | Metrics and dimensions in the warehouse |
+| Data shape | Graph (triples, property graph) | Relational (tables, cubes) |
+| Query | SPARQL / Cypher | Metric queries compiled to SQL |
+| Answers | "How are things connected?" | "What is the number, precisely?" |
+
+Both are **machine-readable meaning** -- the connective tissue agents
+need. The vendors have noticed, which is the next five slides.
+
+## Why Agents Need a Semantic Layer {.smaller}
+
+- **Determinism**: agents ground free-text requests in governed
+  definitions instead of improvising SQL
+- **Trust**: an answer traceable to a metric definition or a graph path
+  is auditable; a raw LLM answer is not
+- **Access control**: the layer enforces row- and column-level policy --
+  the agent never touches raw tables (week 11's fine-grained
+  authorization, applied to data)
+- **Reuse**: one semantic model serves dashboards, notebooks, and every
+  agent
+- **MCP fit**: expose the semantic layer or KG as an MCP server, and any
+  agent queries concepts as tools (week 6)
+
+## AWS: Context Ontology Accelerator {.smaller}
+
+[Context Ontology Accelerator](https://github.com/aws/context-ontology-accelerator)
+(open source, Apache-2.0, July 2026):
+
+- Builds a **machine-readable ontology of your business**: products,
+  customers, policies, and the rules that define how they operate
+- The workflow is AI-drafted, human-approved: it connects to your
+  structured and unstructured sources, **drafts an ontology with AI**,
+  and your domain experts review, edit, and approve every element
+- Serves governed answers to agents, turning months of manual ontology
+  authoring into days
+- The roadmap folds it into **AWS Context** as a managed, user-defined
+  ontology capability
+- The pitch in one line: stop stuffing context into prompts; build an
+  ontology that owns it
+
+## Microsoft: Fabric IQ {.smaller}
+
+[Fabric IQ](https://community.fabric.microsoft.com/blog/fbc_fabricupdatesblogs/fabric-iq-the-shared-context-layer-for-ai-agents-and-real-time-applications/5191678)
+(GA at Build 2026; the ontology item still in preview):
+
+- Layers an **ontology over OneLake and Power BI semantic models**:
+  entities, relationships, natural-language rules, and live data
+  bindings
+- One source of business meaning, many consumers: Fabric data agents,
+  operations agents, Foundry IQ, Copilot Studio, and **any MCP client**
+  read the same ontology
+- The operational angle is distinctive: agents do not just answer from
+  the ontology, they **monitor what is happening and act on it**
+- Microsoft's bet: the semantic model you already maintain for BI
+  becomes your agents' source of truth
+
+## Databricks: Unity Catalog Semantics {.smaller}
+
+Databricks delivers the semantic layer through
+[Unity Catalog](https://learn.microsoft.com/en-us/azure/databricks/business-semantics/):
+
+- **Metric views**: SQL-native, governed metric definitions that
+  separate what you measure from how you slice it -- and they now flow
+  into Power BI too
+- **Business glossaries** attach agreed definitions to catalog objects
+- **Genie Ontology** (gated public preview) adds inferred context and
+  authority ranking on top
+- Genie agents answer from data registered in Unity Catalog, using the
+  attached metadata plus an author-curated knowledge store
+- The through-line: one governed set of definitions flowing to BI,
+  apps, and agents alike
+
+## NVIDIA: Auto Ontology {.smaller}
+
+[Auto Ontology](https://github.com/NVIDIA/auto-ontology) (open source,
+Python):
+
+- A framework for building a **semantic, graph-based reasoning layer
+  over enterprise data**
+- Four verbs: **discover** (generate an ontology from database
+  metadata), **ground** (give agents trusted meaning for metrics,
+  entities, relationships), **expose** (serve context through **MCP**,
+  CLI, and API), **learn** (fold certified corrections and usage back
+  in, so shared context improves with every question)
+- People refine and certify the generated definitions -- the same
+  AI-drafts, humans-approve shape as the AWS accelerator
+- Works with NVIDIA NIM endpoints and any OpenAI-compatible endpoint
+
+## The Standard: Apache Ossie {.smaller}
+
+The missing piece was interchange -- every vendor's semantic model in
+its own format:
+
+- **Open Semantic Interchange (OSI)**, launched September 2025 by
+  Snowflake with Salesforce, dbt Labs, BlackRock, and RelationalAI:
+  a vendor-neutral YAML spec for metrics, dimensions, datasets, and
+  relationships
+- v1.0 shipped January 2026; in July 2026 the project entered the
+  Apache Incubator as
+  [Apache Ossie](https://www.snowflake.com/en/blog/apache-ossie-open-semantic-interchange-incubator/),
+  with 50+ contributors and reference converters (dbt MetricFlow,
+  Apache Polaris, Snowflake semantic models)
+- Why it matters for agents: definitions written once move between the
+  platforms on the previous slides instead of being trapped in one
+- The week 6 pattern repeating: first MCP standardized the tools, now
+  Ossie is trying to standardize the **meaning**
+
+## Design Checklist for a Grounded Agent Stack {.smaller}
+
+1. Which questions are **relational**? Those want the knowledge graph
+2. Which questions are **quantitative**? Those want the semantic layer
+3. Which are **lookup-shaped**? Plain vector RAG is enough
+4. Define the **ontology and metric definitions first**; extraction and
+   SQL generation follow
+5. Expose each layer as a **tool over MCP** with clear, typed contracts
+6. Log every traversal and query for **auditability** (week 7)
+
+The week 4 labs built numbers 1 and 3 by hand; the vendor platforms on
+the last five slides are selling you number 2 at enterprise scale.
+
+## Key Takeaways {.smaller}
+
+- Tokens are the unit of spend; output costs more than input, which
+  costs more than cached -- design prompts accordingly
+- The big levers are architectural: **caching, batching, routing** --
+  and optimize **cost-per-task at target quality**, never cost-per-token
+- Build vs buy is a utilization question; **open weights are not open
+  source**, and the license decides what you can ship
+- Benchmark with **your workload**, report **percentiles under
+  concurrency**, keep accuracy in the loop
+- Ontologies define what can be said; knowledge graphs hold what is
+  known; the semantic layer is the **metrics ontology of the warehouse**
+- Agents need machine-readable meaning, and 2026 is the year the
+  vendors agreed: AWS, Microsoft, Databricks, and NVIDIA all shipped a
+  semantic context layer, and the interchange format went to Apache
+
+## References {.smaller .scrollable}
+
+**Tokenomics**
+
+- [OpenAI API Pricing](https://platform.openai.com/pricing) · [Anthropic Pricing](https://www.anthropic.com/pricing) · [Amazon Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
+- [Prompt caching on the Claude API](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+- [MLCommons MLPerf](https://mlcommons.org/benchmarks/) · [Ray LLMPerf](https://github.com/ray-project/llmperf) · [FMBench](https://github.com/aws-samples/foundation-model-benchmarking-tool)
+- [OSI Open Source AI Definition](https://opensource.org/ai) · [Meta Llama license](https://www.llama.com/) · [OpenAI gpt-oss](https://openai.com/open-models/)
+
+**Semantic layer**
+
+- [Microsoft GraphRAG](https://microsoft.github.io/graphrag/) · [Neo4j docs](https://neo4j.com/docs/) · [W3C RDF Primer](https://www.w3.org/TR/rdf11-primer/)
+- [AWS Context Ontology Accelerator](https://github.com/aws/context-ontology-accelerator)
+- [Microsoft Fabric IQ](https://community.fabric.microsoft.com/blog/fbc_fabricupdatesblogs/fabric-iq-the-shared-context-layer-for-ai-agents-and-real-time-applications/5191678)
+- [Databricks Unity Catalog business semantics](https://learn.microsoft.com/en-us/azure/databricks/business-semantics/)
+- [NVIDIA Auto Ontology](https://github.com/NVIDIA/auto-ontology)
+- [Apache Ossie (Open Semantic Interchange)](https://www.snowflake.com/en/blog/apache-ossie-open-semantic-interchange-incubator/)
+- [dbt Semantic Layer](https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl) · [Cube](https://cube.dev/docs)

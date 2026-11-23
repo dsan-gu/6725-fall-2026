@@ -13,7 +13,7 @@ week_files=(
   "week-09-agent-deployment"
   "week-10-a2a-and-agent-primitives"
   "week-11-identity-policy-guardrails"
-  "week-12-finetuning"
+  "week-12-tokenomics-semantic-layer"
   "week-13-ai-ethics"
 )
 
