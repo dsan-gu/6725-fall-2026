@@ -369,7 +369,9 @@ benchmarks foundation models on the stacks where they run in production:
   - **Constraints**: a `Person` `worksFor` a `Company`, never the
     reverse
 - It encodes the *rules of what can be said* about a domain
-- Standards: **RDF** (triples), **RDFS**, **OWL** (W3C)
+- The W3C standards: **RDF** (Resource Description Framework: triples),
+  **RDFS** (RDF Schema: class hierarchies), **OWL** (Web Ontology
+  Language: constraints and reasoning)
 
 ## Triples and Knowledge Graphs {.smaller}
 
