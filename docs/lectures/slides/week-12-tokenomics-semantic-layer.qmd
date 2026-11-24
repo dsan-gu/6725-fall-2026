@@ -375,23 +375,16 @@ benchmarks foundation models on the stacks where they run in production:
 
 ## Triples and Knowledge Graphs {.smaller}
 
-The atomic unit is the **triple**: *(subject, predicate, object)*
+The atomic unit is the **triple**: *(subject, predicate, object)*.
+Triples compose into a **knowledge graph** -- nodes are entities, edges
+are typed relationships:
 
-```text
-(Bohr,       bornIn,           Copenhagen)
-(Bohr,       collaboratedWith, Heisenberg)
-(Heisenberg, developed,        UncertaintyPrinciple)
-```
+![](img/kg-triples.svg){height=300 fig-align="center"}
 
-- Triples compose into a **knowledge graph**: nodes are entities, edges
-  are typed relationships. Ontology = the schema; knowledge graph = the
-  instance data
-- Famous examples: Google Knowledge Graph, Wikidata, biomedical KGs
-- Two dominant data models: **RDF / SPARQL** (W3C standards, formal
-  reasoning) and **labeled property graphs / Cypher** (pragmatic,
-  developer-friendly: Neo4j, Memgraph)
-- KGs excel at **multi-hop questions**: follow edges instead of hoping
-  chunks co-occur
+- Ontology = the schema; knowledge graph = the instance data. Famous
+  ones: Google Knowledge Graph, Wikidata, biomedical KGs
+- Two data models: **RDF / SPARQL** (W3C, formal reasoning) and
+  **labeled property graphs / Cypher** (pragmatic: Neo4j, Memgraph)
 
 ## Vector RAG vs Graph RAG {.smaller}
 
@@ -439,17 +432,13 @@ open-source methodology that pushed past naive graph construction:
 
 ## The Semantic Layer {.smaller}
 
-A **semantic layer** sits between raw data and consumers, defining:
+A **semantic layer** sits between raw data and everyone who asks
+questions of it:
 
-- **Metrics**: `revenue = sum(order_total) where status = 'complete'`
-- **Dimensions**: time, region, product hierarchies
-- **Entities and joins**: how tables relate
-- **Business definitions**: one agreed meaning of "churn", "active
-  user", "margin"
+![](img/semantic-layer-sandwich.svg){height=430 fig-align="center"}
 
-Consumers -- BI tools, notebooks, and **agents** -- query *concepts*,
-not tables. The established tools: dbt Semantic Layer / MetricFlow,
-Cube, AtScale, Looker's LookML.
+The established tools: dbt Semantic Layer / MetricFlow, Cube, AtScale,
+Looker's LookML -- and the agent platforms a few slides ahead.
 
 ## Text-to-SQL Without Grounding Fails {.smaller}
 
@@ -466,6 +455,10 @@ Week 4's sql-rag lab met this head-on:
   metric query, and the layer compiles correct, governed SQL
 - One definition of revenue means **consistent answers everywhere**:
   text-to-SQL goes from *schema guessing* to *definition lookup*
+
+## One Question, Two Paths
+
+![](img/text2sql-grounded.svg){height=440 fig-align="center"}
 
 ## Ontology vs Semantic Layer
 
