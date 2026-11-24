@@ -557,6 +557,27 @@ Python):
   AI-drafts, humans-approve shape as the AWS accelerator
 - Works with NVIDIA NIM endpoints and any OpenAI-compatible endpoint
 
+## ByteDance: OpenViking {.smaller}
+
+[OpenViking](https://github.com/volcengine/OpenViking) (Volcengine's
+Viking team, open-sourced January 2026, 42k+ stars) takes the other
+road: structure the **agent's own context**, not the warehouse.
+
+- A **context database**: one virtual filesystem under `viking://` for
+  everything an agent knows -- **resources** (documents, code),
+  **memories** (preferences, experience), and **skills** (how to
+  perform tasks)
+- Agents navigate it like files: `ls`, `tree`, `read`, `write`, `grep`;
+  every directory carries a generated summary, so agents scan summaries
+  first and decide what to read
+- **Scoped retrieval**: semantic search over a project or memory
+  subtree instead of one flat vector pool -- and unlike black-box
+  memory, you can open any directory and inspect what the agent knows
+- This unifies three things this course taught separately: week 10's
+  memory, weeks 3-4's knowledge RAG, and skills
+- License: **AGPL-3.0** -- part 1's lesson applies; read it before this
+  ships inside your product
+
 ## The Standard: Apache Ossie {.smaller}
 
 The missing piece was interchange -- every vendor's semantic model in
@@ -602,8 +623,9 @@ the last five slides are selling you number 2 at enterprise scale.
 - Ontologies define what can be said; knowledge graphs hold what is
   known; the semantic layer is the **metrics ontology of the warehouse**
 - Agents need machine-readable meaning, and 2026 is the year the
-  vendors agreed: AWS, Microsoft, Databricks, and NVIDIA all shipped a
-  semantic context layer, and the interchange format went to Apache
+  vendors agreed: AWS, Microsoft, Databricks, NVIDIA, and ByteDance all
+  shipped a semantic context layer, and the interchange format went to
+  Apache
 
 ## References {.smaller .scrollable}
 
@@ -620,6 +642,6 @@ the last five slides are selling you number 2 at enterprise scale.
 - [AWS Context Ontology Accelerator](https://github.com/aws/context-ontology-accelerator)
 - [Microsoft Fabric IQ](https://community.fabric.microsoft.com/blog/fbc_fabricupdatesblogs/fabric-iq-the-shared-context-layer-for-ai-agents-and-real-time-applications/5191678)
 - [Databricks Unity Catalog business semantics](https://learn.microsoft.com/en-us/azure/databricks/business-semantics/)
-- [NVIDIA Auto Ontology](https://github.com/NVIDIA/auto-ontology)
+- [NVIDIA Auto Ontology](https://github.com/NVIDIA/auto-ontology) · [OpenViking](https://github.com/volcengine/OpenViking)
 - [Apache Ossie (Open Semantic Interchange)](https://www.snowflake.com/en/blog/apache-ossie-open-semantic-interchange-incubator/)
 - [dbt Semantic Layer](https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl) · [Cube](https://cube.dev/docs)

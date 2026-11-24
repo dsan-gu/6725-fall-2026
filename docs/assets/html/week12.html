@@ -1715,6 +1715,17 @@ Amit Arora
 <li>Works with NVIDIA NIM endpoints and any OpenAI-compatible endpoint</li>
 </ul>
 </section>
+<section id="bytedance-openviking" class="slide level2 smaller">
+<h2>ByteDance: OpenViking</h2>
+<p><a href="https://github.com/volcengine/OpenViking">OpenViking</a> (Volcengine’s Viking team, open-sourced January 2026, 42k+ stars) takes the other road: structure the <strong>agent’s own context</strong>, not the warehouse.</p>
+<ul>
+<li>A <strong>context database</strong>: one virtual filesystem under <code>viking://</code> for everything an agent knows – <strong>resources</strong> (documents, code), <strong>memories</strong> (preferences, experience), and <strong>skills</strong> (how to perform tasks)</li>
+<li>Agents navigate it like files: <code>ls</code>, <code>tree</code>, <code>read</code>, <code>write</code>, <code>grep</code>; every directory carries a generated summary, so agents scan summaries first and decide what to read</li>
+<li><strong>Scoped retrieval</strong>: semantic search over a project or memory subtree instead of one flat vector pool – and unlike black-box memory, you can open any directory and inspect what the agent knows</li>
+<li>This unifies three things this course taught separately: week 10’s memory, weeks 3-4’s knowledge RAG, and skills</li>
+<li>License: <strong>AGPL-3.0</strong> – part 1’s lesson applies; read it before this ships inside your product</li>
+</ul>
+</section>
 <section id="the-standard-apache-ossie" class="slide level2 smaller">
 <h2>The Standard: Apache Ossie</h2>
 <p>The missing piece was interchange – every vendor’s semantic model in its own format:</p>
@@ -1745,7 +1756,7 @@ Amit Arora
 <li>Build vs buy is a utilization question; <strong>open weights are not open source</strong>, and the license decides what you can ship</li>
 <li>Benchmark with <strong>your workload</strong>, report <strong>percentiles under concurrency</strong>, keep accuracy in the loop</li>
 <li>Ontologies define what can be said; knowledge graphs hold what is known; the semantic layer is the <strong>metrics ontology of the warehouse</strong></li>
-<li>Agents need machine-readable meaning, and 2026 is the year the vendors agreed: AWS, Microsoft, Databricks, and NVIDIA all shipped a semantic context layer, and the interchange format went to Apache</li>
+<li>Agents need machine-readable meaning, and 2026 is the year the vendors agreed: AWS, Microsoft, Databricks, NVIDIA, and ByteDance all shipped a semantic context layer, and the interchange format went to Apache</li>
 </ul>
 </section>
 <section id="references" class="slide level2 smaller scrollable">
@@ -1763,7 +1774,7 @@ Amit Arora
 <li><a href="https://github.com/aws/context-ontology-accelerator">AWS Context Ontology Accelerator</a></li>
 <li><a href="https://community.fabric.microsoft.com/blog/fbc_fabricupdatesblogs/fabric-iq-the-shared-context-layer-for-ai-agents-and-real-time-applications/5191678">Microsoft Fabric IQ</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/databricks/business-semantics/">Databricks Unity Catalog business semantics</a></li>
-<li><a href="https://github.com/NVIDIA/auto-ontology">NVIDIA Auto Ontology</a></li>
+<li><a href="https://github.com/NVIDIA/auto-ontology">NVIDIA Auto Ontology</a> · <a href="https://github.com/volcengine/OpenViking">OpenViking</a></li>
 <li><a href="https://www.snowflake.com/en/blog/apache-ossie-open-semantic-interchange-incubator/">Apache Ossie (Open Semantic Interchange)</a></li>
 <li><a href="https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl">dbt Semantic Layer</a> · <a href="https://cube.dev/docs">Cube</a></li>
 </ul>
